@@ -1,0 +1,13 @@
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+body {
+  background:#0C0F0A; color:#F2F0E8;
+  font-family:'DM Sans',sans-serif; line-height:1.5; overflow-x:hidden;
+}
+input:focus, select:focus { outline:none; }
+button { font-family:inherit; cursor:pointer; }
+a { text-decoration:none; color:inherit; }
+::selection { background:rgba(140,179,105,0.3); color:#fff; }
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:#0C0F0A; }
+::-webkit-scrollbar-thumb { background:#1A2210; border-radius:3px; }
