@@ -546,6 +546,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
         const json = await res.json();
         if (json.paid) {
           clearInterval(pollRef.current);
+          if (typeof fbq !== "undefined") fbq("track", "Purchase", { value: 27, currency: "BRL" });
           setPixStep("paid");
         }
       } catch (_) {}
@@ -588,6 +589,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
       }
       setPixData(data);
       setPixStep("qr");
+      if (typeof fbq !== "undefined") fbq("track", "InitiateCheckout", { value: 27, currency: "BRL" });
     } catch (err) {
       console.error("[PIX create] fetch error:", err);
       setFormError("Erro de conexão. Tente novamente.");
