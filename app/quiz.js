@@ -529,6 +529,141 @@ function Diagnosis({ name, bmi, bmiCat, weightToLose, timeWeeks, answers, frustr
    10. RESULT + OFFER
    ══════════════════════ */
 function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
+  const [pixStep, setPixStep] = useState("idle"); // idle | form | loading | qr | paid
+  const [pixData, setPixData] = useState(null);   // { transactionId, pixPayload, qrCodeSrc }
+  const [form, setForm] = useState({ email:"", phone:"", cpf:"" });
+  const [formError, setFormError] = useState("");
+  const [copied, setCopied] = useState(false);
+  const pollRef = useRef(null);
+
+  // Polling: verifica pagamento a cada 3s quando QR está visível
+  useEffect(() => {
+    if (pixStep !== "qr" || !pixData?.transactionId) return;
+    pollRef.current = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/pix/check?tid=${pixData.transactionId}`);
+        const json = await res.json();
+        if (json.paid) {
+          clearInterval(pollRef.current);
+          setPixStep("paid");
+        }
+      } catch (_) {}
+    }, 3000);
+    return () => clearInterval(pollRef.current);
+  }, [pixStep, pixData]);
+
+  async function handleGeneratePix(e) {
+    e.preventDefault();
+    setFormError("");
+
+    const cpfClean = form.cpf.replace(/\D/g, "");
+    const phoneClean = form.phone.replace(/\D/g, "");
+
+    if (!form.email.includes("@")) { setFormError("Email inválido."); return; }
+    if (phoneClean.length < 10)    { setFormError("Telefone inválido."); return; }
+    if (cpfClean.length !== 11)    { setFormError("CPF inválido (11 dígitos)."); return; }
+
+    setPixStep("loading");
+    try {
+      const res = await fetch("/api/pix/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email: form.email, phone: phoneClean, cpf: cpfClean }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setFormError(data.error || "Erro ao gerar PIX. Tente novamente.");
+        setPixStep("form");
+        return;
+      }
+      setPixData(data);
+      setPixStep("qr");
+    } catch (_) {
+      setFormError("Erro de conexão. Tente novamente.");
+      setPixStep("form");
+    }
+  }
+
+  function handleCopy() {
+    navigator.clipboard.writeText(pixData.pixPayload).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  }
+
+  // ── Bloco PIX: substitui os CTAs quando ativado ──
+  function PixBlock() {
+    if (pixStep === "idle") return (
+      <button className="cta cta-final" onClick={() => setPixStep("form")}>
+        PAGAR COM PIX — R$27 →
+      </button>
+    );
+
+    if (pixStep === "form") return (
+      <form onSubmit={handleGeneratePix} className="pix-form">
+        <p className="pix-form-title">Preencha para gerar o QR Code PIX</p>
+        <input className="name-input pix-input" type="email" required placeholder="Seu e-mail"
+          value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))} />
+        <input className="name-input pix-input" type="tel" required placeholder="Telefone (com DDD)"
+          value={form.phone} onChange={e=>setForm(f=>({...f,phone:e.target.value}))} />
+        <input className="name-input pix-input" type="text" required placeholder="CPF (só números)"
+          maxLength={14} value={form.cpf} onChange={e=>setForm(f=>({...f,cpf:e.target.value}))} />
+        {formError && <p className="pix-error">{formError}</p>}
+        <button type="submit" className="cta cta-final">GERAR QR CODE PIX →</button>
+        <button type="button" className="pix-back" onClick={()=>setPixStep("idle")}>← voltar</button>
+      </form>
+    );
+
+    if (pixStep === "loading") return (
+      <div className="pix-loading">
+        <div className="pix-spinner" />
+        <p style={{color:"#9CA88E",fontSize:"14px",marginTop:"16px"}}>Gerando seu QR Code PIX...</p>
+      </div>
+    );
+
+    if (pixStep === "qr") return (
+      <div className="pix-qr-wrap">
+        <p className="pix-qr-title">Escaneie o QR Code ou copie o código</p>
+        <div className="pix-qr-box">
+          <img src={pixData.qrCodeSrc} alt="QR Code PIX" className="pix-qr-img" />
+        </div>
+        <button className="pix-copy-btn" onClick={handleCopy}>
+          {copied ? "✅ Copiado!" : "📋 Copiar código PIX"}
+        </button>
+        <div className="pix-waiting">
+          <div className="pix-waiting-dot" />
+          <span>Aguardando confirmação do pagamento...</span>
+        </div>
+        <button className="pix-force-check" onClick={async()=>{
+          const res = await fetch(`/api/pix/check?tid=${pixData.transactionId}`);
+          const d = await res.json();
+          if(d.paid){ clearInterval(pollRef.current); setPixStep("paid"); }
+        }}>
+          Já paguei — verificar agora
+        </button>
+        <p style={{fontSize:"11px",color:"#5C6652",marginTop:"8px"}}>
+          O pagamento é confirmado automaticamente em até 30 segundos.
+        </p>
+      </div>
+    );
+
+    if (pixStep === "paid") return (
+      <div className="pix-paid">
+        <div style={{fontSize:"52px",marginBottom:"12px"}}>✅</div>
+        <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:"22px",color:"#F2F0E8",marginBottom:"8px"}}>
+          Pagamento confirmado!
+        </h3>
+        <p style={{fontSize:"15px",color:"#9CA88E",lineHeight:"1.7",marginBottom:"24px"}}>
+          {name}, seu acesso ao Protocolo Dieta da Selva está liberado.<br/>
+          Verifique seu e-mail para o link de acesso.
+        </p>
+        <a href={CHECKOUT_URL} className="cta cta-final" target="_blank" rel="noopener noreferrer">
+          ACESSAR AGORA →
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div style={{paddingTop:"24px"}}>
       <div style={{textAlign:"center",marginBottom:"32px"}}>
@@ -561,7 +696,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
         <p className="dim" style={{fontSize:"14px",lineHeight:"1.7",maxWidth:"440px",margin:"0 auto"}}>{name}, se em 7 dias você não sentir que o Protocolo está funcionando, devolvemos <strong style={{color:"#A8D08D"}}>100% do seu dinheiro</strong>. Sem perguntas.</p>
       </div>
 
-      {/* Price */}
+      {/* Price + PIX */}
       <div className="price-card">
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"12px",marginBottom:"8px"}}>
           <span style={{fontSize:"16px",color:"#5C6652",textDecoration:"line-through"}}>De R$ 197,00</span>
@@ -572,13 +707,16 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
           <span style={{fontFamily:"'Playfair Display',serif",fontSize:"68px",fontWeight:"900",color:"#F2F0E8",lineHeight:"1"}}>27</span>
           <span style={{fontSize:"22px",fontWeight:"700",color:"#9CA88E",marginTop:"10px"}}>,00</span>
         </div>
-        <p style={{fontSize:"14px",color:"#5C6652",marginBottom:"20px"}}>ou 3x de R$ 9,67 sem juros</p>
+        <p style={{fontSize:"14px",color:"#5C6652",marginBottom:"20px"}}>pagamento único via PIX — acesso imediato</p>
 
-        <a href={CHECKOUT_URL} className="cta cta-final" target="_blank" rel="noopener noreferrer">
-          QUERO COMEÇAR MINHA TRANSFORMAÇÃO →
-        </a>
+        <PixBlock />
 
-        <div className="urgency"><div className="urgency-dot" /><span>127 pessoas estão vendo esta página agora</span></div>
+        {pixStep === "idle" && (
+          <div className="urgency" style={{marginTop:"14px"}}>
+            <div className="urgency-dot" />
+            <span>127 pessoas estão vendo esta página agora</span>
+          </div>
+        )}
 
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"14px",marginTop:"14px",fontSize:"12px",color:"#5C6652",flexWrap:"wrap"}}>
           <span>🔒 Compra segura</span><span>✅ Acesso imediato</span><span>🛡️ 7 dias de garantia</span>
@@ -591,15 +729,19 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
         {q:"A Dieta da Selva funciona mesmo?",a:"Sim. É baseada nos princípios da dieta carnívora/ancestral. O chef Henrique Fogaça eliminou 17kg em 3 meses com este método. O protocolo foi adaptado para mulheres acima de 30."},
         {q:"Vou passar fome?",a:"Pelo contrário! Carnes, queijos, ovos e gorduras boas estimulam o GLP-1 — o hormônio natural da saciedade. Você se sente satisfeita por horas."},
         {q:"Preciso ir à academia?",a:"Não. O app inclui exercícios caseiros de 15 minutos. A alimentação é o pilar principal."},
-        {q:"Recebo acesso na hora?",a:"Sim! Após o pagamento, acesso imediato ao webapp com cardápios, receitas, calculadora e calendário."},
+        {q:"Como funciona o pagamento?",a:"100% via PIX. Você gera o QR Code, paga pelo app do seu banco, e o acesso é liberado automaticamente em segundos."},
         {q:"E se não funcionar?",a:"Garantia de 7 dias. Devolvemos 100% sem perguntas."},
       ].map((f,i)=>(<FaqItem key={i} q={f.q} a={f.a} />))}
 
       {/* Final CTA */}
-      <div style={{textAlign:"center",margin:"44px 0"}}>
-        <p style={{fontSize:"17px",color:"#9CA88E",lineHeight:"1.7",marginBottom:"20px"}}>{name}, você merece se sentir bem no seu corpo.<br/><strong style={{color:"#F2F0E8"}}>O primeiro passo é agora.</strong></p>
-        <a href={CHECKOUT_URL} className="cta cta-final" target="_blank" rel="noopener noreferrer">GARANTIR MEU ACESSO POR R$27 →</a>
-      </div>
+      {pixStep === "idle" && (
+        <div style={{textAlign:"center",margin:"44px 0"}}>
+          <p style={{fontSize:"17px",color:"#9CA88E",lineHeight:"1.7",marginBottom:"20px"}}>{name}, você merece se sentir bem no seu corpo.<br/><strong style={{color:"#F2F0E8"}}>O primeiro passo é agora.</strong></p>
+          <button className="cta cta-final" onClick={()=>{ window.scrollTo({top:0,behavior:"smooth"}); setTimeout(()=>setPixStep("form"),400); }}>
+            GARANTIR MEU ACESSO POR R$27 →
+          </button>
+        </div>
+      )}
 
       <footer style={{textAlign:"center",padding:"24px 16px",borderTop:"1px solid rgba(140,179,105,0.08)",fontSize:"12px",color:"#5C6652"}}>
         <p>© 2025 Protocolo Dieta da Selva. Todos os direitos reservados.</p>
@@ -757,4 +899,26 @@ const CSS = `
   .features-grid{grid-template-columns:1fr}
   .price-card span[style*="68px"]{font-size:54px!important}
 }
+
+/* ── PIX ── */
+.pix-form{display:flex;flex-direction:column;gap:10px;width:100%}
+.pix-form-title{font-size:14px;color:#9CA88E;margin-bottom:4px;text-align:center}
+.pix-input{text-align:left!important;font-size:15px!important;padding:14px 18px!important}
+.pix-error{font-size:13px;color:#E85D4A;text-align:center;margin:0}
+.pix-back{background:none;border:none;color:#5C6652;font-size:13px;cursor:pointer;margin-top:4px;font-family:'DM Sans',sans-serif}
+.pix-back:hover{color:#9CA88E}
+.pix-loading{display:flex;flex-direction:column;align-items:center;padding:32px 0}
+.pix-spinner{width:44px;height:44px;border-radius:50%;border:3px solid rgba(140,179,105,0.15);border-top-color:#8CB369;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pix-qr-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.pix-qr-title{font-size:14px;color:#9CA88E;text-align:center}
+.pix-qr-box{padding:12px;background:#fff;border-radius:14px;display:inline-block}
+.pix-qr-img{width:220px;height:220px;display:block}
+.pix-copy-btn{width:100%;padding:14px;border-radius:12px;border:1px solid rgba(140,179,105,0.3);background:rgba(140,179,105,0.06);color:#A8D08D;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s}
+.pix-copy-btn:hover{background:rgba(140,179,105,0.12)}
+.pix-waiting{display:flex;align-items:center;gap:8px;font-size:13px;color:#9CA88E}
+.pix-waiting-dot{width:8px;height:8px;border-radius:50%;background:#8CB369;animation:blink 1.2s infinite;flex-shrink:0}
+.pix-force-check{background:none;border:none;color:#5C6652;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline}
+.pix-force-check:hover{color:#9CA88E}
+.pix-paid{display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 0}
 `;
