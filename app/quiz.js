@@ -535,6 +535,8 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
   const [form, setForm] = useState({ email:"", phone:"", cpf:"" });
   const [formError, setFormError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [magicLink, setMagicLink] = useState(null);
+  const [loadingLink, setLoadingLink] = useState(false);
   const pollRef = useRef(null);
 
   // Polling: verifica pagamento a cada 3s quando QR está visível
@@ -660,21 +662,75 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
       </div>
     );
 
-    if (pixStep === "paid") return (
-      <div className="pix-paid">
-        <div style={{fontSize:"52px",marginBottom:"12px"}}>✅</div>
-        <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:"22px",color:"#F2F0E8",marginBottom:"8px"}}>
-          Pagamento confirmado!
-        </h3>
-        <p style={{fontSize:"15px",color:"#9CA88E",lineHeight:"1.7",marginBottom:"24px"}}>
-          {name}, seu acesso ao Protocolo Dieta da Selva está liberado.<br/>
-          Verifique seu e-mail para o link de acesso.
-        </p>
-        <a href={CHECKOUT_URL} className="cta cta-final" target="_blank" rel="noopener noreferrer">
-          ACESSAR AGORA →
-        </a>
-      </div>
-    );
+    if (pixStep === "paid") {
+      async function handleAcessar() {
+        if (magicLink) { window.location.href = magicLink; return; }
+        setLoadingLink(true);
+        try {
+          const res = await fetch(`/api/pix/magic-link?tid=${pixData?.transactionId}`);
+          const data = await res.json();
+          if (data.link) {
+            setMagicLink(data.link);
+            window.location.href = data.link;
+          }
+        } catch (_) {}
+        setLoadingLink(false);
+      }
+
+      return (
+        <div className="pix-paid">
+          {/* Header */}
+          <div style={{fontSize:"64px",marginBottom:"8px"}}>🌿</div>
+          <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:"24px",color:"#F2F0E8",marginBottom:"6px"}}>
+            Bem-vinda à Selva, {name}!
+          </h3>
+          <p style={{fontSize:"14px",color:"#8CB369",fontWeight:"600",marginBottom:"24px",letterSpacing:"0.05em"}}>
+            ✅ PAGAMENTO CONFIRMADO
+          </p>
+
+          {/* O que você recebe */}
+          <div style={{background:"#111608",border:"1px solid rgba(140,179,105,0.15)",borderRadius:"16px",padding:"20px",marginBottom:"20px",width:"100%",maxWidth:"400px",textAlign:"left"}}>
+            <p style={{fontSize:"11px",fontWeight:"700",color:"#5C6652",letterSpacing:"0.1em",marginBottom:"12px"}}>SEU ACESSO INCLUI</p>
+            {[
+              ["🥩","Plano alimentar completo de 21 dias"],
+              ["📖","Biblioteca de receitas carnívoras"],
+              ["🏆","Desafio 21 dias sem falhar"],
+              ["🏋️","Treinos em casa semana a semana"],
+              ["🌿","Selva IA para tirar suas dúvidas"],
+              ["⭐","5 receitas exclusivas da Selva"],
+            ].map(([emoji, text], i) => (
+              <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"8px"}}>
+                <span style={{fontSize:"16px"}}>{emoji}</span>
+                <span style={{fontSize:"13px",color:"#9CA88E"}}>{text}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Botão magic link */}
+          <button
+            onClick={handleAcessar}
+            disabled={loadingLink}
+            style={{
+              width:"100%",maxWidth:"400px",padding:"18px",
+              background: loadingLink ? "#5C6652" : "#E8A838",
+              color:"#000",fontWeight:"800",fontSize:"16px",
+              borderRadius:"14px",border:"none",cursor:"pointer",
+              marginBottom:"14px",letterSpacing:"0.02em",
+            }}
+          >
+            {loadingLink ? "Gerando seu acesso..." : "ACESSAR MEU PROTOCOLO →"}
+          </button>
+
+          {/* Instrução email */}
+          <div style={{background:"#0D1309",border:"1px solid rgba(140,179,105,0.1)",borderRadius:"12px",padding:"14px",maxWidth:"400px",width:"100%"}}>
+            <p style={{fontSize:"12px",color:"#9CA88E",lineHeight:"1.6",margin:0}}>
+              📧 Também enviamos o link de acesso para o seu e-mail.<br/>
+              <span style={{color:"#5C6652"}}>Verifique a caixa de entrada e o spam.</span>
+            </p>
+          </div>
+        </div>
+      );
+    }
   }
 
   return (
