@@ -113,9 +113,9 @@ const QUIZ_QUESTIONS = [
 ];
 
 const TESTIMONIALS = [
-  { name:"Mariana R.", age:"38", city:"São Paulo", text:"Perdi 8kg no primeiro mês! Como picanha, ovos, queijo... nunca passei fome. Meu marido não acredita.", result:"-8kg / 30 dias", stars:5 },
-  { name:"Cláudia F.", age:"45", city:"Belo Horizonte", text:"Tentei de tudo antes. Com o Protocolo, além de perder 12kg, minha inflamação sumiu. Tenho energia que não tinha aos 30.", result:"-12kg / 60 dias", stars:5 },
-  { name:"Patrícia M.", age:"52", city:"Rio de Janeiro", text:"Com 52 anos achava impossível. O app me guiou dia a dia com receitas fáceis. Perdi 6kg e desinchei completamente.", result:"-6kg / 21 dias", stars:5 },
+  { name:"Mariana R.", age:"38", city:"São Paulo", text:"Eu era a louca do doce, sério. Depois de 3 dias na dieta a vontade simplesmente foi embora. Perdi 8kg sem sofrer.", result:"-8kg / 30 dias", stars:5, img:"/testimonials/prova1.png" },
+  { name:"Cláudia F.", age:"45", city:"Belo Horizonte", text:"Tentei de tudo antes. Com o Protocolo, além de perder 12kg, minha inflamação sumiu. Tenho energia que não tinha aos 30.", result:"-12kg / 60 dias", stars:5, img:"/testimonials/prova2.png" },
+  { name:"Patrícia M.", age:"52", city:"Rio de Janeiro", text:"Com 52 anos achava impossível. O app me guiou dia a dia com receitas fáceis. Perdi 6kg e desinchei completamente.", result:"-6kg / 21 dias", stars:5, img:"/testimonials/prova3.png" },
   { name:"Renata S.", age:"41", city:"Curitiba", text:"A parte do GLP-1 me convenceu. Meu corpo produz saciedade naturalmente agora. Emagreci 10kg sem sofrer.", result:"-10kg / 45 dias", stars:5 },
   { name:"Fernanda L.", age:"36", city:"Salvador", text:"Voltei a caber nas minhas roupas de 5 anos atrás. E o melhor: sem academia, só com alimentação e os exercícios do app.", result:"-7kg / 30 dias", stars:5 },
 ];
@@ -434,6 +434,7 @@ function SocialProof({ name, onNext }) {
       <div className="testimonials">
         {TESTIMONIALS.map((t,i)=>(
           <div key={i} className="testi-card">
+            {t.img && <img src={t.img} alt={`Resultado ${t.name}`} className="testi-img" />}
             <div className="testi-stars">{"★★★★★"}</div>
             <p className="testi-text">"{t.text}"</p>
             <div className="testi-footer">
@@ -851,7 +852,8 @@ const CSS = `
 .edu-quote-author{display:block;margin-top:8px;font-style:normal;font-weight:600;font-size:13px;color:#E8A838}
 
 .testimonials{display:flex;flex-direction:column;gap:14px;margin-bottom:20px}
-.testi-card{padding:20px;border-radius:16px;border:1px solid rgba(140,179,105,0.08);background:rgba(18,24,14,0.8)}
+.testi-card{padding:20px;border-radius:16px;border:1px solid rgba(140,179,105,0.08);background:rgba(18,24,14,0.8);overflow:hidden}
+.testi-img{width:100%;border-radius:10px;margin-bottom:14px;object-fit:cover;max-height:280px}
 .testi-stars{color:#E8A838;font-size:15px;letter-spacing:2px;margin-bottom:10px}
 .testi-text{font-size:14px;color:#9CA88E;line-height:1.7;margin-bottom:14px;font-style:italic}
 .testi-footer{display:flex;align-items:center;gap:10px}
