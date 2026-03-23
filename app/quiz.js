@@ -570,7 +570,16 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email: form.email, phone: phoneClean, cpf: cpfClean }),
       });
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch (_) {
+        const text = await res.text().catch(() => "sem resposta");
+        console.error("[PIX create] resposta não-JSON:", res.status, text);
+        setFormError(`Erro ${res.status}: resposta inválida do servidor.`);
+        setPixStep("form");
+        return;
+      }
       if (!res.ok || data.error) {
         setFormError(data.error || "Erro ao gerar PIX. Tente novamente.");
         setPixStep("form");
@@ -578,7 +587,8 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
       }
       setPixData(data);
       setPixStep("qr");
-    } catch (_) {
+    } catch (err) {
+      console.error("[PIX create] fetch error:", err);
       setFormError("Erro de conexão. Tente novamente.");
       setPixStep("form");
     }
