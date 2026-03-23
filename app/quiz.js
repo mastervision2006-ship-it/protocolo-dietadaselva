@@ -709,7 +709,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
         </div>
         <p style={{fontSize:"14px",color:"#5C6652",marginBottom:"20px"}}>pagamento único via PIX — acesso imediato</p>
 
-        <PixBlock />
+        {PixBlock()}
 
         {pixStep === "idle" && (
           <div className="urgency" style={{marginTop:"14px"}}>
