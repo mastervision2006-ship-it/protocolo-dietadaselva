@@ -15,3 +15,7 @@ npm-debug.log*
 
 # vercel
 .vercel
+
+# skills e assets locais
+.agents/
+.DS_Store
