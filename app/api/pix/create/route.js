@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
 const SIGILOPAY_API = 'https://app.sigilopay.com.br/api/v1';
 
@@ -12,7 +13,7 @@ export async function POST(req) {
 
     const identifier = `dieta_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://seusite.vercel.app';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://protocolo-dietadaselva.vercel.app';
     const callbackUrl = `${appUrl}/api/pix/webhook`;
 
     const payload = {
@@ -47,33 +48,31 @@ export async function POST(req) {
 
     const transactionId = data.transactionId || '';
 
-    // SigiloPay pode retornar o PIX em data.pix ou data.order.pix
-    const pixNode = data.pix || data.order?.pix || {};
+    // Salva lead vinculado ao transactionId para o webhook usar depois
+    if (transactionId) {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY
+      );
+      await supabase.from('pending_purchases').upsert(
+        { transaction_id: transactionId, name, email, phone: phone.replace(/\D/g, '') },
+        { onConflict: 'transaction_id', ignoreDuplicates: true }
+      );
+    }
 
+    const pixNode = data.pix || data.order?.pix || {};
     const pixPayload =
-      pixNode.code ||
-      pixNode.payload ||
-      pixNode.emv ||
-      pixNode.qrCode ||
-      pixNode.qrcode ||
-      null;
+      pixNode.code || pixNode.payload || pixNode.emv || pixNode.qrCode || pixNode.qrcode || null;
 
     if (!pixPayload) {
       return NextResponse.json({ error: 'Sem código PIX na resposta da SigiloPay' }, { status: 500 });
     }
 
-    // QR code: tenta a imagem da API, senão gera via qrserver.com
-    let qrCodeSrc =
-      pixNode.base64 ||
-      pixNode.image ||
-      pixNode.imageUrl ||
-      pixNode.qrCodeImageUrl ||
-      null;
+    let qrCodeSrc = pixNode.base64 || pixNode.image || pixNode.imageUrl || pixNode.qrCodeImageUrl || null;
 
     if (qrCodeSrc && !qrCodeSrc.startsWith('data:') && !qrCodeSrc.startsWith('http')) {
       qrCodeSrc = `data:image/png;base64,${qrCodeSrc}`;
     }
-
     if (!qrCodeSrc) {
       qrCodeSrc = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(pixPayload)}`;
     }
