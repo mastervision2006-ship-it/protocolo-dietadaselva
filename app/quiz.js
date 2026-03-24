@@ -492,11 +492,11 @@ const CHAT_KB = [
     suggestions: ['Como é feito o pagamento?','E a garantia?','Quero garantir agora'],
     showCTA: true,
   },
-  // Pagamento / PIX
+  // Pagamento / PIX — passo a passo completo
   {
-    triggers: ['pagar','pagamento','pix','cartao','cartão','boleto','parcelar','parcelamento','como pago','forma de pagamento'],
-    text: `O pagamento é 100% via PIX. 💳\n\n✅ Confirmação em menos de 30 segundos\n✅ Acesso liberado imediatamente\n✅ Sem dados de cartão — sem risco\n✅ Você vê tudo no app do seu banco\n\nÉ só gerar o QR Code aqui, abrir o app do banco e pagar. Simples assim.`,
-    suggestions: ['Como acesso depois?','E a garantia?','Quero garantir agora'],
+    triggers: ['pagar','pagamento','pix','cartao','cartão','boleto','parcelar','parcelamento','como pago','forma de pagamento','passo a passo','como funciona o pix','nao sei pagar','não sei pagar','nunca usei pix','como usar pix','qr code','copia e cola','copiar codigo','código pix'],
+    text: `O pagamento é 100% via PIX — seguro, rápido e sem complicação. 🔒\n\n📱 PASSO A PASSO — QR CODE:\n1. Clica no botão abaixo\n2. Preenche nome, e-mail e CPF\n3. O QR Code aparece na tela\n4. Abre o app do seu banco\n5. Vai em "PIX" → "Pagar com QR Code"\n6. Aponta a câmera para o código\n7. Confirma o valor de R$ 27\n8. Acesso liberado em menos de 30 segundos!\n\n📋 PREFERE COPIA E COLA?\nClica em "Copiar código PIX", abre o app do banco → PIX → Pix Copia e Cola, e cola o código. Só confirmar!\n\n🔒 SEUS DADOS 100% PROTEGIDOS:\n✅ Nenhum dado de cartão cadastrado\n✅ Você aprova tudo dentro do app do seu banco\n✅ Transação criptografada e segura\n✅ Processado pelo sistema bancário oficial\n\n🌿 GARANTIA INCONDICIONAL DE 7 DIAS:\nSe em 7 dias você não sentir nenhuma diferença — no inchaço, na energia, na saciedade — devolvemos 100% do seu dinheiro. Sem perguntas. Sem burocracia. Risco zero.`,
+    suggestions: ['Como acesso após pagar?','E a garantia de 7 dias?','Quero garantir agora'],
     showCTA: true,
   },
   // Garantia
