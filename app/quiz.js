@@ -116,8 +116,9 @@ const TESTIMONIALS = [
   { name:"Mariana R.", age:"38", city:"São Paulo", text:"Eu era a louca do doce, sério. Depois de 3 dias na dieta a vontade simplesmente foi embora. Perdi 8kg sem sofrer.", result:"-8kg / 30 dias", stars:5, img:"/testimonials/prova1.png" },
   { name:"Cláudia F.", age:"45", city:"Belo Horizonte", text:"Tentei de tudo antes. Com o Protocolo, além de perder 12kg, minha inflamação sumiu. Tenho energia que não tinha aos 30.", result:"-12kg / 60 dias", stars:5, img:"/testimonials/prova2.png" },
   { name:"Patrícia M.", age:"52", city:"Rio de Janeiro", text:"Com 52 anos achava impossível. O app me guiou dia a dia com receitas fáceis. Perdi 6kg e desinchei completamente.", result:"-6kg / 21 dias", stars:5, img:"/testimonials/prova3.png" },
-  { name:"Renata S.", age:"41", city:"Curitiba", text:"A parte do GLP-1 me convenceu. Meu corpo produz saciedade naturalmente agora. Emagreci 10kg sem sofrer.", result:"-10kg / 45 dias", stars:5 },
-  { name:"Fernanda L.", age:"36", city:"Salvador", text:"Voltei a caber nas minhas roupas de 5 anos atrás. E o melhor: sem academia, só com alimentação e os exercícios do app.", result:"-7kg / 30 dias", stars:5 },
+  { name:"Renata S.", age:"41", city:"Curitiba", text:"A parte do GLP-1 me convenceu. Meu corpo produz saciedade naturalmente agora. Emagreci 10kg sem sofrer.", result:"-10kg / 45 dias", stars:5, img:"/testimonials/prova4.png" },
+  { name:"Fernanda L.", age:"36", city:"Salvador", text:"Voltei a caber nas minhas roupas de 5 anos atrás. E o melhor: sem academia, só com alimentação e os exercícios do app.", result:"-7kg / 30 dias", stars:5, img:"/testimonials/prova5.jpg" },
+  { name:"Juliana C.", age:"44", city:"Porto Alegre", text:"Achei que era mais uma dieta da moda. Me enganei. No 7º dia já não sentia mais aquela fome ansiosa. Perdi 9kg em 5 semanas.", result:"-9kg / 35 dias", stars:5, img:"/testimonials/prova6.webp" },
 ];
 
 /* ══════════════════════
