@@ -727,48 +727,60 @@ function Landing({ onStart }) {
   return (
     <div className="landing-wrap">
 
-      {/* Fonte da matéria */}
+      {/* Tag de fonte — matéria real */}
       <div className="landing-source">
         <span className="landing-source-dot"/>
-        <span>Matéria publicada no <strong>UOL VivaBem</strong> · Nov 2025</span>
+        <span>Notícia verificada · <strong>UOL VivaBem</strong> · Nov 2025</span>
       </div>
 
-      {/* Headline estilo manchete */}
+      {/* Headline idêntica ao título da matéria */}
       <h1 className="hero-title">
-        Chef Henrique Fogaça revela como <span className="hl-accent">secou 17kg</span> comendo <span className="hl">carne, ovos e queijo</span> — sem passar fome
+        Fogaça diz ter secado <span className="hl-accent">17 kg</span> com <span className="hl">'dieta da selva'</span>: funciona? Há riscos?
       </h1>
 
-      {/* Foto do Fogaça com legenda */}
+      {/* Card estilo matéria com foto */}
       <div className="fogaca-card">
-        <img src="/fogaca.webp" alt="Henrique Fogaça antes e depois da Dieta da Selva" className="fogaca-img" />
+        <img src="/fogaca.webp" alt="Henrique Fogaça — Dieta da Selva" className="fogaca-img" />
         <div className="fogaca-caption">
-          <span className="fogaca-caption-tag">📰 UOL VivaBem</span>
-          <p>"Emagreci 17kg em 3 meses comendo o que eu amo. Carne, gordura, proteína. Sem contar caloria, sem passar fome."</p>
-          <span className="fogaca-caption-name">— Henrique Fogaça, chef e empresário</span>
+          <div className="fogaca-caption-header">
+            <span className="fogaca-caption-tag">📰 UOL VivaBem</span>
+            <span className="fogaca-caption-date">26/11/2025</span>
+          </div>
+          <p>"O chef parou de comer carboidratos e passou a comer mais carne e gordura. O peso caiu rápido. Especialistas explicam como funciona e quais são os cuidados."</p>
         </div>
       </div>
 
-      {/* Subtítulo explicativo */}
-      <p className="hero-sub">
-        O método usado por Fogaça — chamado <strong style={{color:"#A8D08D"}}>Dieta da Selva</strong> — chegou ao Brasil com força total. Baseada na alimentação ancestral e carnívora, a dieta elimina inflamação, regula hormônios e acelera a queima de gordura <em>sem restrição de quantidade.</em>
-      </p>
+      {/* O que o artigo diz — estilo lead de matéria */}
+      <div className="landing-article-block">
+        <p className="landing-article-lead">
+          O chef Henrique Fogaça afirma ter perdido <strong>17 kg</strong> com a "dieta da selva" — uma alimentação baseada em <strong>carnes, ovos, queijos e laticínios</strong>, com quase nenhum carboidrato.
+        </p>
+        <p className="landing-article-body">
+          Segundo o próprio Fogaça, ele parou de comer carboidratos e passou a priorizar proteína animal e gordura boa. O resultado: o peso caiu rápido, a energia aumentou e a fome ansiosa desapareceu.
+        </p>
+      </div>
 
-      {/* Números de prova */}
+      {/* Números */}
       <div className="proof-row">
-        <div className="proof-item"><span className="proof-num">17kg</span><span className="proof-lbl">eliminados por Fogaça</span></div>
+        <div className="proof-item"><span className="proof-num">17kg</span><span className="proof-lbl">perdidos por Fogaça</span></div>
         <div className="proof-div"/>
         <div className="proof-item"><span className="proof-num">3 meses</span><span className="proof-lbl">de protocolo</span></div>
         <div className="proof-div"/>
         <div className="proof-item"><span className="proof-num">+10mil</span><span className="proof-lbl">mulheres no método</span></div>
       </div>
 
-      {/* Bullets do método */}
+      {/* Divisor */}
+      <div className="landing-divider">
+        <span>O método adaptado para mulheres acima de 30</span>
+      </div>
+
+      {/* Bullets */}
       <div className="landing-bullets">
         {[
-          ['🥩','Come carne, ovos, queijo e gordura boa'],
-          ['🚫','Sem contar caloria, sem passar fome'],
-          ['⚡','Energia alta desde a primeira semana'],
-          ['📱','App guia você dia a dia nos 21 dias'],
+          ['🥩','Carne, ovos, queijo e gordura boa — sem restrição de quantidade'],
+          ['🚫','Zero carboidrato processado — sem contar caloria, sem passar fome'],
+          ['⚡','Energia sobe na 1ª semana enquanto o peso cai'],
+          ['📱','App com plano de 21 dias guia você dia a dia'],
         ].map(([e,t],i)=>(
           <div key={i} className="landing-bullet">
             <span className="landing-bullet-em">{e}</span>
@@ -777,7 +789,7 @@ function Landing({ onStart }) {
         ))}
       </div>
 
-      {/* CTA */}
+      {/* CTA principal */}
       <button className="cta" onClick={onStart}>Descobrir se funciona para mim →</button>
       <p className="micro">⏱️ Análise gratuita em 2 minutos • Resultado personalizado</p>
 
@@ -1378,17 +1390,25 @@ const CSS = `
 
 .hero-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1.25;color:#F2F0E8;margin-bottom:22px}
 
-.fogaca-card{margin:0 auto 24px;max-width:480px;border-radius:20px;overflow:hidden;border:1px solid rgba(140,179,105,0.15);box-shadow:0 8px 40px rgba(0,0,0,0.4)}
-.fogaca-img{width:100%;display:block;object-fit:cover;max-height:340px}
-.fogaca-caption{background:#0E1409;padding:14px 16px;text-align:left}
-.fogaca-caption-tag{display:inline-block;font-size:10px;font-weight:700;color:#8CB369;letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px}
-.fogaca-caption p{font-size:14px;color:#D4D9CC;line-height:1.6;font-style:italic;margin-bottom:7px}
-.fogaca-caption-name{font-size:11px;color:#5C6652;font-weight:600}
+.fogaca-card{margin:0 auto 22px;max-width:480px;border-radius:18px;overflow:hidden;border:1px solid rgba(140,179,105,0.15);box-shadow:0 8px 40px rgba(0,0,0,0.5)}
+.fogaca-img{width:100%;display:block;object-fit:cover;max-height:320px}
+.fogaca-caption{background:#0B0F07;padding:13px 15px;text-align:left}
+.fogaca-caption-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.fogaca-caption-tag{font-size:10px;font-weight:700;color:#8CB369;letter-spacing:.06em;text-transform:uppercase}
+.fogaca-caption-date{font-size:10px;color:#354030}
+.fogaca-caption p{font-size:13px;color:#C8D4B8;line-height:1.6;font-style:italic}
 
-.landing-bullets{display:flex;flex-direction:column;gap:8px;margin:0 auto 28px;max-width:400px;text-align:left}
-.landing-bullet{display:flex;align-items:center;gap:10px;background:rgba(140,179,105,0.05);border:1px solid rgba(140,179,105,0.1);border-radius:12px;padding:10px 14px}
-.landing-bullet-em{font-size:18px;flex-shrink:0}
-.landing-bullet-txt{font-size:14px;color:#C8D4B8;line-height:1.4}
+.landing-article-block{max-width:480px;margin:0 auto 24px;text-align:left;background:rgba(140,179,105,0.04);border:1px solid rgba(140,179,105,0.1);border-left:3px solid #8CB369;border-radius:0 12px 12px 0;padding:14px 16px}
+.landing-article-lead{font-size:15px;color:#D4D9CC;line-height:1.65;margin-bottom:10px}
+.landing-article-body{font-size:13px;color:#9CA88E;line-height:1.65}
+
+.landing-divider{display:flex;align-items:center;gap:10px;margin:0 auto 18px;max-width:480px;color:#5C6652;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.landing-divider::before,.landing-divider::after{content:'';flex:1;height:1px;background:rgba(140,179,105,0.1)}
+
+.landing-bullets{display:flex;flex-direction:column;gap:7px;margin:0 auto 28px;max-width:480px;text-align:left}
+.landing-bullet{display:flex;align-items:flex-start;gap:10px;background:rgba(140,179,105,0.04);border:1px solid rgba(140,179,105,0.1);border-radius:12px;padding:10px 14px}
+.landing-bullet-em{font-size:18px;flex-shrink:0;margin-top:1px}
+.landing-bullet-txt{font-size:13px;color:#C8D4B8;line-height:1.5}
 .hl{color:#A8D08D}.hl-accent{color:#E8A838}
 .hero-sub{font-size:16px;line-height:1.7;color:#9CA88E;margin-bottom:28px;max-width:520px;margin-left:auto;margin-right:auto}
 .proof-row{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:32px;flex-wrap:wrap}
