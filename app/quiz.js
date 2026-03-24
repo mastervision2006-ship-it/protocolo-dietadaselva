@@ -235,7 +235,7 @@ export default function Quiz() {
         {screen === "edu-science" && <EduScience name={userName} onNext={goNext("social-proof")} />}
         {screen === "social-proof" && <SocialProof name={userName} onNext={startAnalysis} />}
         {screen === "analyzing" && <Analyzing progress={analysisProgress} name={userName} />}
-        {screen === "diagnosis" && <Diagnosis name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} frustrationText={frustrationText} onNext={goNext("result")} />}
+        {screen === "diagnosis" && <Diagnosis name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} onNext={goNext("result")} />}
         {screen === "result" && <Result name={userName} weightToLose={weightToLose} timeWeeks={timeWeeks} bmi={bmi} bmiCat={getBmiCategory(bmi)} />}
       </div>
       {screen === "result" && <SelvaChat name={userName} />}
@@ -1022,40 +1022,226 @@ function Analyzing({ progress, name }) {
 }
 
 /* ══════════════════════
-   9. DIAGNOSIS
+   9. DIAGNOSIS ENGINE
    ══════════════════════ */
-function Diagnosis({ name, bmi, bmiCat, weightToLose, timeWeeks, answers, frustrationText, onNext }) {
+function buildDiagnosis(answers, bmi, bmiCat, weightToLose, timeWeeks) {
+  const { age, symptoms, meals, frustration, commitment, ready, goal } = answers;
+
+  // ── Perfil Metabólico ──────────────────────────────────────
+  let perfil, perfilEmoji, perfilColor, perfilDesc;
+  if (age === '25-34') {
+    if (symptoms === 'ansiedade') {
+      perfil = 'Compulsão e Inflamação Silenciosa'; perfilEmoji = '🧠'; perfilColor = '#E8A838';
+      perfilDesc = 'Seu corpo sinaliza estresse metabólico via compulsão alimentar. O cortisol elevado bloqueia a queima de gordura e cria ciclos de fome emocional que sabotam qualquer dieta convencional.';
+    } else if (symptoms === 'inchaço') {
+      perfil = 'Intolerância a Carboidratos'; perfilEmoji = '💧'; perfilColor = '#8CB369';
+      perfilDesc = 'O inchaço constante indica que seu corpo não processa bem carboidratos. A inflamação intestinal retém líquido e disfarça a perda de gordura real nos primeiros dias.';
+    } else if (symptoms === 'inflamação') {
+      perfil = 'Inflamação Sistêmica Precoce'; perfilEmoji = '🔥'; perfilColor = '#E85D4A';
+      perfilDesc = 'As dores articulares nessa faixa etária quase sempre têm origem alimentar — glúten, açúcar e óleos vegetais inflamam as articulações. A dieta ancestral é o antiinflamatório mais potente.';
+    } else {
+      perfil = 'Resistência Metabólica Inicial'; perfilEmoji = '⚡'; perfilColor = '#E8A838';
+      perfilDesc = 'Seu metabolismo está nos primeiros sinais de resistência — ainda responsivo, mas já mostrando que dietas convencionais não funcionam mais. É o momento ideal para agir.';
+    }
+  } else if (age === '35-44') {
+    if (symptoms === 'cansaço') {
+      perfil = 'Fadiga Metabólica + Desequilíbrio Hormonal'; perfilEmoji = '🔋'; perfilColor = '#E85D4A';
+      perfilDesc = 'Entre 35-44 anos, a queda gradual de estrogênio reduz a eficiência celular. O cansaço que você sente não é preguiça — é bioquímica. Proteína animal e gordura boa restauram essa energia.';
+    } else if (symptoms === 'inchaço') {
+      perfil = 'Inflamação Crônica de Baixo Grau'; perfilEmoji = '🔥'; perfilColor = '#E85D4A';
+      perfilDesc = 'O inchaço nessa faixa quase sempre indica inflamação sistêmica relacionada à alimentação. Eliminar carboidratos inflamatórios produz desinchamento visível em 48-72h.';
+    } else if (symptoms === 'ansiedade') {
+      perfil = 'Disrupção do Eixo Intestino-Cérebro'; perfilEmoji = '🧠'; perfilColor = '#E8A838';
+      perfilDesc = '90% da serotonina é produzida no intestino. A ansiedade alimentar nessa fase indica que a microbiota está desequilibrada — a dieta ancestral reconstrói esse eixo naturalmente.';
+    } else {
+      perfil = 'Transição Metabólica Hormonal'; perfilEmoji = '🌊'; perfilColor = '#E8A838';
+      perfilDesc = 'Seu metabolismo está em transição — os hormônios começam a reduzir e a insulina se torna menos eficiente. A janela para reverter esse processo com dieta é agora.';
+    }
+  } else if (age === '45-54') {
+    if (symptoms === 'inflamação') {
+      perfil = 'Inflamação Pós-Hormonal + Resistência à Insulina'; perfilEmoji = '🛡️'; perfilColor = '#E85D4A';
+      perfilDesc = 'Com a queda do estrogênio, o corpo migra gordura para a região abdominal e aumenta a inflamação articular. A dieta carnívora é clinicamente reconhecida como reversora desse padrão.';
+    } else {
+      perfil = 'Metabolismo Pós-Hormonal Adaptativo'; perfilEmoji = '🛡️'; perfilColor = '#E8A838';
+      perfilDesc = 'Nessa fase o corpo exige mais proteína e gordura boa para manter massa muscular, densidade óssea e energia. O protocolo ancestral foi feito exatamente para esse metabolismo.';
+    }
+  } else {
+    perfil = 'Metabolismo de Maturidade — Proteína é Prioridade'; perfilEmoji = '💎'; perfilColor = '#A8D08D';
+    perfilDesc = 'Acima dos 55, cada grama de proteína animal conta para preservar músculos, ossos e cognição. O protocolo carnívoro entrega a maior densidade nutricional possível por refeição.';
+  }
+
+  // ── Padrão Alimentar ──────────────────────────────────────
+  const padraoMap = {
+    carboidratos: { titulo: 'Dependência de Carboidratos', desc: 'Pão, massa e doce ativam os mesmos receptores de dopamina que substâncias viciantes. Seu cérebro foi treinado a precisar deles — não é falta de força de vontade, é neurologia.' },
+    pula:         { titulo: 'Ciclo de Privação e Compensação', desc: 'Pular refeições eleva o cortisol e ativa modo de emergência metabólica. Quando come, o corpo armazena tudo como gordura por "segurança". Esse ciclo sabota qualquer tentativa de emagrecimento.' },
+    tenta:        { titulo: 'Inconsistência Alimentar', desc: 'Você sabe o que é saudável mas não consegue manter. Isso acontece porque dietas convencionais são biologicamente incompatíveis com o cérebro — geram fome, irritação e abandono previsível.' },
+    descontrole:  { titulo: 'Compulsão por Deficit de Saciedade', desc: 'Comer sem controle quase sempre indica que o corpo não recebe os nutrientes certos. Quando você come proteína animal + gordura boa, o hormônio GLP-1 sinaliza saciedade real — e a compulsão some.' },
+  };
+  const padrao = padraoMap[meals] || padraoMap.tenta;
+
+  // ── Principal Bloqueador ──────────────────────────────────
+  const bloqueadorMap = {
+    dietas:  { titulo: 'Histórico de Tentativas Frustradas', desc: 'Cada dieta que falhou não foi sua culpa — foi o método. Dietas que restringem quantidade sem resolver a fome são biologicamente insustentáveis.', solucao: 'O protocolo resolve a raiz: remove a fome. Quando a fome desaparece, a dieta deixa de ser um esforço.' },
+    sanfona: { titulo: 'Efeito Sanfona Recorrente', desc: 'O efeito sanfona acontece quando a dieta perde músculo junto com gordura. Sem músculo, o metabolismo cai, e o peso volta com juros.', solucao: 'A proteína animal em abundância preserva cada grama de músculo enquanto o corpo elimina gordura.' },
+    fome:    { titulo: 'Hipersensibilidade à Restrição', desc: 'Seu corpo aprendeu que restrição = perigo, e dispara fome compulsiva para se proteger. Esse mecanismo é inconsciente e mais forte que a força de vontade.', solucao: 'Comendo até a saciedade — carne, ovos, gordura — o alarme de fome é desativado na raiz.' },
+    tempo:   { titulo: 'Barreira de Rotina e Complexidade', desc: 'Dietas com múltiplos ingredientes e preparo longo são incompatíveis com a vida real. A complexidade é o principal motivo de abandono.', solucao: 'As receitas do protocolo levam 10-20 minutos e usam no máximo 4 ingredientes. Simples por design.' },
+  };
+  const bloqueador = bloqueadorMap[frustration] || bloqueadorMap.dietas;
+
+  // ── Previsão Semana 1 ─────────────────────────────────────
+  const semana1Map = {
+    inchaço:    { dia: 'Dias 2-3', evento: 'Desinchamento visível — até 2kg de retenção eliminados' },
+    cansaço:    { dia: 'Dia 3-4',  evento: 'Energia notável — o corpo passa a usar gordura como combustível' },
+    ansiedade:  { dia: 'Dia 4-5',  evento: 'Fome ansiosa reduz drasticamente — GLP-1 ativado' },
+    inflamação: { dia: 'Dia 5-7',  evento: 'Alívio de dores articulares e sensação de leveza' },
+  };
+  const semana1 = semana1Map[symptoms] || { dia: 'Dias 2-4', evento: 'Primeiros resultados visíveis de desinchamento e energia' };
+
+  // ── Score de Compatibilidade ──────────────────────────────
+  let score = 72;
+  if (goal === 'todas') score += 9;
+  else if (goal === 'peso' || goal === 'desinchar') score += 7;
+  if (commitment === 'hoje') score += 9;
+  else if (commitment === 'tentaria') score += 5;
+  if (ready === 'pronta') score += 7;
+  else if (ready === 'comprovado') score += 4;
+  if (meals === 'carboidratos') score += 6;
+  if (meals === 'descontrole') score += 4;
+  if (symptoms === 'inchaço' || symptoms === 'ansiedade') score += 4;
+  score = Math.min(99, score);
+
+  // ── Urgência por Idade ────────────────────────────────────
+  const urgenciaMap = { '55+': ['ALTA','#E85D4A'], '45-54': ['ALTA','#E85D4A'], '35-44': ['MODERADA-ALTA','#E8A838'], '25-34': ['MODERADA','#8CB369'] };
+  const [urgencia, urgenciaColor] = urgenciaMap[age] || ['MODERADA','#8CB369'];
+
+  // ── Protocolo recomendado por perfil ─────────────────────
+  const protocoloMap = {
+    carboidratos: 'Protocolo Detox de Carboidratos — eliminação gradual em 3 fases',
+    pula:         'Protocolo de Estruturação de Refeições — 3 refeições fixas com proteína',
+    tenta:        'Protocolo de Ancoragem de Hábitos — sistema de check-in diário',
+    descontrole:  'Protocolo de Saciedade — foco em GLP-1 e controle natural do apetite',
+  };
+  const protocolo = protocoloMap[meals] || 'Protocolo Dieta da Selva 21 Dias';
+
+  return { perfil, perfilEmoji, perfilColor, perfilDesc, padrao, bloqueador, semana1, score, urgencia, urgenciaColor, protocolo };
+}
+
+function Diagnosis({ name, bmi, bmiCat, weightToLose, timeWeeks, answers, onNext }) {
+  const d = buildDiagnosis(answers, bmi, bmiCat, weightToLose, timeWeeks);
+
   return (
-    <div style={{paddingTop:"24px"}}>
-      <div style={{textAlign:"center",marginBottom:"24px"}}>
-        <div className="badge" style={{background:"rgba(232,168,56,0.1)",borderColor:"rgba(232,168,56,0.25)",color:"#E8A838"}}>📋 DIAGNÓSTICO EXCLUSIVO</div>
-        <h2 className="screen-title" style={{fontSize:"28px"}}>{name}, aqui está seu diagnóstico</h2>
+    <div className="diag-wrap">
+
+      {/* Header */}
+      <div style={{textAlign:'center',marginBottom:'24px'}}>
+        <div className="badge" style={{background:'rgba(232,168,56,0.08)',borderColor:'rgba(232,168,56,0.22)',color:'#E8A838',marginBottom:'14px'}}>
+          📋 LAUDO DIAGNÓSTICO PERSONALIZADO
+        </div>
+        <h2 className="screen-title" style={{fontSize:'26px',marginBottom:'6px'}}>{name}, seu diagnóstico está pronto</h2>
+        <p style={{fontSize:'13px',color:'#5C6652'}}>Gerado com base nas suas {Object.keys(answers).length} respostas + dados biométricos</p>
       </div>
 
-      <div className="diag-card">
-        <div className="diag-row"><span className="diag-label">Seu IMC atual</span><span className="diag-value" style={{color:bmiCat.color}}>{bmi} — {bmiCat.label}</span></div>
-        <div className="diag-row"><span className="diag-label">Meta de eliminação</span><span className="diag-value" style={{color:"#E8A838"}}>{weightToLose.toFixed(1)} kg</span></div>
-        <div className="diag-row"><span className="diag-label">Tempo estimado</span><span className="diag-value" style={{color:"#A8D08D"}}>{timeWeeks} semanas</span></div>
-        <div className="diag-row"><span className="diag-label">Compatibilidade</span><span className="diag-value" style={{color:"#8CB369"}}>97% com o Protocolo</span></div>
+      {/* Perfil Metabólico */}
+      <div className="diag-perfil-card" style={{borderColor: d.perfilColor+'33'}}>
+        <div className="diag-perfil-header">
+          <span style={{fontSize:'28px'}}>{d.perfilEmoji}</span>
+          <div>
+            <p style={{fontSize:'10px',fontWeight:'700',color:'#5C6652',letterSpacing:'.08em',textTransform:'uppercase',marginBottom:'3px'}}>Perfil Metabólico Identificado</p>
+            <p style={{fontSize:'15px',fontWeight:'800',color:d.perfilColor,lineHeight:'1.2'}}>{d.perfil}</p>
+          </div>
+        </div>
+        <p style={{fontSize:'13px',color:'#9CA88E',lineHeight:'1.7',marginTop:'10px'}}>{d.perfilDesc}</p>
       </div>
 
-      <div className="diag-analysis">
-        <h3 style={{fontSize:"16px",color:"#F2F0E8",marginBottom:"12px"}}>📝 Análise personalizada para {name}:</h3>
-        <p style={{fontSize:"14px",color:"#9CA88E",lineHeight:"1.8"}}>
-          Com base nas suas respostas, identificamos que você é uma mulher {answers.frustration && frustrationText[answers.frustration] ? frustrationText[answers.frustration] : "que busca uma transformação real"}. 
-          Seu IMC de <strong style={{color:bmiCat.color}}>{bmi}</strong> indica <strong>{bmiCat.label.toLowerCase()}</strong>, e seu objetivo de eliminar <strong style={{color:"#E8A838"}}>{weightToLose.toFixed(1)}kg</strong> é totalmente alcançável com o Protocolo Dieta da Selva.
-        </p>
-        <p style={{fontSize:"14px",color:"#9CA88E",lineHeight:"1.8",marginTop:"12px"}}>
-          A alta ingestão de <strong style={{color:"#A8D08D"}}>proteínas e gorduras boas</strong> do protocolo vai estimular seu GLP-1 naturalmente, eliminando a fome e a compulsão. Seu corpo vai começar a <strong>queimar gordura como combustível</strong> — provavelmente já nas primeiras 72 horas.
-        </p>
-        <p style={{fontSize:"14px",color:"#9CA88E",lineHeight:"1.8",marginTop:"12px"}}>
-          Estimamos que em <strong style={{color:"#A8D08D"}}>{timeWeeks} semanas</strong> você pode atingir seu peso desejado, perdendo em média <strong>1 a 1,2kg por semana</strong> de forma saudável e sustentável — sem fome, sem academia obrigatória e comendo comidas que você ama.
+      {/* Métricas */}
+      <div className="diag-metricas">
+        <div className="diag-metrica">
+          <span className="diag-metrica-val" style={{color:bmiCat.color}}>{bmi}</span>
+          <span className="diag-metrica-lbl">IMC · {bmiCat.label}</span>
+        </div>
+        <div className="diag-metrica">
+          <span className="diag-metrica-val" style={{color:'#E8A838'}}>{weightToLose.toFixed(1)}kg</span>
+          <span className="diag-metrica-lbl">a eliminar</span>
+        </div>
+        <div className="diag-metrica">
+          <span className="diag-metrica-val" style={{color:'#A8D08D'}}>{timeWeeks}sem</span>
+          <span className="diag-metrica-lbl">estimado</span>
+        </div>
+        <div className="diag-metrica">
+          <span className="diag-metrica-val" style={{color:'#8CB369'}}>{d.score}%</span>
+          <span className="diag-metrica-lbl">compatível</span>
+        </div>
+      </div>
+
+      {/* Urgência */}
+      <div className="diag-urgencia" style={{borderColor:d.urgenciaColor+'44',background:d.urgenciaColor+'0D'}}>
+        <span style={{fontSize:'12px',fontWeight:'800',color:d.urgenciaColor,letterSpacing:'.06em'}}>⚠ PRIORIDADE {d.urgencia}</span>
+        <p style={{fontSize:'12px',color:'#9CA88E',marginTop:'3px'}}>
+          {d.urgencia === 'ALTA'
+            ? 'Seu perfil indica que cada mês sem agir torna a perda mais difícil. Iniciar agora maximiza os resultados.'
+            : 'Seu metabolismo ainda responde bem à intervenção. Iniciar agora garante resultados mais rápidos.'}
         </p>
       </div>
 
-      <button className="cta" onClick={onNext} style={{width:"100%",marginTop:"24px"}}>
-        Ver como alcançar esse resultado →
+      {/* Padrão Alimentar */}
+      <div className="diag-section">
+        <div className="diag-section-header">
+          <span className="diag-section-icon">🍽️</span>
+          <span className="diag-section-title">Padrão Alimentar Identificado</span>
+        </div>
+        <p style={{fontSize:'13px',fontWeight:'700',color:'#F2F0E8',marginBottom:'6px'}}>{d.padrao.titulo}</p>
+        <p style={{fontSize:'13px',color:'#9CA88E',lineHeight:'1.7'}}>{d.padrao.desc}</p>
+      </div>
+
+      {/* Bloqueador + Solução */}
+      <div className="diag-section">
+        <div className="diag-section-header">
+          <span className="diag-section-icon">🔒</span>
+          <span className="diag-section-title">Principal Bloqueador</span>
+        </div>
+        <p style={{fontSize:'13px',fontWeight:'700',color:'#F2F0E8',marginBottom:'6px'}}>{d.bloqueador.titulo}</p>
+        <p style={{fontSize:'13px',color:'#9CA88E',lineHeight:'1.7',marginBottom:'10px'}}>{d.bloqueador.desc}</p>
+        <div className="diag-solucao">
+          <span style={{fontSize:'11px',fontWeight:'800',color:'#8CB369',letterSpacing:'.06em'}}>✓ COMO O PROTOCOLO RESOLVE</span>
+          <p style={{fontSize:'13px',color:'#A8D08D',lineHeight:'1.6',marginTop:'4px'}}>{d.bloqueador.solucao}</p>
+        </div>
+      </div>
+
+      {/* Previsão Semana 1 */}
+      <div className="diag-section">
+        <div className="diag-section-header">
+          <span className="diag-section-icon">📅</span>
+          <span className="diag-section-title">O que esperar na 1ª semana</span>
+        </div>
+        <div className="diag-timeline">
+          {[
+            { dia:'Dia 1', evento:'Primeiras refeições — carne, ovos e gordura. Sem fome entre refeições.' },
+            { dia: d.semana1.dia, evento: d.semana1.evento },
+            { dia:'Dia 7', evento:'Check-in do Desafio — peso, medidas e energia avaliados no app.' },
+            { dia:'Semana 3', evento:`Meta: eliminar ${(weightToLose * 0.35).toFixed(1)}kg e atingir ${Math.round(d.score * 0.98)}% do seu potencial metabólico.` },
+          ].map((t,i)=>(
+            <div key={i} className="diag-timeline-item">
+              <div className="diag-tl-dot"/>
+              <div>
+                <span className="diag-tl-dia">{t.dia}</span>
+                <p className="diag-tl-evento">{t.evento}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Protocolo Recomendado */}
+      <div className="diag-protocolo">
+        <p style={{fontSize:'10px',fontWeight:'700',color:'#5C6652',letterSpacing:'.08em',textTransform:'uppercase',marginBottom:'6px'}}>Protocolo Recomendado para {name}</p>
+        <p style={{fontSize:'14px',fontWeight:'800',color:'#F2F0E8',marginBottom:'4px'}}>🌿 {d.protocolo}</p>
+        <p style={{fontSize:'12px',color:'#9CA88E'}}>21 dias · App com guia diário · IA disponível 24h · Garantia de 7 dias</p>
+      </div>
+
+      <button className="cta" onClick={onNext} style={{width:'100%',marginTop:'20px'}}>
+        Ver como iniciar o protocolo →
       </button>
+      <p className="micro" style={{marginTop:'10px'}}>🔒 Diagnóstico exclusivo gerado para {name} com base nas suas respostas</p>
     </div>
   );
 }
@@ -1500,6 +1686,28 @@ const CSS = `
 .diag-label{font-size:14px;color:#9CA88E}.diag-value{font-size:15px;font-weight:700}
 
 .diag-analysis{padding:24px;border-radius:16px;border:1px solid rgba(140,179,105,0.1);background:rgba(18,24,14,0.7);margin-bottom:8px}
+
+.diag-wrap{padding-top:20px;max-width:520px;margin:0 auto}
+.diag-perfil-card{border-radius:16px;border:1px solid;background:rgba(12,16,9,0.9);padding:16px;margin-bottom:14px}
+.diag-perfil-header{display:flex;align-items:flex-start;gap:12px}
+.diag-metricas{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.diag-metrica{background:rgba(12,16,9,0.9);border:1px solid rgba(140,179,105,0.1);border-radius:12px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;gap:3px}
+.diag-metrica-val{font-size:18px;font-weight:800;font-family:'Playfair Display',serif;line-height:1}
+.diag-metrica-lbl{font-size:9px;color:#5C6652;font-weight:500;line-height:1.2}
+.diag-urgencia{border-radius:12px;border:1px solid;padding:10px 14px;margin-bottom:14px;text-align:center}
+.diag-section{background:rgba(12,16,9,0.85);border:1px solid rgba(140,179,105,0.1);border-radius:14px;padding:14px;margin-bottom:10px}
+.diag-section-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(140,179,105,0.07)}
+.diag-section-icon{font-size:16px}
+.diag-section-title{font-size:11px;font-weight:700;color:#5C6652;letter-spacing:.07em;text-transform:uppercase}
+.diag-solucao{background:rgba(140,179,105,0.06);border:1px solid rgba(140,179,105,0.15);border-radius:10px;padding:10px 12px}
+.diag-timeline{display:flex;flex-direction:column;gap:0}
+.diag-timeline-item{display:flex;gap:12px;position:relative;padding-bottom:14px}
+.diag-timeline-item:last-child{padding-bottom:0}
+.diag-timeline-item:not(:last-child)::before{content:'';position:absolute;left:7px;top:16px;bottom:0;width:1px;background:rgba(140,179,105,0.15)}
+.diag-tl-dot{width:14px;height:14px;border-radius:50%;background:rgba(140,179,105,0.15);border:2px solid rgba(140,179,105,0.35);flex-shrink:0;margin-top:2px}
+.diag-tl-dia{font-size:10px;font-weight:700;color:#E8A838;letter-spacing:.04em;display:block;margin-bottom:2px}
+.diag-tl-evento{font-size:12px;color:#9CA88E;line-height:1.5}
+.diag-protocolo{background:linear-gradient(135deg,rgba(26,32,16,.9),rgba(12,16,9,.9));border:1px solid rgba(140,179,105,0.2);border-radius:16px;padding:16px;text-align:center;margin-top:6px}
 
 .section-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;text-align:center;color:#F2F0E8;margin-bottom:24px}
 
