@@ -325,19 +325,16 @@ function getSelvaResponse(text, name) {
 
 function SelvaChat({ name }) {
   const firstName = name?.split(' ')[0] ?? '';
-  const [open, setOpen]       = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [msgs, setMsgs]       = useState([]);
-  const [input, setInput]     = useState('');
-  const [typing, setTyping]   = useState(false);
-  const [unread, setUnread]   = useState(false);
+  const [open, setOpen]     = useState(false);
+  const [msgs, setMsgs]     = useState([]);
+  const [input, setInput]   = useState('');
+  const [typing, setTyping] = useState(false);
   const endRef   = useRef(null);
   const inputRef = useRef(null);
 
-  useEffect(() => { const t = setTimeout(() => { setVisible(true); setUnread(true); }, 6000); return () => clearTimeout(t); }, []);
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [msgs, typing]);
   useEffect(() => {
-    if (open) { setUnread(false); setTimeout(() => inputRef.current?.focus(), 350); }
+    if (open) { setTimeout(() => inputRef.current?.focus(), 350); }
   }, [open]);
   useEffect(() => {
     if (!open || msgs.length > 0) return;
@@ -359,15 +356,12 @@ function SelvaChat({ name }) {
     }, 700 + Math.random() * 900);
   }
 
-  if (!visible) return null;
-
   return (
     <>
       {!open && (
         <button className="s-fab" onClick={() => setOpen(true)} aria-label="Chat com Selva IA">
           <span className="s-fab-icon">🌿</span>
           <span className="s-fab-label">Tirar dúvidas</span>
-          {unread && <span className="s-fab-dot" />}
         </button>
       )}
       {open && (
