@@ -268,10 +268,10 @@ function AppDemo({ onComprar }) {
 
   const diaData = PLANO_S1.find(d => d.dia === diaPlano) ?? PLANO_S1[0];
 
-  const IcoHome  = () => React.createElement('svg',{width:'18',height:'18',viewBox:'0 0 24 24',fill:'none'},React.createElement('path',{d:'M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9',stroke:'currentColor',strokeWidth:'1.8',strokeLinecap:'round',strokeLinejoin:'round'}));
-  const IcoPlano = () => React.createElement('svg',{width:'18',height:'18',viewBox:'0 0 24 24',fill:'none'},React.createElement('rect',{x:'3',y:'4',width:'18',height:'18',rx:'2',stroke:'currentColor',strokeWidth:'1.8'}),React.createElement('path',{d:'M3 9h18M8 3v3M16 3v3M8 14h4M8 17h6',stroke:'currentColor',strokeWidth:'1.8',strokeLinecap:'round'}));
-  const IcoDesaf = () => React.createElement('svg',{width:'18',height:'18',viewBox:'0 0 24 24',fill:'none'},React.createElement('path',{d:'M12 2C9 7 6 9 8 14c1 2.5 3 4 4 4-2-3-1-6 1-8 0 3 2 5 3 7 1-2 1-5-1-7 2 1 4 4 3 7 2-2 4-6 1-10C17 4 14 2 12 2z',stroke:'currentColor',strokeWidth:'1.8',strokeLinecap:'round',strokeLinejoin:'round',fill:'none'}));
-  const IcoChat  = () => React.createElement('svg',{width:'18',height:'18',viewBox:'0 0 24 24',fill:'none'},React.createElement('path',{d:'M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z',stroke:'currentColor',strokeWidth:'1.8',strokeLinecap:'round',strokeLinejoin:'round'}));
+  const IcoHome  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  const IcoPlano = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.8"/><path d="M3 9h18M8 3v3M16 3v3M8 14h4M8 17h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>;
+  const IcoDesaf = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C9 7 6 9 8 14c1 2.5 3 4 4 4-2-3-1-6 1-8 0 3 2 5 3 7 1-2 1-5-1-7 2 1 4 4 3 7 2-2 4-6 1-10C17 4 14 2 12 2z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  const IcoChat  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 
   return (
     <div className="demo-wrap">
@@ -404,7 +404,9 @@ function AppDemo({ onComprar }) {
                 </div>
                 <div className="app-bar" style={{marginBottom:'10px'}}><div className="app-bar-fill" style={{width:'0%'}}/></div>
                 <div className="app-days-grid">
-                  {Array.from({length:21},function(_,i){ return React.createElement('div',{key:i,className:'app-day'+(i===0?' app-day-today':'')},i===0?'●':i+1); })}
+                  {Array.from({length:21},(_,i)=>(
+                    <div key={i} className={`app-day${i===0?' app-day-today':''}`}>{i===0?'●':i+1}</div>
+                  ))}
                 </div>
               </div>
 
@@ -420,13 +422,13 @@ function AppDemo({ onComprar }) {
               </div>
 
               <div className="app-stats-row" style={{marginTop:'10px'}}>
-                {[['📅','0','Dias feitos'],['🔥','0','Sequência'],['⏳','21','Restam']].map(function(item,i){
-                  return React.createElement('div',{key:i,className:'app-card',style:{flex:1,textAlign:'center',padding:'8px 4px'}},
-                    React.createElement('div',{style:{fontSize:'16px',marginBottom:'3px'}},item[0]),
-                    React.createElement('p',{style:{fontSize:'16px',fontWeight:'800',color:'#F2F0E8',lineHeight:'1'}},item[1]),
-                    React.createElement('p',{style:{fontSize:'9px',color:'#9CA88E',marginTop:'2px'}},item[2])
-                  );
-                })}
+                {[['📅','0','Dias feitos'],['🔥','0','Sequência'],['⏳','21','Restam']].map(([e,v,l],i)=>(
+                  <div key={i} className="app-card" style={{flex:1,textAlign:'center',padding:'8px 4px'}}>
+                    <div style={{fontSize:'16px',marginBottom:'3px'}}>{e}</div>
+                    <p style={{fontSize:'16px',fontWeight:'800',color:'#F2F0E8',lineHeight:'1'}}>{v}</p>
+                    <p style={{fontSize:'9px',color:'#9CA88E',marginTop:'2px'}}>{l}</p>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -465,12 +467,12 @@ function AppDemo({ onComprar }) {
             {id:'plano',   Ic:IcoPlano, label:'Plano'},
             {id:'desafio', Ic:IcoDesaf, label:'Desafio'},
             {id:'chat',    Ic:IcoChat,  label:'Selva IA'},
-          ].map(function(n){
-            return React.createElement('button',{key:n.id,className:'pnav-btn'+(tab===n.id?' pnav-active':''),onClick:function(){setTab(n.id);}},
-              React.createElement(n.Ic),
-              React.createElement('span',{className:'pnav-label'},n.label)
-            );
-          })}
+          ].map(({id,Ic,label})=>(
+            <button key={id} className={`pnav-btn${tab===id?' pnav-active':''}`} onClick={()=>setTab(id)}>
+              <Ic/>
+              <span className="pnav-label">{label}</span>
+            </button>
+          ))}
         </div>
 
         <div className="phone-home-ind"/>
