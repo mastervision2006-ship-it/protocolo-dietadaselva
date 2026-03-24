@@ -247,106 +247,146 @@ export default function Quiz() {
 /* ══════════════════════
    APP DEMO — Interactive Preview
    ══════════════════════ */
-const DEMO_RECEITAS = [
-  {emoji:'🥚',nome:'Ovos mexidos com bacon',tag:'Café da manhã',tempo:'10 min'},
-  {emoji:'🥩',nome:'Picanha grelhada com manteiga',tag:'Almoço',tempo:'20 min'},
-  {emoji:'🍗',nome:'Frango na manteiga',tag:'Jantar',tempo:'25 min'},
-  {emoji:'🐟',nome:'Salmão com ervas frescas',tag:'Jantar',tempo:'20 min'},
-  {emoji:'🧀',nome:'Omelete de queijo cremoso',tag:'Café da manhã',tempo:'8 min'},
-  {emoji:'🦴',nome:'Costela na Laje — Exclusiva',tag:'Exclusiva',tempo:'3h',exclusiva:true},
-];
-const DEMO_TREINOS = [
-  {dia:1,titulo:'Ativação de Glúteos',tempo:'15 min',nivel:'Iniciante',emoji:'🍑'},
-  {dia:2,titulo:'Core e Abdômen',tempo:'12 min',nivel:'Iniciante',emoji:'💪'},
-  {dia:3,titulo:'Descanso Ativo',tempo:'20 min',nivel:'Leve',emoji:'🧘'},
-  {dia:4,titulo:'Membros Inferiores',tempo:'18 min',nivel:'Moderado',emoji:'🦵'},
-  {dia:5,titulo:'Corpo Inteiro HIIT',tempo:'15 min',nivel:'Intenso',emoji:'🔥'},
-  {dia:6,titulo:'Força + Resistência',tempo:'20 min',nivel:'Moderado',emoji:'⚡'},
+const PLANO_S1 = [
+  {dia:1,titulo:'Dia 1 — Ativação',subtitulo:'Iniciando o Protocolo',cafe:{emoji:'☀️',tipo:'Café da manhã',hora:'7h',titulo:'Ovos mexidos com bacon',descricao:'3 ovos + 3 fatias bacon + manteiga',calorias:420,proteinas:28},almoco:{emoji:'🥩',tipo:'Almoço',hora:'12h',titulo:'Picanha grelhada',descricao:'200g picanha + manteiga de alho',calorias:680,proteinas:52},lanche:{emoji:'🧀',tipo:'Lanche',hora:'15h',titulo:'Queijo coalho grelhado',descricao:'2 fatias + azeite',calorias:280,proteinas:18},jantar:{emoji:'🌙',tipo:'Jantar',hora:'19h',titulo:'Frango com manteiga de alho',descricao:'200g coxa + ervas finas',calorias:520,proteinas:48}},
+  {dia:2,titulo:'Dia 2 — Adaptação',subtitulo:'O corpo se ajusta',cafe:{emoji:'☀️',tipo:'Café da manhã',hora:'7h',titulo:'Omelete de queijo',descricao:'3 ovos + 50g queijo + manteiga',calorias:390,proteinas:30},almoco:{emoji:'🥩',tipo:'Almoço',hora:'12h',titulo:'Costelinha assada',descricao:'300g costelinha + alho',calorias:720,proteinas:48},lanche:{emoji:'🐟',tipo:'Lanche',hora:'15h',titulo:'Sardinha com azeite',descricao:'1 lata + azeite extra virgem',calorias:250,proteinas:22},jantar:{emoji:'🌙',tipo:'Jantar',hora:'19h',titulo:'Carne moída refogada',descricao:'200g patinho + manteiga',calorias:460,proteinas:44}},
+  {dia:3,titulo:'Dia 3 — Queima',subtitulo:'Cetose iniciando',cafe:{emoji:'☀️',tipo:'Café da manhã',hora:'7h',titulo:'Café com manteiga',descricao:'Café preto + 1 col manteiga',calorias:120,proteinas:0},almoco:{emoji:'🥩',tipo:'Almoço',hora:'12h',titulo:'Contrafilé na brasa',descricao:'250g contrafilé + sal grosso',calorias:600,proteinas:55},lanche:{emoji:'🧀',tipo:'Lanche',hora:'15h',titulo:'Queijo e presunto',descricao:'3 fatias queijo + 3 presunto',calorias:220,proteinas:20},jantar:{emoji:'🌙',tipo:'Jantar',hora:'19h',titulo:'Salmão grelhado',descricao:'180g salmão + limão + manteiga',calorias:480,proteinas:46}},
+  {dia:4,titulo:'Dia 4 — Energia',subtitulo:'Combustível animal',cafe:{emoji:'☀️',tipo:'Café da manhã',hora:'7h',titulo:'Ovos com calabresa',descricao:'2 ovos + 60g calabresa + manteiga',calorias:440,proteinas:26},almoco:{emoji:'🥩',tipo:'Almoço',hora:'12h',titulo:'Tilápia grelhada',descricao:'250g tilápia + manteiga + ervas',calorias:520,proteinas:50},lanche:{emoji:'🥑',tipo:'Lanche',hora:'15h',titulo:'Abacate com sal',descricao:'½ abacate + sal + limão',calorias:180,proteinas:2},jantar:{emoji:'🌙',tipo:'Jantar',hora:'19h',titulo:'Frango desfiado',descricao:'200g frango + 20g manteiga',calorias:490,proteinas:52}},
+  {dia:5,titulo:'Dia 5 — Força',subtitulo:'Chegando ao pico',cafe:{emoji:'☀️',tipo:'Café da manhã',hora:'7h',titulo:'Panqueca de ovo',descricao:'2 ovos + 1 banana + manteiga',calorias:320,proteinas:14},almoco:{emoji:'🥩',tipo:'Almoço',hora:'12h',titulo:'Costela no forno',descricao:'300g costela + alho + cebola',calorias:780,proteinas:56},lanche:{emoji:'🧀',tipo:'Lanche',hora:'15h',titulo:'Iogurte grego',descricao:'200g iogurte natural integral',calorias:180,proteinas:16},jantar:{emoji:'🌙',tipo:'Jantar',hora:'19h',titulo:'Atum grelhado',descricao:'200g atum + azeite + limão',calorias:440,proteinas:50}},
+  {dia:6,titulo:'Dia 6 — Reviravolta',subtitulo:'Corpo em transformação',cafe:{emoji:'☀️',tipo:'Café da manhã',hora:'7h',titulo:'Ovos cozidos com azeite',descricao:'3 ovos cozidos + azeite + sal',calorias:280,proteinas:21},almoco:{emoji:'🥩',tipo:'Almoço',hora:'12h',titulo:'Pernil assado',descricao:'250g pernil + alecrim + alho',calorias:650,proteinas:54},lanche:{emoji:'🐟',tipo:'Lanche',hora:'15h',titulo:'Sardinha em azeite',descricao:'1 lata sardinha em azeite',calorias:280,proteinas:22},jantar:{emoji:'🌙',tipo:'Jantar',hora:'19h',titulo:'Bife acebolado',descricao:'200g coxão + cebola + manteiga',calorias:500,proteinas:46}},
+  {dia:7,titulo:'Dia 7 — Virada!',subtitulo:'Uma semana concluída 🎉',cafe:{emoji:'☀️',tipo:'Café da manhã',hora:'7h',titulo:'Omelete especial',descricao:'3 ovos + cogumelo + queijo',calorias:380,proteinas:28},almoco:{emoji:'🥩',tipo:'Almoço',hora:'12h',titulo:'Churrasco especial',descricao:'Picanha + costela + frango',calorias:900,proteinas:72},lanche:{emoji:'🧀',tipo:'Lanche',hora:'15h',titulo:'Mix de queijos',descricao:'Minas + coalho + parmesão',calorias:250,proteinas:18},jantar:{emoji:'🌙',tipo:'Jantar',hora:'19h',titulo:'Caldo de ossobuco',descricao:'Ossobuco + legumes + ervas',calorias:420,proteinas:40}},
 ];
 
 function AppDemo({ onComprar }) {
-  const [tab, setTab]           = useState('inicio');
-  const [locked, setLocked]     = useState(false);
+  const [tab, setTab]       = useState('inicio');
+  const [locked, setLocked] = useState(false);
   const [lockedItem, setLockedItem] = useState('');
+  const [semana, setSemana] = useState(1);
+  const [diaPlano, setDiaPlano] = useState(1);
 
   function tryAccess(item) { setLockedItem(item); setLocked(true); }
+
+  const diaData = PLANO_S1.find(d => d.dia === diaPlano) ?? PLANO_S1[0];
+
+  const IcoHome  = () => React.createElement('svg',{width:'18',height:'18',viewBox:'0 0 24 24',fill:'none'},React.createElement('path',{d:'M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9',stroke:'currentColor',strokeWidth:'1.8',strokeLinecap:'round',strokeLinejoin:'round'}));
+  const IcoPlano = () => React.createElement('svg',{width:'18',height:'18',viewBox:'0 0 24 24',fill:'none'},React.createElement('rect',{x:'3',y:'4',width:'18',height:'18',rx:'2',stroke:'currentColor',strokeWidth:'1.8'}),React.createElement('path',{d:'M3 9h18M8 3v3M16 3v3M8 14h4M8 17h6',stroke:'currentColor',strokeWidth:'1.8',strokeLinecap:'round'}));
+  const IcoDesaf = () => React.createElement('svg',{width:'18',height:'18',viewBox:'0 0 24 24',fill:'none'},React.createElement('path',{d:'M12 2C9 7 6 9 8 14c1 2.5 3 4 4 4-2-3-1-6 1-8 0 3 2 5 3 7 1-2 1-5-1-7 2 1 4 4 3 7 2-2 4-6 1-10C17 4 14 2 12 2z',stroke:'currentColor',strokeWidth:'1.8',strokeLinecap:'round',strokeLinejoin:'round',fill:'none'}));
+  const IcoChat  = () => React.createElement('svg',{width:'18',height:'18',viewBox:'0 0 24 24',fill:'none'},React.createElement('path',{d:'M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z',stroke:'currentColor',strokeWidth:'1.8',strokeLinecap:'round',strokeLinejoin:'round'}));
 
   return (
     <div className="demo-wrap">
       <p className="demo-headline">📱 Explore o app antes de comprar</p>
-      <p className="demo-sub">Toque nas receitas, treinos e seções para ver o que está te esperando</p>
+      <p className="demo-sub">Toque em qualquer seção para ver o que está te esperando</p>
 
       <div className="phone-frame">
-        {/* notch */}
-        <div className="phone-notch"><div className="phone-camera"/></div>
+        <div className="phone-status">
+          <span className="phone-time">9:41</span>
+          <div className="phone-status-icons">
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="currentColor"><rect x="0" y="4" width="2" height="6" rx="0.5" opacity=".4"/><rect x="3" y="2.5" width="2" height="7.5" rx="0.5" opacity=".6"/><rect x="6" y="1" width="2" height="9" rx="0.5" opacity=".8"/><rect x="9" y="0" width="2" height="10" rx="0.5"/></svg>
+            <svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor"><path d="M7.5 2.5C5.2 2.5 3.1 3.5 1.7 5.1L0 3.3C1.9 1.3 4.6 0 7.5 0s5.6 1.3 7.5 3.3l-1.7 1.8C11.9 3.5 9.8 2.5 7.5 2.5z" opacity=".4"/><path d="M7.5 5.5c-1.5 0-2.8.6-3.7 1.6L2.2 5.4C3.6 3.9 5.5 3 7.5 3s3.9.9 5.3 2.4L11.2 7.1C10.3 6.1 9 5.5 7.5 5.5z" opacity=".7"/><circle cx="7.5" cy="10" r="1.3"/></svg>
+            <svg width="22" height="11" viewBox="0 0 22 11" fill="currentColor"><rect x="0.5" y="0.5" width="18" height="10" rx="2.5" stroke="currentColor" strokeOpacity=".35" fill="none"/><rect x="2" y="2" width="14" height="7" rx="1.5"/><path d="M20 3.5v3A1.5 1.5 0 0020 3.5z" opacity=".4"/></svg>
+          </div>
+        </div>
 
-        {/* scrollable content */}
         <div className="phone-body">
 
           {tab==='inicio' && (
             <div className="app-home">
               <div className="app-top-bar">
-                <div><p className="app-greeting">Bem-vinda,</p><p className="app-name-txt">Você 👋</p></div>
+                <div>
+                  <p className="app-greeting">Bem-vinda,</p>
+                  <p className="app-name-txt">Você 👋</p>
+                </div>
                 <div className="app-av">🌿</div>
               </div>
+
               <div className="app-card" onClick={()=>tryAccess('Progresso do Protocolo')}>
                 <p className="app-lbl">MEU PROTOCOLO</p>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:'6px'}}>
-                  <span style={{fontSize:'24px',fontWeight:'800',color:'#F2F0E8'}}>0%</span>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:'5px'}}>
+                  <div><span style={{fontSize:'26px',fontWeight:'800',color:'#F2F0E8'}}>0%</span><span style={{fontSize:'11px',color:'#9CA88E',marginLeft:'6px'}}>concluído</span></div>
                   <span style={{fontSize:'11px',color:'#9CA88E'}}>Dia 1/21</span>
                 </div>
                 <div className="app-bar"><div className="app-bar-fill" style={{width:'4%'}}/></div>
-                <div className="app-stats-row">
-                  {[['Perdeu','-0kg'],['Meta','Emagrecer'],['Dias','21']].map(([l,v],i)=>(
-                    <div key={i} className="app-stat"><span className="app-stat-l">{l}</span><strong className="app-stat-v">{v}</strong></div>
+                <div className="app-stats-row" style={{marginTop:'8px'}}>
+                  {[['Perdeu','-0kg','#E8A838'],['Meta','Emagrecer','#8CB369'],['Dias','21','#F2F0E8']].map(([l,v,c],i)=>(
+                    <div key={i} className="app-stat"><span className="app-stat-l">{l}</span><strong className="app-stat-v" style={{color:c}}>{v}</strong></div>
                   ))}
                 </div>
               </div>
-              <p className="app-lbl" style={{marginTop:'12px',marginBottom:'6px'}}>PRÓXIMA REFEIÇÃO</p>
+
+              <p className="app-lbl" style={{marginTop:'10px',marginBottom:'5px'}}>PRÓXIMA REFEIÇÃO</p>
               <div className="app-meal" onClick={()=>tryAccess('Plano Alimentar Completo')}>
                 <div className="app-meal-icon">🥩</div>
                 <div style={{flex:1,minWidth:0}}>
                   <p style={{fontSize:'10px',color:'#E8A838',fontWeight:'600',marginBottom:'2px'}}>Café da manhã</p>
-                  <p style={{fontSize:'12px',fontWeight:'700',color:'#F2F0E8',marginBottom:'1px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>Ovos mexidos com bacon</p>
+                  <p style={{fontSize:'12px',fontWeight:'700',color:'#F2F0E8',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',marginBottom:'1px'}}>Ovos mexidos com bacon</p>
                   <p style={{fontSize:'10px',color:'#9CA88E'}}>420 kcal · 28g proteína</p>
                 </div>
-                <span style={{color:'#E8A838',fontSize:'18px'}}>›</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#E8A838" strokeWidth="2" strokeLinecap="round"/></svg>
               </div>
-              <p className="app-lbl" style={{marginTop:'12px',marginBottom:'6px'}}>DICA DO DIA</p>
-              <div className="app-tip" onClick={()=>tryAccess('Dicas Diárias')}>
+
+              <p className="app-lbl" style={{marginTop:'10px',marginBottom:'5px'}}>DICA DO DIA</p>
+              <div className="app-tip" onClick={()=>tryAccess('Dicas Diárias Personalizadas')}>
                 <span style={{fontSize:'18px'}}>💧</span>
-                <p style={{fontSize:'11px',color:'#9CA88E',lineHeight:'1.5',flex:1}}>Beba pelo menos 2,5L de água hoje. A hidratação acelera a queima de gordura...</p>
+                <p style={{fontSize:'10px',color:'#9CA88E',lineHeight:'1.5',flex:1}}>Beba pelo menos 2,5L de água hoje. A hidratação acelera a queima de gordura e reduz a fome.</p>
+              </div>
+
+              <div className="app-ia-cta" onClick={()=>tryAccess('Selva IA — Chat 24h')}>
+                <div className="app-ia-icon">🌿</div>
+                <div style={{flex:1}}>
+                  <p style={{fontSize:'11px',fontWeight:'700',color:'#F2F0E8',marginBottom:'1px'}}>Selva IA</p>
+                  <p style={{fontSize:'10px',color:'#9CA88E'}}>Tire dúvidas sobre sua dieta agora</p>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#E8A838" strokeWidth="2" strokeLinecap="round"/></svg>
               </div>
             </div>
           )}
 
-          {tab==='receitas' && (
+          {tab==='plano' && (
             <div className="app-section">
-              <p className="app-page-title">Receitas</p>
-              {DEMO_RECEITAS.map((r,i)=>(
-                <div key={i} className={`app-recipe ${r.exclusiva?'app-recipe-ex':''}`} onClick={()=>tryAccess(r.nome)}>
-                  <span className="app-recipe-em">{r.emoji}</span>
-                  <div style={{flex:1,minWidth:0}}>
-                    <p style={{fontSize:'12px',fontWeight:'600',color:r.exclusiva?'#E8A838':'#F2F0E8',marginBottom:'2px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.nome}</p>
-                    <p style={{fontSize:'10px',color:'#9CA88E'}}>{r.tag} · {r.tempo}</p>
-                  </div>
-                  <span style={{fontSize:'14px',opacity:.5}}>🔒</span>
-                </div>
-              ))}
-            </div>
-          )}
+              <p className="app-page-title">Plano Alimentar</p>
+              <p style={{fontSize:'10px',color:'#9CA88E',marginTop:'-4px',marginBottom:'10px'}}>Protocolo 21 dias · Dieta da Selva</p>
 
-          {tab==='treinos' && (
-            <div className="app-section">
-              <p className="app-page-title">Treinos 21 Dias</p>
-              {DEMO_TREINOS.map((t,i)=>(
-                <div key={i} className="app-treino" onClick={()=>tryAccess(`Treino Dia ${t.dia} — ${t.titulo}`)}>
-                  <div className="app-treino-em">{t.emoji}</div>
-                  <div style={{flex:1}}>
-                    <p style={{fontSize:'12px',fontWeight:'600',color:'#F2F0E8',marginBottom:'2px'}}>Dia {t.dia} — {t.titulo}</p>
-                    <p style={{fontSize:'10px',color:'#9CA88E'}}>{t.tempo}</p>
+              <div className="app-semana-row">
+                {[1,2,3].map(s=>(
+                  <button key={s}
+                    className={'app-semana-btn'+(semana===s?' app-semana-active':'')}
+                    onClick={()=>{ if(s>1){tryAccess('Semana '+s+' do Protocolo');return;} setSemana(s);setDiaPlano(1); }}>
+                    Semana {s}
+                  </button>
+                ))}
+              </div>
+
+              <div className="app-dias-row">
+                {PLANO_S1.map(d=>(
+                  <button key={d.dia}
+                    className={'app-dia-pill'+(diaPlano===d.dia?' app-dia-active':'')+(d.dia<diaPlano?' app-dia-done':'')}
+                    onClick={()=>setDiaPlano(d.dia)}>
+                    <span style={{fontSize:'8px',fontWeight:'500'}}>Dia</span>
+                    <span style={{fontSize:'13px',fontWeight:'800',lineHeight:'1.1'}}>{d.dia}</span>
+                    {d.dia<diaPlano && <span style={{fontSize:'8px'}}>✓</span>}
+                  </button>
+                ))}
+              </div>
+
+              <div className="app-dia-header">
+                <p style={{fontSize:'13px',fontWeight:'700',color:'#F2F0E8',marginBottom:'3px'}}>{diaData.titulo}</p>
+                <span className="app-dia-tag">{diaData.subtitulo}</span>
+              </div>
+
+              {[diaData.cafe,diaData.almoco,diaData.lanche,diaData.jantar].map((r,i)=>(
+                <div key={i} className="app-ref-card" onClick={()=>tryAccess(r.titulo)}>
+                  <div className="app-ref-head">
+                    <span style={{fontSize:'13px'}}>{r.emoji}</span>
+                    <span className="app-ref-tipo">{r.tipo}</span>
+                    <span className="app-ref-hora">{r.hora}</span>
                   </div>
-                  <span className={`app-nivel nivel-${i}`}>{t.nivel}</span>
+                  <p style={{fontSize:'11px',fontWeight:'700',color:'#F2F0E8',marginBottom:'2px'}}>{r.titulo}</p>
+                  <p style={{fontSize:'10px',color:'#9CA88E',marginBottom:'6px'}}>{r.descricao}</p>
+                  <div style={{display:'flex',gap:'12px'}}>
+                    <span><span style={{fontSize:'9px',color:'#5C6652'}}>Kcal </span><strong style={{fontSize:'10px',color:'#E8A838'}}>{r.calorias}</strong></span>
+                    <span><span style={{fontSize:'9px',color:'#5C6652'}}>Proteína </span><strong style={{fontSize:'10px',color:'#8CB369'}}>{r.proteinas}g</strong></span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -355,53 +395,105 @@ function AppDemo({ onComprar }) {
           {tab==='desafio' && (
             <div className="app-section">
               <p className="app-page-title">Desafio 21 Dias</p>
-              <div className="app-card" style={{marginBottom:'10px'}} onClick={()=>tryAccess('Desafio 21 Dias')}>
-                <div style={{display:'flex',justifyContent:'space-between',marginBottom:'12px'}}>
-                  <div><p style={{fontSize:'24px',fontWeight:'800',color:'#F2F0E8'}}>0%</p><p style={{fontSize:'10px',color:'#9CA88E'}}>concluído</p></div>
-                  <div style={{textAlign:'right'}}><p style={{fontSize:'20px',fontWeight:'700',color:'#E8A838'}}>🔥 0</p><p style={{fontSize:'10px',color:'#9CA88E'}}>dias seguidos</p></div>
+              <p style={{fontSize:'10px',color:'#9CA88E',marginTop:'-6px',marginBottom:'10px'}}>Sem falhar · Protocolo Dieta da Selva</p>
+
+              <div className="app-card" style={{marginBottom:'10px'}} onClick={()=>tryAccess('Progresso do Desafio')}>
+                <div style={{display:'flex',justifyContent:'space-between',marginBottom:'10px'}}>
+                  <div><p style={{fontSize:'24px',fontWeight:'800',color:'#F2F0E8',lineHeight:'1'}}>0%</p><p style={{fontSize:'9px',color:'#9CA88E'}}>do desafio concluído</p></div>
+                  <div style={{textAlign:'right'}}><p style={{fontSize:'18px',fontWeight:'700',color:'#E8A838'}}>🔥 0</p><p style={{fontSize:'9px',color:'#9CA88E'}}>dias seguidos</p></div>
                 </div>
+                <div className="app-bar" style={{marginBottom:'10px'}}><div className="app-bar-fill" style={{width:'0%'}}/></div>
                 <div className="app-days-grid">
-                  {Array.from({length:21},(_,i)=>(
-                    <div key={i} className={`app-day ${i===0?'app-day-today':''}`}>{i===0?'●':i+1}</div>
-                  ))}
+                  {Array.from({length:21},function(_,i){ return React.createElement('div',{key:i,className:'app-day'+(i===0?' app-day-today':'')},i===0?'●':i+1); })}
                 </div>
               </div>
-              <div className="app-meal" onClick={()=>tryAccess('Check-in do Dia')}>
-                <span style={{fontSize:'20px'}}>📋</span>
-                <div>
-                  <p style={{fontSize:'12px',fontWeight:'600',color:'#F2F0E8'}}>Check-in — Dia 1</p>
-                  <p style={{fontSize:'10px',color:'#9CA88E'}}>Marque quando concluir o cardápio de hoje</p>
+
+              <div className="app-checkin-card" onClick={()=>tryAccess('Check-in Diário')}>
+                <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'8px'}}>
+                  <span style={{fontSize:'18px'}}>📋</span>
+                  <div>
+                    <p style={{fontSize:'11px',fontWeight:'700',color:'#F2F0E8'}}>Check-in — Dia 1</p>
+                    <p style={{fontSize:'10px',color:'#9CA88E'}}>Marque quando concluir o cardápio de hoje</p>
+                  </div>
+                </div>
+                <div className="app-checkin-btn">MARCAR DIA COMO CONCLUÍDO</div>
+              </div>
+
+              <div className="app-stats-row" style={{marginTop:'10px'}}>
+                {[['📅','0','Dias feitos'],['🔥','0','Sequência'],['⏳','21','Restam']].map(function(item,i){
+                  return React.createElement('div',{key:i,className:'app-card',style:{flex:1,textAlign:'center',padding:'8px 4px'}},
+                    React.createElement('div',{style:{fontSize:'16px',marginBottom:'3px'}},item[0]),
+                    React.createElement('p',{style:{fontSize:'16px',fontWeight:'800',color:'#F2F0E8',lineHeight:'1'}},item[1]),
+                    React.createElement('p',{style:{fontSize:'9px',color:'#9CA88E',marginTop:'2px'}},item[2])
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {tab==='chat' && (
+            <div className="app-chat-wrap">
+              <div className="app-chat-hd">
+                <div className="app-chat-av">🌿</div>
+                <div style={{flex:1}}>
+                  <p style={{fontSize:'12px',fontWeight:'700',color:'#F2F0E8',marginBottom:'1px'}}>Selva IA</p>
+                  <p style={{fontSize:'10px',color:'#8CB369',display:'flex',alignItems:'center',gap:'4px'}}>
+                    <span style={{width:'6px',height:'6px',borderRadius:'50%',background:'#8CB369',display:'inline-block'}}/>online agora
+                  </p>
+                </div>
+              </div>
+              <div className="app-chat-msgs">
+                <div className="app-chat-bot-msg">Oi! Sou a Selva IA 🌿 Estou aqui para te guiar no protocolo, adaptar receitas e te motivar!</div>
+                <div className="app-chat-bot-msg">Posso calcular sua meta de proteína, sugerir substituições e responder qualquer dúvida sobre a dieta.</div>
+                <div className="app-chat-blur-wrap" onClick={()=>tryAccess('Selva IA — Chat 24h')}>
+                  <div className="app-chat-user-msg" style={{filter:'blur(4px)',userSelect:'none'}}>Qual receita posso fazer...</div>
+                  <div className="app-chat-bot-msg" style={{filter:'blur(4px)',userSelect:'none'}}>Com certeza! Para o seu perfil eu recomendo...</div>
+                  <div className="app-chat-lock-overlay">
+                    <span style={{fontSize:'20px'}}>🔒</span>
+                    <p style={{fontSize:'10px',fontWeight:'700',color:'#F2F0E8',marginTop:'4px'}}>Disponível para membros</p>
+                    <p style={{fontSize:'9px',color:'#9CA88E'}}>Chat 24h · acesso por R$27</p>
+                  </div>
                 </div>
               </div>
             </div>
           )}
         </div>
 
-        {/* bottom nav */}
         <div className="phone-nav">
           {[
-            {id:'inicio',icon:'🏠',label:'Início'},
-            {id:'receitas',icon:'🥩',label:'Receitas'},
-            {id:'treinos',icon:'🏋️',label:'Treinos'},
-            {id:'desafio',icon:'🏆',label:'Desafio'},
-          ].map(n=>(
-            <button key={n.id} className={`pnav-btn ${tab===n.id?'pnav-active':''}`} onClick={()=>setTab(n.id)}>
-              <span style={{fontSize:'16px'}}>{n.icon}</span>
-              <span className="pnav-label">{n.label}</span>
-            </button>
-          ))}
+            {id:'inicio',  Ic:IcoHome,  label:'Início'},
+            {id:'plano',   Ic:IcoPlano, label:'Plano'},
+            {id:'desafio', Ic:IcoDesaf, label:'Desafio'},
+            {id:'chat',    Ic:IcoChat,  label:'Selva IA'},
+          ].map(function(n){
+            return React.createElement('button',{key:n.id,className:'pnav-btn'+(tab===n.id?' pnav-active':''),onClick:function(){setTab(n.id);}},
+              React.createElement(n.Ic),
+              React.createElement('span',{className:'pnav-label'},n.label)
+            );
+          })}
         </div>
 
-        {/* paywall */}
+        <div className="phone-home-ind"/>
+
         {locked && (
           <div className="demo-paywall" onClick={()=>setLocked(false)}>
             <div className="demo-pw-card" onClick={e=>e.stopPropagation()}>
-              <div style={{fontSize:'32px',marginBottom:'6px'}}>🔒</div>
+              <div style={{fontSize:'36px',marginBottom:'4px'}}>🔒</div>
               <p className="demo-pw-title">Conteúdo Exclusivo</p>
-              <p className="demo-pw-sub">"{lockedItem}" está disponível para membros do Protocolo Dieta da Selva</p>
+              <p className="demo-pw-sub">"{lockedItem}" é exclusivo para membros do Protocolo Dieta da Selva</p>
+              <div className="demo-pw-price">
+                <span style={{fontSize:'13px',color:'#5C6652',textDecoration:'line-through',marginRight:'8px'}}>De R$ 197</span>
+                <span style={{fontSize:'26px',fontWeight:'900',color:'#F2F0E8'}}>R$ 27</span>
+              </div>
+              <div className="demo-pw-perks">
+                {['Plano 21 dias completo','Selva IA 24h','Desafio + check-in','Garantia 7 dias'].map((p,i)=>(
+                  <span key={i} className="demo-pw-perk">✓ {p}</span>
+                ))}
+              </div>
               <button className="demo-pw-cta" onClick={()=>{ setLocked(false); onComprar(); }}>
-                GARANTIR ACESSO POR R$27 →
+                GARANTIR ACESSO AGORA →
               </button>
+              <p className="demo-pw-guarantee">🛡️ Garantia incondicional de 7 dias</p>
               <button className="demo-pw-back" onClick={()=>setLocked(false)}>← Continuar explorando</button>
             </div>
           </div>
@@ -1379,66 +1471,102 @@ const CSS = `
 .pix-force-check:hover{color:#9CA88E}
 .pix-paid{display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 0}
 
-/* ── APP DEMO ── */
 .demo-wrap{margin-bottom:36px;text-align:center}
 .demo-headline{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#F2F0E8;margin-bottom:6px}
 .demo-sub{font-size:13px;color:#9CA88E;margin-bottom:20px}
 
-.phone-frame{position:relative;width:280px;margin:0 auto;background:#080D06;border-radius:36px;border:2px solid rgba(140,179,105,0.2);box-shadow:0 0 0 6px rgba(10,14,8,0.8),0 0 0 8px rgba(140,179,105,0.08),0 24px 60px rgba(0,0,0,0.6);overflow:hidden;user-select:none}
-.phone-notch{display:flex;justify-content:center;padding:10px 0 6px;background:#080D06}
-.phone-camera{width:10px;height:10px;border-radius:50%;background:#111608;border:1px solid rgba(140,179,105,0.15)}
-.phone-body{height:440px;overflow-y:auto;overflow-x:hidden;background:#0C0F0A;scrollbar-width:none}
-.phone-body::-webkit-scrollbar{display:none}
-.phone-nav{display:flex;border-top:1px solid rgba(140,179,105,0.1);background:#080D06;padding:6px 0 10px}
-.pnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 0;transition:opacity .2s}
-.pnav-btn:hover{opacity:.8}
-.pnav-label{font-size:9px;color:#5C6652;font-family:'DM Sans',sans-serif;font-weight:500}
-.pnav-active .pnav-label{color:#E8A838}
+.phone-frame{position:relative;width:300px;margin:0 auto;background:#080D06;border-radius:44px;border:2px solid rgba(140,179,105,0.18);box-shadow:0 0 0 7px rgba(8,13,6,0.9),0 0 0 9px rgba(140,179,105,0.07),0 28px 70px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.04);overflow:hidden;user-select:none}
 
-.app-home{padding:16px 12px}
-.app-top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.phone-status{display:flex;align-items:center;justify-content:space-between;padding:12px 20px 4px;background:#080D06;color:rgba(242,240,232,0.85)}
+.phone-time{font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;letter-spacing:.01em}
+.phone-status-icons{display:flex;align-items:center;gap:5px}
+
+.phone-body{height:460px;overflow-y:auto;overflow-x:hidden;background:#0C0F0A;scrollbar-width:none}
+.phone-body::-webkit-scrollbar{display:none}
+
+.phone-nav{display:flex;border-top:1px solid rgba(140,179,105,0.08);background:#080D06;padding:8px 0 4px}
+.phone-home-ind{height:20px;background:#080D06;display:flex;align-items:center;justify-content:center}
+.phone-home-ind::after{content:'';display:block;width:100px;height:4px;border-radius:100px;background:rgba(242,240,232,0.2)}
+
+.pnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:4px 0;color:#5C6652;transition:color .2s}
+.pnav-btn:hover{color:#9CA88E}
+.pnav-active{color:#E8A838}
+.pnav-label{font-size:9px;font-family:'DM Sans',sans-serif;font-weight:500}
+
+.app-home{padding:14px 12px 16px}
+.app-top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .app-greeting{font-size:10px;color:#9CA88E;margin-bottom:1px}
 .app-name-txt{font-size:16px;font-weight:800;color:#F2F0E8}
 .app-av{width:32px;height:32px;border-radius:50%;background:#1A2010;border:1px solid rgba(140,179,105,0.2);display:flex;align-items:center;justify-content:center;font-size:14px}
-.app-card{background:#111608;border:1px solid rgba(140,179,105,0.1);border-radius:14px;padding:12px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
-.app-card:hover{border-color:rgba(140,179,105,0.3)}
-.app-lbl{font-size:9px;font-weight:700;color:#5C6652;letter-spacing:.08em;margin-bottom:6px}
-.app-bar{height:4px;background:rgba(140,179,105,0.1);border-radius:4px;overflow:hidden;margin-bottom:10px}
-.app-bar-fill{height:100%;background:linear-gradient(90deg,#8CB369,#E8A838);border-radius:4px}
-.app-stats-row{display:flex;gap:6px}
+
+.app-card{background:#111608;border:1px solid rgba(140,179,105,0.1);border-radius:14px;padding:12px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
+.app-card:hover{border-color:rgba(140,179,105,0.28)}
+.app-lbl{font-size:9px;font-weight:700;color:#5C6652;letter-spacing:.08em;margin-bottom:5px}
+.app-bar{height:5px;background:rgba(140,179,105,0.1);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.app-bar-fill{height:100%;background:linear-gradient(90deg,#8CB369,#E8A838);border-radius:4px;transition:width .4s}
+.app-stats-row{display:flex;gap:5px}
 .app-stat{flex:1;background:#1A2010;border-radius:8px;padding:6px 4px;text-align:center}
 .app-stat-l{display:block;font-size:9px;color:#9CA88E;margin-bottom:2px}
-.app-stat-v{display:block;font-size:12px;font-weight:700;color:#E8A838}
-.app-meal{display:flex;align-items:center;gap:8px;background:#111608;border:1px solid rgba(140,179,105,0.08);border-radius:12px;padding:10px;cursor:pointer;transition:border-color .2s}
+.app-stat-v{display:block;font-size:11px;font-weight:700}
+
+.app-meal{display:flex;align-items:center;gap:8px;background:#111608;border:1px solid rgba(140,179,105,0.08);border-radius:12px;padding:10px;cursor:pointer;transition:border-color .2s;margin-bottom:0}
 .app-meal:hover{border-color:rgba(140,179,105,0.25)}
 .app-meal-icon{width:36px;height:36px;background:#1A2010;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.app-tip{display:flex;gap:8px;align-items:flex-start;background:#1A2010;border-radius:12px;padding:10px;cursor:pointer}
 
-.app-section{padding:12px}
-.app-page-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#F2F0E8;margin-bottom:10px}
-.app-recipe{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;border:1px solid rgba(140,179,105,0.07);background:#111608;margin-bottom:6px;cursor:pointer;transition:border-color .2s}
-.app-recipe:hover{border-color:rgba(140,179,105,0.25)}
-.app-recipe-ex{border-color:rgba(232,168,56,0.2)!important;background:rgba(232,168,56,0.04)!important}
-.app-recipe-em{font-size:20px;flex-shrink:0}
-.app-treino{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;border:1px solid rgba(140,179,105,0.07);background:#111608;margin-bottom:6px;cursor:pointer;transition:border-color .2s}
-.app-treino:hover{border-color:rgba(140,179,105,0.25)}
-.app-treino-em{width:30px;height:30px;background:#1A2010;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.app-nivel{padding:3px 7px;border-radius:100px;font-size:9px;font-weight:700;white-space:nowrap}
-.nivel-0,.nivel-1{background:rgba(140,179,105,0.12);color:#8CB369}
-.nivel-2{background:rgba(232,168,56,0.12);color:#E8A838}
-.nivel-3{background:rgba(232,93,74,0.12);color:#E85D4A}
-.nivel-4,.nivel-5{background:rgba(232,168,56,0.12);color:#E8A838}
-.app-days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.app-day{aspect-ratio:1;border-radius:6px;background:#1A2010;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#5C6652}
+.app-tip{display:flex;gap:8px;align-items:flex-start;background:#1A2010;border-radius:12px;padding:10px;cursor:pointer;margin-bottom:0}
+
+.app-ia-cta{display:flex;align-items:center;gap:10px;margin-top:8px;background:linear-gradient(135deg,rgba(26,32,16,.9),rgba(17,22,8,.9));border:1px solid rgba(232,168,56,0.18);border-radius:14px;padding:10px 12px;cursor:pointer;transition:border-color .2s}
+.app-ia-cta:hover{border-color:rgba(232,168,56,0.35)}
+.app-ia-icon{width:32px;height:32px;background:rgba(232,168,56,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+
+.app-section{padding:12px 12px 16px}
+.app-page-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#F2F0E8;margin-bottom:2px}
+
+.app-semana-row{display:flex;gap:5px;margin-bottom:10px}
+.app-semana-btn{flex:1;padding:6px 4px;border-radius:10px;border:none;background:#1A2010;color:#9CA88E;font-size:10px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s}
+.app-semana-active{background:#E8A838;color:#000}
+
+.app-dias-row{display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;scrollbar-width:none}
+.app-dias-row::-webkit-scrollbar{display:none}
+.app-dia-pill{flex-shrink:0;width:38px;height:52px;border-radius:14px;border:1px solid rgba(140,179,105,0.12);background:#111608;color:#5C6652;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.app-dia-active{background:#E8A838;border-color:#E8A838;color:#000}
+.app-dia-done{color:#9CA88E}
+
+.app-dia-header{margin-bottom:8px}
+.app-dia-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:100px;background:rgba(232,168,56,0.1);color:#E8A838;border:1px solid rgba(232,168,56,0.2);margin-top:2px}
+
+.app-ref-card{background:#111608;border:1px solid rgba(140,179,105,0.08);border-radius:12px;padding:10px;margin-bottom:6px;cursor:pointer;transition:border-color .2s}
+.app-ref-card:hover{border-color:rgba(140,179,105,0.25)}
+.app-ref-head{display:flex;align-items:center;gap:5px;margin-bottom:5px}
+.app-ref-tipo{font-size:9px;font-weight:700;color:#5C6652;letter-spacing:.06em;text-transform:uppercase;flex:1}
+.app-ref-hora{font-size:9px;color:#354030}
+
+.app-checkin-card{background:#111608;border:1px solid rgba(140,179,105,0.1);border-radius:12px;padding:10px;cursor:pointer}
+.app-checkin-btn{background:#E8A838;color:#000;border-radius:10px;padding:8px;font-size:10px;font-weight:800;text-align:center;font-family:'DM Sans',sans-serif;letter-spacing:.04em}
+
+.app-days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.app-day{aspect-ratio:1;border-radius:5px;background:#1A2010;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#5C6652}
 .app-day-today{background:rgba(232,168,56,0.15);border:1px solid rgba(232,168,56,0.3);color:#E8A838}
 
-/* Paywall overlay */
-.demo-paywall{position:absolute;inset:0;background:rgba(6,9,4,0.75);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:10;animation:s-msg-in .2s ease both}
-.demo-pw-card{background:#111608;border:1px solid rgba(140,179,105,0.2);border-radius:20px;padding:22px 18px;text-align:center;width:90%;max-width:240px}
-.demo-pw-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#F2F0E8;margin-bottom:6px}
-.demo-pw-sub{font-size:11px;color:#9CA88E;line-height:1.55;margin-bottom:16px}
-.demo-pw-cta{width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#8CB369,#6B9B45);color:#fff;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:8px;transition:opacity .2s}
+.app-chat-wrap{display:flex;flex-direction:column;height:100%}
+.app-chat-hd{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#080D06;border-bottom:1px solid rgba(140,179,105,0.08)}
+.app-chat-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#1A2010,#2A3A1A);border:1px solid rgba(140,179,105,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.app-chat-msgs{padding:10px 10px;display:flex;flex-direction:column;gap:6px;flex:1}
+.app-chat-bot-msg{background:#1A2010;border-radius:0 10px 10px 10px;padding:8px 10px;font-size:10px;color:#D4D9CC;line-height:1.5;max-width:85%;border:1px solid rgba(140,179,105,0.08)}
+.app-chat-user-msg{background:rgba(140,179,105,0.12);border-radius:10px 0 10px 10px;padding:8px 10px;font-size:10px;color:#A8D08D;line-height:1.5;max-width:75%;align-self:flex-end;border:1px solid rgba(140,179,105,0.15)}
+.app-chat-blur-wrap{position:relative;display:flex;flex-direction:column;gap:6px;cursor:pointer}
+.app-chat-lock-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(6,9,4,0.5);backdrop-filter:blur(2px);border-radius:8px}
+
+.demo-paywall{position:absolute;inset:0;background:rgba(4,6,3,0.8);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;z-index:10;animation:s-msg-in .2s ease both}
+.demo-pw-card{background:linear-gradient(160deg,#131A0A,#0C0F0A);border:1px solid rgba(140,179,105,0.22);border-radius:22px;padding:22px 18px;text-align:center;width:88%;max-width:250px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.demo-pw-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#F2F0E8;margin-bottom:5px}
+.demo-pw-sub{font-size:11px;color:#9CA88E;line-height:1.55;margin-bottom:12px}
+.demo-pw-price{margin-bottom:12px;display:flex;align-items:center;justify-content:center}
+.demo-pw-perks{display:flex;flex-direction:column;gap:4px;margin-bottom:14px;text-align:left}
+.demo-pw-perk{font-size:10px;color:#A8D08D;padding:3px 0}
+.demo-pw-cta{width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#E8A838,#D4941A);color:#000;font-size:12px;font-weight:800;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:8px;transition:opacity .2s;box-shadow:0 4px 16px rgba(232,168,56,0.3)}
 .demo-pw-cta:hover{opacity:.9}
+.demo-pw-guarantee{font-size:10px;color:#5C6652;margin-bottom:8px}
 .demo-pw-back{background:none;border:none;color:#5C6652;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .demo-pw-back:hover{color:#9CA88E}
 
