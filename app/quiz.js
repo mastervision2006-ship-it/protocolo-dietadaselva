@@ -245,6 +245,173 @@ export default function Quiz() {
 }
 
 /* ══════════════════════
+   APP DEMO — Interactive Preview
+   ══════════════════════ */
+const DEMO_RECEITAS = [
+  {emoji:'🥚',nome:'Ovos mexidos com bacon',tag:'Café da manhã',tempo:'10 min'},
+  {emoji:'🥩',nome:'Picanha grelhada com manteiga',tag:'Almoço',tempo:'20 min'},
+  {emoji:'🍗',nome:'Frango na manteiga',tag:'Jantar',tempo:'25 min'},
+  {emoji:'🐟',nome:'Salmão com ervas frescas',tag:'Jantar',tempo:'20 min'},
+  {emoji:'🧀',nome:'Omelete de queijo cremoso',tag:'Café da manhã',tempo:'8 min'},
+  {emoji:'🦴',nome:'Costela na Laje — Exclusiva',tag:'Exclusiva',tempo:'3h',exclusiva:true},
+];
+const DEMO_TREINOS = [
+  {dia:1,titulo:'Ativação de Glúteos',tempo:'15 min',nivel:'Iniciante',emoji:'🍑'},
+  {dia:2,titulo:'Core e Abdômen',tempo:'12 min',nivel:'Iniciante',emoji:'💪'},
+  {dia:3,titulo:'Descanso Ativo',tempo:'20 min',nivel:'Leve',emoji:'🧘'},
+  {dia:4,titulo:'Membros Inferiores',tempo:'18 min',nivel:'Moderado',emoji:'🦵'},
+  {dia:5,titulo:'Corpo Inteiro HIIT',tempo:'15 min',nivel:'Intenso',emoji:'🔥'},
+  {dia:6,titulo:'Força + Resistência',tempo:'20 min',nivel:'Moderado',emoji:'⚡'},
+];
+
+function AppDemo({ onComprar }) {
+  const [tab, setTab]           = useState('inicio');
+  const [locked, setLocked]     = useState(false);
+  const [lockedItem, setLockedItem] = useState('');
+
+  function tryAccess(item) { setLockedItem(item); setLocked(true); }
+
+  return (
+    <div className="demo-wrap">
+      <p className="demo-headline">📱 Explore o app antes de comprar</p>
+      <p className="demo-sub">Toque nas receitas, treinos e seções para ver o que está te esperando</p>
+
+      <div className="phone-frame">
+        {/* notch */}
+        <div className="phone-notch"><div className="phone-camera"/></div>
+
+        {/* scrollable content */}
+        <div className="phone-body">
+
+          {tab==='inicio' && (
+            <div className="app-home">
+              <div className="app-top-bar">
+                <div><p className="app-greeting">Bem-vinda,</p><p className="app-name-txt">Você 👋</p></div>
+                <div className="app-av">🌿</div>
+              </div>
+              <div className="app-card" onClick={()=>tryAccess('Progresso do Protocolo')}>
+                <p className="app-lbl">MEU PROTOCOLO</p>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:'6px'}}>
+                  <span style={{fontSize:'24px',fontWeight:'800',color:'#F2F0E8'}}>0%</span>
+                  <span style={{fontSize:'11px',color:'#9CA88E'}}>Dia 1/21</span>
+                </div>
+                <div className="app-bar"><div className="app-bar-fill" style={{width:'4%'}}/></div>
+                <div className="app-stats-row">
+                  {[['Perdeu','-0kg'],['Meta','Emagrecer'],['Dias','21']].map(([l,v],i)=>(
+                    <div key={i} className="app-stat"><span className="app-stat-l">{l}</span><strong className="app-stat-v">{v}</strong></div>
+                  ))}
+                </div>
+              </div>
+              <p className="app-lbl" style={{marginTop:'12px',marginBottom:'6px'}}>PRÓXIMA REFEIÇÃO</p>
+              <div className="app-meal" onClick={()=>tryAccess('Plano Alimentar Completo')}>
+                <div className="app-meal-icon">🥩</div>
+                <div style={{flex:1,minWidth:0}}>
+                  <p style={{fontSize:'10px',color:'#E8A838',fontWeight:'600',marginBottom:'2px'}}>Café da manhã</p>
+                  <p style={{fontSize:'12px',fontWeight:'700',color:'#F2F0E8',marginBottom:'1px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>Ovos mexidos com bacon</p>
+                  <p style={{fontSize:'10px',color:'#9CA88E'}}>420 kcal · 28g proteína</p>
+                </div>
+                <span style={{color:'#E8A838',fontSize:'18px'}}>›</span>
+              </div>
+              <p className="app-lbl" style={{marginTop:'12px',marginBottom:'6px'}}>DICA DO DIA</p>
+              <div className="app-tip" onClick={()=>tryAccess('Dicas Diárias')}>
+                <span style={{fontSize:'18px'}}>💧</span>
+                <p style={{fontSize:'11px',color:'#9CA88E',lineHeight:'1.5',flex:1}}>Beba pelo menos 2,5L de água hoje. A hidratação acelera a queima de gordura...</p>
+              </div>
+            </div>
+          )}
+
+          {tab==='receitas' && (
+            <div className="app-section">
+              <p className="app-page-title">Receitas</p>
+              {DEMO_RECEITAS.map((r,i)=>(
+                <div key={i} className={`app-recipe ${r.exclusiva?'app-recipe-ex':''}`} onClick={()=>tryAccess(r.nome)}>
+                  <span className="app-recipe-em">{r.emoji}</span>
+                  <div style={{flex:1,minWidth:0}}>
+                    <p style={{fontSize:'12px',fontWeight:'600',color:r.exclusiva?'#E8A838':'#F2F0E8',marginBottom:'2px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.nome}</p>
+                    <p style={{fontSize:'10px',color:'#9CA88E'}}>{r.tag} · {r.tempo}</p>
+                  </div>
+                  <span style={{fontSize:'14px',opacity:.5}}>🔒</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {tab==='treinos' && (
+            <div className="app-section">
+              <p className="app-page-title">Treinos 21 Dias</p>
+              {DEMO_TREINOS.map((t,i)=>(
+                <div key={i} className="app-treino" onClick={()=>tryAccess(`Treino Dia ${t.dia} — ${t.titulo}`)}>
+                  <div className="app-treino-em">{t.emoji}</div>
+                  <div style={{flex:1}}>
+                    <p style={{fontSize:'12px',fontWeight:'600',color:'#F2F0E8',marginBottom:'2px'}}>Dia {t.dia} — {t.titulo}</p>
+                    <p style={{fontSize:'10px',color:'#9CA88E'}}>{t.tempo}</p>
+                  </div>
+                  <span className={`app-nivel nivel-${i}`}>{t.nivel}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {tab==='desafio' && (
+            <div className="app-section">
+              <p className="app-page-title">Desafio 21 Dias</p>
+              <div className="app-card" style={{marginBottom:'10px'}} onClick={()=>tryAccess('Desafio 21 Dias')}>
+                <div style={{display:'flex',justifyContent:'space-between',marginBottom:'12px'}}>
+                  <div><p style={{fontSize:'24px',fontWeight:'800',color:'#F2F0E8'}}>0%</p><p style={{fontSize:'10px',color:'#9CA88E'}}>concluído</p></div>
+                  <div style={{textAlign:'right'}}><p style={{fontSize:'20px',fontWeight:'700',color:'#E8A838'}}>🔥 0</p><p style={{fontSize:'10px',color:'#9CA88E'}}>dias seguidos</p></div>
+                </div>
+                <div className="app-days-grid">
+                  {Array.from({length:21},(_,i)=>(
+                    <div key={i} className={`app-day ${i===0?'app-day-today':''}`}>{i===0?'●':i+1}</div>
+                  ))}
+                </div>
+              </div>
+              <div className="app-meal" onClick={()=>tryAccess('Check-in do Dia')}>
+                <span style={{fontSize:'20px'}}>📋</span>
+                <div>
+                  <p style={{fontSize:'12px',fontWeight:'600',color:'#F2F0E8'}}>Check-in — Dia 1</p>
+                  <p style={{fontSize:'10px',color:'#9CA88E'}}>Marque quando concluir o cardápio de hoje</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* bottom nav */}
+        <div className="phone-nav">
+          {[
+            {id:'inicio',icon:'🏠',label:'Início'},
+            {id:'receitas',icon:'🥩',label:'Receitas'},
+            {id:'treinos',icon:'🏋️',label:'Treinos'},
+            {id:'desafio',icon:'🏆',label:'Desafio'},
+          ].map(n=>(
+            <button key={n.id} className={`pnav-btn ${tab===n.id?'pnav-active':''}`} onClick={()=>setTab(n.id)}>
+              <span style={{fontSize:'16px'}}>{n.icon}</span>
+              <span className="pnav-label">{n.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* paywall */}
+        {locked && (
+          <div className="demo-paywall" onClick={()=>setLocked(false)}>
+            <div className="demo-pw-card" onClick={e=>e.stopPropagation()}>
+              <div style={{fontSize:'32px',marginBottom:'6px'}}>🔒</div>
+              <p className="demo-pw-title">Conteúdo Exclusivo</p>
+              <p className="demo-pw-sub">"{lockedItem}" está disponível para membros do Protocolo Dieta da Selva</p>
+              <button className="demo-pw-cta" onClick={()=>{ setLocked(false); onComprar(); }}>
+                GARANTIR ACESSO POR R$27 →
+              </button>
+              <button className="demo-pw-back" onClick={()=>setLocked(false)}>← Continuar explorando</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════
    SELVA CHAT — Knowledge Base
    ══════════════════════ */
 const CHAT_KB = [
@@ -910,6 +1077,9 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
         <p className="screen-sub">Você tem 97% de compatibilidade com o Protocolo Dieta da Selva</p>
       </div>
 
+      {/* App Demo */}
+      <AppDemo onComprar={() => document.querySelector('.price-card')?.scrollIntoView({behavior:'smooth',block:'center'})} />
+
       {/* What you get */}
       <h3 className="section-title">O que você recebe hoje</h3>
       <div className="features-grid">
@@ -1161,6 +1331,69 @@ const CSS = `
 .pix-force-check{background:none;border:none;color:#5C6652;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline}
 .pix-force-check:hover{color:#9CA88E}
 .pix-paid{display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 0}
+
+/* ── APP DEMO ── */
+.demo-wrap{margin-bottom:36px;text-align:center}
+.demo-headline{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#F2F0E8;margin-bottom:6px}
+.demo-sub{font-size:13px;color:#9CA88E;margin-bottom:20px}
+
+.phone-frame{position:relative;width:280px;margin:0 auto;background:#080D06;border-radius:36px;border:2px solid rgba(140,179,105,0.2);box-shadow:0 0 0 6px rgba(10,14,8,0.8),0 0 0 8px rgba(140,179,105,0.08),0 24px 60px rgba(0,0,0,0.6);overflow:hidden;user-select:none}
+.phone-notch{display:flex;justify-content:center;padding:10px 0 6px;background:#080D06}
+.phone-camera{width:10px;height:10px;border-radius:50%;background:#111608;border:1px solid rgba(140,179,105,0.15)}
+.phone-body{height:440px;overflow-y:auto;overflow-x:hidden;background:#0C0F0A;scrollbar-width:none}
+.phone-body::-webkit-scrollbar{display:none}
+.phone-nav{display:flex;border-top:1px solid rgba(140,179,105,0.1);background:#080D06;padding:6px 0 10px}
+.pnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 0;transition:opacity .2s}
+.pnav-btn:hover{opacity:.8}
+.pnav-label{font-size:9px;color:#5C6652;font-family:'DM Sans',sans-serif;font-weight:500}
+.pnav-active .pnav-label{color:#E8A838}
+
+.app-home{padding:16px 12px}
+.app-top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.app-greeting{font-size:10px;color:#9CA88E;margin-bottom:1px}
+.app-name-txt{font-size:16px;font-weight:800;color:#F2F0E8}
+.app-av{width:32px;height:32px;border-radius:50%;background:#1A2010;border:1px solid rgba(140,179,105,0.2);display:flex;align-items:center;justify-content:center;font-size:14px}
+.app-card{background:#111608;border:1px solid rgba(140,179,105,0.1);border-radius:14px;padding:12px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+.app-card:hover{border-color:rgba(140,179,105,0.3)}
+.app-lbl{font-size:9px;font-weight:700;color:#5C6652;letter-spacing:.08em;margin-bottom:6px}
+.app-bar{height:4px;background:rgba(140,179,105,0.1);border-radius:4px;overflow:hidden;margin-bottom:10px}
+.app-bar-fill{height:100%;background:linear-gradient(90deg,#8CB369,#E8A838);border-radius:4px}
+.app-stats-row{display:flex;gap:6px}
+.app-stat{flex:1;background:#1A2010;border-radius:8px;padding:6px 4px;text-align:center}
+.app-stat-l{display:block;font-size:9px;color:#9CA88E;margin-bottom:2px}
+.app-stat-v{display:block;font-size:12px;font-weight:700;color:#E8A838}
+.app-meal{display:flex;align-items:center;gap:8px;background:#111608;border:1px solid rgba(140,179,105,0.08);border-radius:12px;padding:10px;cursor:pointer;transition:border-color .2s}
+.app-meal:hover{border-color:rgba(140,179,105,0.25)}
+.app-meal-icon{width:36px;height:36px;background:#1A2010;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.app-tip{display:flex;gap:8px;align-items:flex-start;background:#1A2010;border-radius:12px;padding:10px;cursor:pointer}
+
+.app-section{padding:12px}
+.app-page-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#F2F0E8;margin-bottom:10px}
+.app-recipe{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;border:1px solid rgba(140,179,105,0.07);background:#111608;margin-bottom:6px;cursor:pointer;transition:border-color .2s}
+.app-recipe:hover{border-color:rgba(140,179,105,0.25)}
+.app-recipe-ex{border-color:rgba(232,168,56,0.2)!important;background:rgba(232,168,56,0.04)!important}
+.app-recipe-em{font-size:20px;flex-shrink:0}
+.app-treino{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;border:1px solid rgba(140,179,105,0.07);background:#111608;margin-bottom:6px;cursor:pointer;transition:border-color .2s}
+.app-treino:hover{border-color:rgba(140,179,105,0.25)}
+.app-treino-em{width:30px;height:30px;background:#1A2010;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.app-nivel{padding:3px 7px;border-radius:100px;font-size:9px;font-weight:700;white-space:nowrap}
+.nivel-0,.nivel-1{background:rgba(140,179,105,0.12);color:#8CB369}
+.nivel-2{background:rgba(232,168,56,0.12);color:#E8A838}
+.nivel-3{background:rgba(232,93,74,0.12);color:#E85D4A}
+.nivel-4,.nivel-5{background:rgba(232,168,56,0.12);color:#E8A838}
+.app-days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.app-day{aspect-ratio:1;border-radius:6px;background:#1A2010;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#5C6652}
+.app-day-today{background:rgba(232,168,56,0.15);border:1px solid rgba(232,168,56,0.3);color:#E8A838}
+
+/* Paywall overlay */
+.demo-paywall{position:absolute;inset:0;background:rgba(6,9,4,0.75);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:10;animation:s-msg-in .2s ease both}
+.demo-pw-card{background:#111608;border:1px solid rgba(140,179,105,0.2);border-radius:20px;padding:22px 18px;text-align:center;width:90%;max-width:240px}
+.demo-pw-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#F2F0E8;margin-bottom:6px}
+.demo-pw-sub{font-size:11px;color:#9CA88E;line-height:1.55;margin-bottom:16px}
+.demo-pw-cta{width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#8CB369,#6B9B45);color:#fff;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:8px;transition:opacity .2s}
+.demo-pw-cta:hover{opacity:.9}
+.demo-pw-back{background:none;border:none;color:#5C6652;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.demo-pw-back:hover{color:#9CA88E}
 
 /* ── SELVA CHAT ── */
 @keyframes s-fab-in{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
