@@ -725,19 +725,63 @@ function SelvaChat({ name }) {
    ══════════════════════ */
 function Landing({ onStart }) {
   return (
-    <div style={{textAlign:"center",paddingTop:"36px"}}>
-      <div className="badge">🌿 PROTOCOLO VALIDADO POR +10.000 MULHERES</div>
-      <h1 className="hero-title">Descubra como mulheres <span className="hl">acima de 30</span> estão perdendo até <span className="hl-accent">17kg em 3 meses</span> comendo <span className="hl">carnes, queijos e ovos</span></h1>
-      <p className="hero-sub">O mesmo método que transformou o corpo do chef Henrique Fogaça — agora adaptado para a realidade da mulher brasileira, com um app exclusivo que guia você dia a dia.</p>
+    <div className="landing-wrap">
+
+      {/* Fonte da matéria */}
+      <div className="landing-source">
+        <span className="landing-source-dot"/>
+        <span>Matéria publicada no <strong>UOL VivaBem</strong> · Nov 2025</span>
+      </div>
+
+      {/* Headline estilo manchete */}
+      <h1 className="hero-title">
+        Chef Henrique Fogaça revela como <span className="hl-accent">secou 17kg</span> comendo <span className="hl">carne, ovos e queijo</span> — sem passar fome
+      </h1>
+
+      {/* Foto do Fogaça com legenda */}
+      <div className="fogaca-card">
+        <img src="/fogaca.webp" alt="Henrique Fogaça antes e depois da Dieta da Selva" className="fogaca-img" />
+        <div className="fogaca-caption">
+          <span className="fogaca-caption-tag">📰 UOL VivaBem</span>
+          <p>"Emagreci 17kg em 3 meses comendo o que eu amo. Carne, gordura, proteína. Sem contar caloria, sem passar fome."</p>
+          <span className="fogaca-caption-name">— Henrique Fogaça, chef e empresário</span>
+        </div>
+      </div>
+
+      {/* Subtítulo explicativo */}
+      <p className="hero-sub">
+        O método usado por Fogaça — chamado <strong style={{color:"#A8D08D"}}>Dieta da Selva</strong> — chegou ao Brasil com força total. Baseada na alimentação ancestral e carnívora, a dieta elimina inflamação, regula hormônios e acelera a queima de gordura <em>sem restrição de quantidade.</em>
+      </p>
+
+      {/* Números de prova */}
       <div className="proof-row">
         <div className="proof-item"><span className="proof-num">17kg</span><span className="proof-lbl">eliminados por Fogaça</span></div>
-        <div className="proof-div" />
-        <div className="proof-item"><span className="proof-num">3 meses</span><span className="proof-lbl">para resultados</span></div>
-        <div className="proof-div" />
-        <div className="proof-item"><span className="proof-num">0</span><span className="proof-lbl">fome ou sofrimento</span></div>
+        <div className="proof-div"/>
+        <div className="proof-item"><span className="proof-num">3 meses</span><span className="proof-lbl">de protocolo</span></div>
+        <div className="proof-div"/>
+        <div className="proof-item"><span className="proof-num">+10mil</span><span className="proof-lbl">mulheres no método</span></div>
       </div>
-      <button className="cta" onClick={onStart}>Fazer minha análise gratuita →</button>
-      <p className="micro">⏱️ Leva 2 minutos • 100% gratuito • Resultado personalizado</p>
+
+      {/* Bullets do método */}
+      <div className="landing-bullets">
+        {[
+          ['🥩','Come carne, ovos, queijo e gordura boa'],
+          ['🚫','Sem contar caloria, sem passar fome'],
+          ['⚡','Energia alta desde a primeira semana'],
+          ['📱','App guia você dia a dia nos 21 dias'],
+        ].map(([e,t],i)=>(
+          <div key={i} className="landing-bullet">
+            <span className="landing-bullet-em">{e}</span>
+            <span className="landing-bullet-txt">{t}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <button className="cta" onClick={onStart}>Descobrir se funciona para mim →</button>
+      <p className="micro">⏱️ Análise gratuita em 2 minutos • Resultado personalizado</p>
+
+      {/* Prova social */}
       <div className="faces-row">
         {["M","C","P","A","R"].map((l,i)=>(<div key={i} className="face">{l}</div>))}
         <span className="faces-txt">+2.847 mulheres fizeram o quiz hoje</span>
@@ -1327,7 +1371,24 @@ const S = {
    ══════════════════════ */
 const CSS = `
 .badge{display:inline-block;padding:8px 20px;border-radius:100px;background:rgba(140,179,105,0.08);border:1px solid rgba(140,179,105,0.2);font-size:12px;font-weight:600;letter-spacing:.5px;color:#A8D08D;margin-bottom:24px}
-.hero-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1.25;color:#F2F0E8;margin-bottom:18px}
+
+.landing-wrap{padding-top:28px;text-align:center}
+.landing-source{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#5C6652;margin-bottom:16px;background:rgba(140,179,105,0.04);border:1px solid rgba(140,179,105,0.1);padding:5px 12px;border-radius:100px}
+.landing-source-dot{width:6px;height:6px;border-radius:50%;background:#8CB369;flex-shrink:0;animation:blink 1.4s infinite}
+
+.hero-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1.25;color:#F2F0E8;margin-bottom:22px}
+
+.fogaca-card{margin:0 auto 24px;max-width:480px;border-radius:20px;overflow:hidden;border:1px solid rgba(140,179,105,0.15);box-shadow:0 8px 40px rgba(0,0,0,0.4)}
+.fogaca-img{width:100%;display:block;object-fit:cover;max-height:340px}
+.fogaca-caption{background:#0E1409;padding:14px 16px;text-align:left}
+.fogaca-caption-tag{display:inline-block;font-size:10px;font-weight:700;color:#8CB369;letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px}
+.fogaca-caption p{font-size:14px;color:#D4D9CC;line-height:1.6;font-style:italic;margin-bottom:7px}
+.fogaca-caption-name{font-size:11px;color:#5C6652;font-weight:600}
+
+.landing-bullets{display:flex;flex-direction:column;gap:8px;margin:0 auto 28px;max-width:400px;text-align:left}
+.landing-bullet{display:flex;align-items:center;gap:10px;background:rgba(140,179,105,0.05);border:1px solid rgba(140,179,105,0.1);border-radius:12px;padding:10px 14px}
+.landing-bullet-em{font-size:18px;flex-shrink:0}
+.landing-bullet-txt{font-size:14px;color:#C8D4B8;line-height:1.4}
 .hl{color:#A8D08D}.hl-accent{color:#E8A838}
 .hero-sub{font-size:16px;line-height:1.7;color:#9CA88E;margin-bottom:28px;max-width:520px;margin-left:auto;margin-right:auto}
 .proof-row{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:32px;flex-wrap:wrap}
@@ -1442,7 +1503,8 @@ const CSS = `
 .faq-a{padding:0 18px 16px;font-size:13px;line-height:1.7;color:#9CA88E}
 
 @media(max-width:640px){
-  .hero-title{font-size:26px}
+  .hero-title{font-size:24px}
+  .fogaca-img{max-height:260px}
   .screen-title{font-size:22px}
   .question{font-size:20px}
   .edu-title{font-size:20px}
