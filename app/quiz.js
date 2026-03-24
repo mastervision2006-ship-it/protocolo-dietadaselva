@@ -238,8 +238,183 @@ export default function Quiz() {
         {screen === "diagnosis" && <Diagnosis name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} frustrationText={frustrationText} onNext={goNext("result")} />}
         {screen === "result" && <Result name={userName} weightToLose={weightToLose} timeWeeks={timeWeeks} bmi={bmi} bmiCat={getBmiCategory(bmi)} />}
       </div>
+      {screen === "result" && <SelvaChat name={userName} />}
       <style>{CSS}</style>
     </div>
+  );
+}
+
+/* ══════════════════════
+   SELVA CHAT — Knowledge Base
+   ══════════════════════ */
+const CHAT_KB = [
+  {
+    triggers: ['funciona','resultado','prova','real','verdade','mentira','mesmo','comprovado','acreditar'],
+    text: `Sim! O protocolo é baseado na Dieta da Selva — o mesmo método que o chef Henrique Fogaça usou para eliminar 17kg. 🥩\n\nMais de 10.000 mulheres já seguiram. A maioria sente diferença já na primeira semana: menos inchaço, mais energia e saciedade real.\n\nA ciência por trás é o GLP-1, o hormônio natural da saciedade ativado pela proteína animal. O mesmo mecanismo do Ozempic — sem injeção.`,
+    suggestions: ['Vou passar fome?','Quanto posso perder?','E a garantia?'],
+  },
+  {
+    triggers: ['fome','passar fome','ficar com fome','saciedade','satisfeita','satisfeito','restritiva'],
+    text: `Essa é a maior surpresa de quem começa! 🙌\n\nCarne, ovos e queijo ativam o GLP-1 — o hormônio da saciedade. Você se sente satisfeita por horas sem precisar ficar beliscando a cada 2h.\n\nA maioria das mulheres relata comer menos naturalmente, sem esforço. É o oposto das dietas de restrição.`,
+    suggestions: ['Posso comer carboidrato?','Tem receitas variadas?','Funciona mesmo?'],
+  },
+  {
+    triggers: ['garantia','devolver','dinheiro de volta','reembolso','risco','7 dias','7dias'],
+    text: `Garantia incondicional de 7 dias. ✅\n\nSe em 7 dias você não sentir diferença — no inchaço, na energia ou na saciedade — basta mandar uma mensagem e devolvemos 100% do seu dinheiro.\n\nSem perguntas, sem burocracia. O risco é zero do seu lado.`,
+    suggestions: ['Como funciona o pagamento?','Como acesso o app?','Quero garantir agora'],
+  },
+  {
+    triggers: ['acesso','como acesso','onde','app','baixar','instalar','link','apos pagar','depois de pagar','como uso'],
+    text: `Super simples! 📱\n\nAssim que o PIX for confirmado (menos de 30 segundos), você recebe um link direto no celular para acessar o app.\n\nNão precisa instalar nada — funciona no navegador do seu celular. Você adiciona ao atalho da tela inicial e vira um app de verdade.`,
+    suggestions: ['Vou receber por email?','E a garantia?','Quero garantir agora'],
+  },
+  {
+    triggers: ['27','preco','valor','caro','barato','por que','porque','desconto','promo','promocao','lancamento'],
+    text: `O preço de R$27 é de lançamento. 🌿\n\nEstamos construindo nossa base de usuárias e por isso praticamos esse valor promocional — o original é R$197.\n\nQuando essa fase encerrar, o valor volta ao normal. Não há garantia que este preço vai estar disponível amanhã.`,
+    suggestions: ['Como pago?','Tem parcelamento?','Quero garantir agora'],
+  },
+  {
+    triggers: ['academia','exercicio','exercício','treino','malhar','ginastica','sem academia','esporte'],
+    text: `Não precisa de academia! 🏠\n\nO app inclui treinos caseiros de apenas 15 minutos por dia. Mas a maior parte dos resultados vem da alimentação — ela representa 80% da transformação.\n\nMuitas mulheres perdem peso sem fazer qualquer exercício, só ajustando a alimentação.`,
+    suggestions: ['Funciona sem exercício?','Que resultados posso esperar?','E a garantia?'],
+  },
+  {
+    triggers: ['carboidrato','carbo','arroz','pao','pão','macarrao','massa','doce','chocolate','fruta','proibido'],
+    text: `A Dieta da Selva não é zero carboidrato. 🥗\n\nO foco é proteína animal + gorduras boas como base. Carboidratos naturais (arroz, fruta, mandioca) podem entrar com moderação.\n\nO que elimina é o carboidrato refinado — pão branco, macarrão, doces industriais. Esses causam inflamação e bloqueiam a perda de gordura.`,
+    suggestions: ['Vou passar fome sem pão?','As receitas são gostosas?','Funciona mesmo?'],
+  },
+  {
+    triggers: ['receita','comida','cardapio','cardápio','o que comer','gostoso','saboroso','variado','menu'],
+    text: `O app tem 20 receitas completas + 5 exclusivas da Selva! 🍳\n\nDo café da manhã (omelete, panqueca zero farinha, ovos com bacon) ao jantar (picanha, salmão, frango assado com ervas).\n\nReceitas práticas, rápidas e genuinamente gostosas. Esse é um dos pontos fortes — você não sente que está em dieta.`,
+    suggestions: ['Tem plano alimentar pronto?','E os exercícios?','Quero garantir agora'],
+  },
+  {
+    triggers: ['quanto','quanto vou perder','perder','emagrecer','semana','dias','tempo','prazo','rapido','rápido'],
+    text: `Os resultados variam, mas o padrão que vemos é: 📊\n\n• Semana 1: redução do inchaço, mais energia\n• Semana 2-3: roupas mais folgadas, balança caindo\n• 21 dias: transformação real e mensurável\n\nO protocolo é de 21 dias justamente porque é o tempo necessário para o corpo adaptar o metabolismo.`,
+    suggestions: ['Funciona mesmo?','E a garantia?','Vou passar fome?'],
+  },
+  {
+    triggers: ['pagar','pagamento','pix','cartao','cartão','boleto','parcelar','parcelamento','como pago'],
+    text: `O pagamento é 100% via PIX. 💳\n\nVantagens:\n✅ Confirmação em menos de 30 segundos\n✅ Acesso liberado imediatamente\n✅ Sem dados de cartão\n✅ 100% seguro pelo app do seu banco\n\nAinda não aceitamos cartão, mas o PIX garante acesso na hora — sem espera.`,
+    suggestions: ['Como acesso o app?','E a garantia?','Quero garantir agora'],
+  },
+  {
+    triggers: ['seguro','confiança','confiavel','golpe','fraude','suspeita','legitimo','legítimo'],
+    text: `Entendo a dúvida — é válido questionar. 🛡️\n\n• Garantia de 7 dias com devolução integral\n• +10.000 mulheres já usaram o protocolo\n• Pagamento via PIX — você vê a transação no app do seu banco\n• Acesso imediato após pagamento\n\nSe não confiar após experimentar 7 dias, devolvemos tudo.`,
+    suggestions: ['E a garantia?','Como funciona o acesso?','Funciona mesmo?'],
+  },
+  {
+    triggers: ['comecar','começar','inicio','início','hoje','agora','quero','garantir','comprar'],
+    text: `Que ótimo! 🎉\n\nClique em "PAGAR COM PIX — R$27" aqui em cima, preencha e-mail e CPF, e pague pelo app do seu banco.\n\nEm menos de 30 segundos o acesso é liberado e você começa hoje mesmo!`,
+    suggestions: ['Como funciona o pagamento?','E a garantia?','Funciona mesmo?'],
+  },
+];
+
+function getSelvaResponse(text, name) {
+  const t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  for (const entry of CHAT_KB) {
+    if (entry.triggers.some(tr => t.includes(tr.normalize('NFD').replace(/[\u0300-\u036f]/g, '')))) {
+      return { text: entry.text, suggestions: entry.suggestions };
+    }
+  }
+  return {
+    text: `Boa pergunta${name ? `, ${name}` : ''}! 🌿\n\nPosso te ajudar com informações sobre o protocolo. Me fala mais o que você quer saber — sobre os resultados, como funciona, pagamento ou acesso?`,
+    suggestions: ['Funciona mesmo?','Como acesso?','E a garantia?','Por que R$ 27?'],
+  };
+}
+
+function SelvaChat({ name }) {
+  const firstName = name?.split(' ')[0] ?? '';
+  const [open, setOpen]       = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [msgs, setMsgs]       = useState([]);
+  const [input, setInput]     = useState('');
+  const [typing, setTyping]   = useState(false);
+  const [unread, setUnread]   = useState(false);
+  const endRef   = useRef(null);
+  const inputRef = useRef(null);
+
+  useEffect(() => { const t = setTimeout(() => { setVisible(true); setUnread(true); }, 6000); return () => clearTimeout(t); }, []);
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [msgs, typing]);
+  useEffect(() => {
+    if (open) { setUnread(false); setTimeout(() => inputRef.current?.focus(), 350); }
+  }, [open]);
+  useEffect(() => {
+    if (!open || msgs.length > 0) return;
+    setTyping(true);
+    setTimeout(() => {
+      setTyping(false);
+      setMsgs([{ from:'bot', text:`Oi${firstName ? `, ${firstName}` : ''}! 🌿\n\nSou a Selva IA. Alguma dúvida antes de garantir seu acesso? Pode perguntar!`, suggestions:['Funciona mesmo?','Vou passar fome?','E a garantia?','Como acesso?','Por que R$ 27?'] }]);
+    }, 1100);
+  }, [open]);
+
+  function sendMsg(text) {
+    if (!text.trim()) return;
+    setMsgs(prev => [...prev, { from:'user', text }]);
+    setInput('');
+    setTyping(true);
+    setTimeout(() => {
+      setTyping(false);
+      setMsgs(prev => [...prev, { from:'bot', ...getSelvaResponse(text, firstName) }]);
+    }, 700 + Math.random() * 900);
+  }
+
+  if (!visible) return null;
+
+  return (
+    <>
+      {!open && (
+        <button className="s-fab" onClick={() => setOpen(true)} aria-label="Chat com Selva IA">
+          <span className="s-fab-icon">🌿</span>
+          <span className="s-fab-label">Tirar dúvidas</span>
+          {unread && <span className="s-fab-dot" />}
+        </button>
+      )}
+      {open && (
+        <div className="s-chat">
+          <div className="s-hd">
+            <div className="s-av">🌿</div>
+            <div className="s-meta">
+              <span className="s-nm">Selva IA</span>
+              <span className="s-st"><span className="s-st-dot" />online agora</span>
+            </div>
+            <button className="s-close" onClick={() => setOpen(false)} aria-label="Fechar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#9CA88E" strokeWidth="2.5" strokeLinecap="round"/></svg>
+            </button>
+          </div>
+          <div className="s-body">
+            {msgs.map((m, i) => (
+              <div key={i} className="s-group">
+                <div className={`s-msg s-${m.from}`}>
+                  {m.text.split('\n').map((line, li, arr) => <span key={li}>{line}{li < arr.length - 1 && <br/>}</span>)}
+                </div>
+                {m.suggestions?.length > 0 && (
+                  <div className="s-chips">
+                    {m.suggestions.map((s, j) => <button key={j} className="s-chip" onClick={() => sendMsg(s)}>{s}</button>)}
+                  </div>
+                )}
+              </div>
+            ))}
+            {typing && (
+              <div className="s-msg s-bot s-typing">
+                <span className="s-dot"/><span className="s-dot"/><span className="s-dot"/>
+              </div>
+            )}
+            <div ref={endRef}/>
+          </div>
+          <div className="s-ft">
+            <input ref={inputRef} className="s-inp" placeholder="Escreva sua dúvida..." value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), sendMsg(input))}
+              maxLength={200}
+            />
+            <button className="s-send" onClick={() => sendMsg(input)} disabled={!input.trim()} aria-label="Enviar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -992,4 +1167,53 @@ const CSS = `
 .pix-force-check{background:none;border:none;color:#5C6652;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline}
 .pix-force-check:hover{color:#9CA88E}
 .pix-paid{display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 0}
+
+/* ── SELVA CHAT ── */
+@keyframes s-fab-in{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes s-chat-in{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:translateY(0)}}
+@keyframes s-msg-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes s-dot-b{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+
+.s-fab{position:fixed;bottom:28px;right:20px;display:flex;align-items:center;gap:8px;padding:11px 18px 11px 14px;border-radius:100px;border:1px solid rgba(140,179,105,0.3);background:rgba(13,18,9,0.97);backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(140,179,105,0.06);color:#F2F0E8;font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;z-index:9999;animation:s-fab-in .55s cubic-bezier(.34,1.56,.64,1) both;transition:transform .2s,box-shadow .2s,border-color .2s;position:fixed}
+.s-fab:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.55),0 0 0 1px rgba(140,179,105,0.18);border-color:rgba(140,179,105,0.45)}
+.s-fab-icon{font-size:18px;line-height:1}
+.s-fab-label{white-space:nowrap}
+.s-fab-dot{position:absolute;top:-4px;right:-4px;width:11px;height:11px;border-radius:50%;background:#E85D4A;border:2px solid #0C0F0A;animation:blink 1.5s infinite}
+
+.s-chat{position:fixed;bottom:0;right:0;width:100%;max-width:400px;height:500px;display:flex;flex-direction:column;background:#0B100A;border:1px solid rgba(140,179,105,0.18);border-bottom:none;border-radius:20px 20px 0 0;box-shadow:0 -12px 60px rgba(0,0,0,0.65);z-index:9999;animation:s-chat-in .35s cubic-bezier(.34,1.56,.64,1) both;overflow:hidden}
+
+.s-hd{display:flex;align-items:center;gap:11px;padding:13px 15px;background:rgba(15,20,11,0.98);border-bottom:1px solid rgba(140,179,105,0.1);flex-shrink:0}
+.s-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#162010,#243018);border:2px solid rgba(140,179,105,0.3);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.s-meta{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.s-nm{font-size:13.5px;font-weight:700;color:#F2F0E8}
+.s-st{display:flex;align-items:center;gap:5px;font-size:11px;color:#8CB369}
+.s-st-dot{width:6px;height:6px;border-radius:50%;background:#8CB369;flex-shrink:0;animation:blink 2.5s infinite}
+.s-close{width:30px;height:30px;border-radius:50%;background:rgba(140,179,105,0.06);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;flex-shrink:0}
+.s-close:hover{background:rgba(140,179,105,0.13)}
+
+.s-body{flex:1;overflow-y:auto;padding:14px 13px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:rgba(140,179,105,0.12) transparent}
+.s-body::-webkit-scrollbar{width:3px}
+.s-body::-webkit-scrollbar-thumb{background:rgba(140,179,105,0.18);border-radius:3px}
+
+.s-group{display:flex;flex-direction:column;gap:7px}
+.s-msg{max-width:84%;padding:10px 13px;font-size:13px;line-height:1.65;font-family:'DM Sans',sans-serif;animation:s-msg-in .22s ease both}
+.s-bot{background:rgba(20,27,14,0.92);border:1px solid rgba(140,179,105,0.1);color:#CDD0C4;border-radius:4px 16px 16px 16px;align-self:flex-start}
+.s-user{background:linear-gradient(135deg,#3A5C1A,#2D4914);color:#F2F0E8;border-radius:16px 4px 16px 16px;align-self:flex-end;border:1px solid rgba(140,179,105,0.18)}
+.s-typing{display:flex;gap:5px;align-items:center;padding:12px 14px}
+.s-dot{width:6px;height:6px;border-radius:50%;background:#8CB369;opacity:.4;animation:s-dot-b .85s ease infinite}
+.s-dot:nth-child(2){animation-delay:.14s}.s-dot:nth-child(3){animation-delay:.28s}
+
+.s-chips{display:flex;flex-wrap:wrap;gap:5px;padding-left:2px}
+.s-chip{padding:5px 11px;border-radius:100px;background:rgba(140,179,105,0.05);border:1px solid rgba(140,179,105,0.18);color:#A8D08D;font-size:11.5px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s;white-space:nowrap}
+.s-chip:hover{background:rgba(140,179,105,0.11);border-color:rgba(140,179,105,0.38);transform:translateY(-1px)}
+
+.s-ft{display:flex;gap:8px;padding:10px 12px;background:rgba(15,20,11,0.98);border-top:1px solid rgba(140,179,105,0.08);flex-shrink:0}
+.s-inp{flex:1;padding:9px 15px;border-radius:100px;border:1px solid rgba(140,179,105,0.13);background:rgba(8,12,6,0.9);color:#F2F0E8;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s}
+.s-inp:focus{border-color:rgba(140,179,105,0.38)}
+.s-inp::placeholder{color:#354030}
+.s-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8CB369,#6B9B45);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.s-send:hover:not(:disabled){transform:scale(1.08);box-shadow:0 4px 16px rgba(140,179,105,0.28)}
+.s-send:disabled{opacity:.3;cursor:default}
+
+@media(max-width:440px){.s-chat{max-width:100%;border-radius:16px 16px 0 0}.s-fab{bottom:88px;right:16px}}
 `;
