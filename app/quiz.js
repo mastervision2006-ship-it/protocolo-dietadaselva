@@ -415,78 +415,120 @@ function AppDemo({ onComprar }) {
    SELVA CHAT — Knowledge Base
    ══════════════════════ */
 const CHAT_KB = [
+  // OBJEÇÃO 1 — Já tentei tanta coisa
   {
-    triggers: ['funciona','resultado','prova','real','verdade','mentira','mesmo','comprovado','acreditar'],
-    text: `Sim! O protocolo é baseado na Dieta da Selva — o mesmo método que o chef Henrique Fogaça usou para eliminar 17kg. 🥩\n\nMais de 10.000 mulheres já seguiram. A maioria sente diferença já na primeira semana: menos inchaço, mais energia e saciedade real.\n\nA ciência por trás é o GLP-1, o hormônio natural da saciedade ativado pela proteína animal. O mesmo mecanismo do Ozempic — sem injeção.`,
-    suggestions: ['Vou passar fome?','Quanto posso perder?','E a garantia?'],
+    triggers: ['ja tentei','já tentei','nao funciona','não funciona','tentei de tudo','tentei varias','tentei várias','decepcionei','frustrada','frustrei','nao acredito','não acredito','funciona mesmo','vai ser diferente'],
+    text: `Eu entendo. De verdade.\n\nSabe o que me dói nessa frase? Que você está carregando a culpa de um fracasso que não é seu.\n\nVocê não falhou. O método falhou com você.\n\nPensa comigo: toda dieta que você tentou antes te pediu o quê? Cortar carboidrato e passar fome. Contar caloria e viver com ansiedade. Tomar shake e fingir que aquilo é comida de verdade. Sacrificar final de semana, social, prazer — por um resultado que some na primeira semana que você para.\n\nNão é fraqueza sua. É que esse sistema foi feito pra você abandonar. Porque toda vez que você abandona, você culpa a si mesma e tenta de novo.\n\nA Dieta da Selva funciona diferente porque ela não pede sacrifício. Ela pede que você coma — de verdade. Carne, ovos, frutas. Comida que sacia, que alimenta, que dá energia. Sem contar nada, sem passar fome.\n\nSão só R$27. Com garantia de 7 dias. Se em uma semana você achar que não é pra você, devolvemos tudo. Sem pergunta, sem burocracia.\n\nA única pergunta que importa agora é: você vai deixar as tentativas passadas te impedir de tentar o único método que respeita o seu corpo?`,
+    suggestions: ['Vou passar fome?','E a garantia?','Quero começar hoje'],
+    showCTA: false,
   },
+  // OBJEÇÃO 2 — Medo de passar fome
   {
-    triggers: ['fome','passar fome','ficar com fome','saciedade','satisfeita','satisfeito','restritiva'],
-    text: `Essa é a maior surpresa de quem começa! 🙌\n\nCarne, ovos e queijo ativam o GLP-1 — o hormônio da saciedade. Você se sente satisfeita por horas sem precisar ficar beliscando a cada 2h.\n\nA maioria das mulheres relata comer menos naturalmente, sem esforço. É o oposto das dietas de restrição.`,
-    suggestions: ['Posso comer carboidrato?','Tem receitas variadas?','Funciona mesmo?'],
+    triggers: ['fome','passar fome','ficar com fome','fiquei com fome','restritiva','restricao','restrição','sacrificio','sacrifício','mal-humorada','mal humorada','ansiosa com dieta'],
+    text: `Essa é a melhor objeção que você podia ter. Porque ela me diz que você já sofreu pra caramba com dieta — e que dessa vez você quer algo diferente.\n\nVou te contar uma coisa que a maioria não fala: fome não é sinal de que você está emagrecendo. Fome é sinal de que o seu corpo está em pânico. E quando o corpo entra em pânico, ele segura gordura.\n\nA Dieta da Selva foi construída exatamente ao contrário. Você come até ficar saciada. Carne, ovo, frutas. Gordura boa. Proteína de verdade. Seu corpo recebe o sinal de que está bem alimentado — e aí, sim, ele libera a gordura guardada.\n\nA primeira coisa que muda é que a fome ansiosa das 15h desaparece. Aquela vontade de doce depois do almoço? Some. Porque o corpo finalmente foi alimentado de verdade.\n\nCom R$27 você testa isso por 7 dias. Se no sétimo dia você ainda estiver com fome, pede o dinheiro de volta. Mas você vai sentir a diferença muito antes disso.`,
+    suggestions: ['Posso comer de tudo?','E os carboidratos?','Quero testar os 7 dias'],
+    showCTA: true,
   },
+  // OBJEÇÃO 3 — Não vai funcionar pra mim
   {
-    triggers: ['garantia','devolver','dinheiro de volta','reembolso','risco','7 dias','7dias'],
-    text: `Garantia incondicional de 7 dias. ✅\n\nSe em 7 dias você não sentir diferença — no inchaço, na energia ou na saciedade — basta mandar uma mensagem e devolvemos 100% do seu dinheiro.\n\nSem perguntas, sem burocracia. O risco é zero do seu lado.`,
-    suggestions: ['Como funciona o pagamento?','Como acesso o app?','Quero garantir agora'],
+    triggers: ['comigo nao','comigo não','meu metabolismo','metabolismo lento','nao sou como','não sou como','caso especial','diferente das outras','meu corpo nao','meu corpo não','problema no meu corpo'],
+    text: `Sabe o que é mais doloroso do que uma dieta não funcionar? É quando você começa a acreditar que o problema é você.\n\nQuantas vezes você já disse essa frase: "Comigo não funciona"? Eu preciso que você escute o quanto isso machuca. Porque você está carregando uma crença que não é sua — alguém plantou ela em você cada vez que um método falhou e jogou a culpa no seu corpo.\n\nMas vou te falar a verdade: o seu corpo não é defeituoso. Ele é inteligente. Quando você passa fome, ele segura gordura. Quando você come industrializado, ele inflama. Quando você come de verdade — proteína, gordura boa, fruta — ele faz exatamente o que deveria fazer.\n\nA Dieta da Selva não é pra um tipo específico de corpo. Ela funciona porque respeita como o corpo humano funciona — o seu, o meu, o de qualquer mulher.\n\nR$27 é menos que um lanche no shopping. Com 7 dias de garantia. Você não tem nada a perder — só a crença de que "comigo não funciona". E essa crença? Ela está te custando muito mais do que R$27.`,
+    suggestions: ['Mas tenho hormônio lento','E a garantia?','Quero tentar'],
+    showCTA: true,
   },
+  // OBJEÇÃO 4 — Não tenho tempo
   {
-    triggers: ['acesso','como acesso','onde','app','baixar','instalar','link','apos pagar','depois de pagar','como uso'],
-    text: `Super simples! 📱\n\nAssim que o PIX for confirmado (menos de 30 segundos), você recebe um link direto no celular para acessar o app.\n\nNão precisa instalar nada — funciona no navegador do seu celular. Você adiciona ao atalho da tela inicial e vira um app de verdade.`,
-    suggestions: ['Vou receber por email?','E a garantia?','Quero garantir agora'],
+    triggers: ['nao tenho tempo','não tenho tempo','vida corrida','ocupada','sem tempo','nao consigo','não consigo','rotina cheia','muita coisa pra fazer','cansada demais'],
+    text: `Você trabalha, cuida da casa, cuida das pessoas que ama — e ainda assim está aqui, tentando cuidar de você. Isso diz muito sobre quem você é.\n\nMas eu preciso te fazer uma pergunta honesta: quanto tempo você gasta por dia se sentindo mal com o próprio corpo? Se olhando no espelho e desviando o olhar? Escolhendo roupa porque nada te agrada? Pensando em "segunda-feira começo"?\n\nÀs vezes o que nos toma mais tempo não é fazer a mudança — é o peso emocional de adiar ela.\n\nO App Dieta da Selva cabe na sua rotina porque não exige nada de extra. As receitas são simples. Os exercícios são em casa, sem equipamento, em menos de 15 minutos. A alimentação usa comida de verdade que você já compra.\n\nNão é mais uma coisa na sua lista. É a coisa que vai te dar energia pra fazer todas as outras coisas melhor.`,
+    suggestions: ['As receitas são rápidas?','Precisa de academia?','Quero começar'],
+    showCTA: true,
   },
+  // OBJEÇÃO 5 — R$27 parece barato demais
   {
-    triggers: ['27','preco','valor','caro','barato','por que','porque','desconto','promo','promocao','lancamento'],
-    text: `O preço de R$27 é de lançamento. 🌿\n\nEstamos construindo nossa base de usuárias e por isso praticamos esse valor promocional — o original é R$197.\n\nQuando essa fase encerrar, o valor volta ao normal. Não há garantia que este preço vai estar disponível amanhã.`,
-    suggestions: ['Como pago?','Tem parcelamento?','Quero garantir agora'],
+    triggers: ['barato demais','muito barato','parece fraco','parece ruim','qualidade baixa','27 reais so','r$27 so','27 reais é pouco','desconfio','desconfiei'],
+    text: `Eu adoro essa pergunta porque ela diz que você tem discernimento. Você já foi enganada antes — e não quer cair num golpe de novo.\n\nMas me deixa virar essa lógica: você já pagou caro por algo que não funcionou? Nutricionista a R$300 a consulta? Shake de R$200? Curso de reeducação alimentar de R$500?\n\nO preço alto não é garantia de resultado. Às vezes é só garantia de que o marketing foi mais caro.\n\nO App Dieta da Selva custa R$27 porque o objetivo é simples: tirar a barreira financeira que impede você de começar. A aposta é que quando você experimentar e ver resultado, vai querer continuar.\n\nDentro do app você tem receitas completas para café, almoço e jantar. Plano de exercícios de 21 dias pra fazer em casa. Guia completo da Dieta da Selva. Tudo organizado, fácil de seguir.\n\nPor R$27. Com 7 dias de garantia. O risco não é você comprar — o risco é você não comprar e continuar do mesmo jeito.`,
+    suggestions: ['O que tem no app?','E a garantia?','Quero garantir agora'],
+    showCTA: true,
   },
+  // OBJEÇÃO 6 — Preciso pensar
   {
-    triggers: ['academia','exercicio','exercício','treino','malhar','ginastica','sem academia','esporte'],
-    text: `Não precisa de academia! 🏠\n\nO app inclui treinos caseiros de apenas 15 minutos por dia. Mas a maior parte dos resultados vem da alimentação — ela representa 80% da transformação.\n\nMuitas mulheres perdem peso sem fazer qualquer exercício, só ajustando a alimentação.`,
-    suggestions: ['Funciona sem exercício?','Que resultados posso esperar?','E a garantia?'],
+    triggers: ['preciso pensar','vou pensar','deixa eu pensar','ainda nao sei','ainda não sei','vou ver','nao sei se','não sei se','talvez','pode ser'],
+    text: `Tudo bem. Mas me conta uma coisa: o que exatamente você precisa pensar?\n\nSe for sobre o preço — R$27 com garantia de 7 dias é literalmente risco zero. Você pode pedir o dinheiro de volta sem explicação.\n\nSe for sobre o método — você já tem a resposta de todas as outras tentativas. Elas funcionaram? A única coisa diferente aqui é experimentar algo diferente.\n\nSe for sobre o tempo — o app já existe, o conteúdo está pronto, você acessa agora mesmo.\n\nEntão me ajuda a entender: o que especificamente você precisa pensar? Me fala, e a gente resolve juntas agora.`,
+    suggestions: ['Tenho medo de gastar e não usar','E se não funcionar?','Tá, me convenceu'],
+    showCTA: false,
   },
+  // OBJEÇÃO 7 — Já tenho muitos apps que não uso
   {
-    triggers: ['carboidrato','carbo','arroz','pao','pão','macarrao','massa','doce','chocolate','fruta','proibido'],
-    text: `A Dieta da Selva não é zero carboidrato. 🥗\n\nO foco é proteína animal + gorduras boas como base. Carboidratos naturais (arroz, fruta, mandioca) podem entrar com moderação.\n\nO que elimina é o carboidrato refinado — pão branco, macarrão, doces industriais. Esses causam inflamação e bloqueiam a perda de gordura.`,
-    suggestions: ['Vou passar fome sem pão?','As receitas são gostosas?','Funciona mesmo?'],
+    triggers: ['muitos apps','apps que nao uso','apps que não uso','compro e nao uso','compro e não uso','nao vou usar','não vou usar','ja comprei','já comprei','esqueco','esqueço','abandono tudo'],
+    text: `Você está sendo honesta comigo e eu respeito isso. Mas me deixa ser honesta com você também.\n\nVocê não usa esses apps porque eles são complicados, chatos ou te fazem sentir culpada toda vez que abre. Correto?\n\nO App Dieta da Selva foi feito pra ser simples. Você abre, vê o que comer hoje, faz o exercício do dia, fecha. Não tem contador de caloria, não tem planilha, não tem nada que te faça sentir inadequada.\n\nMas vou falar uma verdade que vai doer um pouco: o maior desperdício não é os R$27. É mais um ano do jeito que está.\n\nVocê tem 7 dias de garantia. Se abrir o app e não sentir que vale, pede o dinheiro de volta. Mas e se abrir e sentir que finalmente encontrou algo que funciona pra você?`,
+    suggestions: ['Como é o app por dentro?','E a garantia de 7 dias?','Quero tentar'],
+    showCTA: true,
   },
+  // OBJEÇÃO 8 — Família não vai comer assim
   {
-    triggers: ['receita','comida','cardapio','cardápio','o que comer','gostoso','saboroso','variado','menu'],
-    text: `O app tem 20 receitas completas + 5 exclusivas da Selva! 🍳\n\nDo café da manhã (omelete, panqueca zero farinha, ovos com bacon) ao jantar (picanha, salmão, frango assado com ervas).\n\nReceitas práticas, rápidas e genuinamente gostosas. Esse é um dos pontos fortes — você não sente que está em dieta.`,
-    suggestions: ['Tem plano alimentar pronto?','E os exercícios?','Quero garantir agora'],
+    triggers: ['familia nao','família não','familia vai','família vai','filhos nao','filhos não','marido nao','marido não','cozinhar separado','cozinha separada','casa toda','minha familia'],
+    text: `Essa é uma das coisas mais legais da Dieta da Selva — ela não é uma dieta esquisita.\n\nCarne, ovo, frango, frutas, arroz, feijão, legumes. Sua família já come isso. A diferença é que você vai cortar os ultra-processados e óleos ruins — e isso serve pra todo mundo.\n\nVocê não precisa cozinhar separado. Você não precisa ficar explicando. Você simplesmente começa a comer melhor — e muitas vezes a família vai junto sem nem perceber.\n\nE mesmo que prefira adaptar só o seu prato, leva 5 minutos. Não tem nada restritivo ou complicado aqui.`,
+    suggestions: ['Tem receitas práticas?','Quanto tempo leva?','Quero começar'],
+    showCTA: true,
   },
+  // OBJEÇÃO 9 — Problema de saúde / hormônio / tireoide
   {
-    triggers: ['quanto','quanto vou perder','perder','emagrecer','semana','dias','tempo','prazo','rapido','rápido'],
-    text: `Os resultados variam, mas o padrão que vemos é: 📊\n\n• Semana 1: redução do inchaço, mais energia\n• Semana 2-3: roupas mais folgadas, balança caindo\n• 21 dias: transformação real e mensurável\n\nO protocolo é de 21 dias justamente porque é o tempo necessário para o corpo adaptar o metabolismo.`,
-    suggestions: ['Funciona mesmo?','E a garantia?','Vou passar fome?'],
+    triggers: ['tireoide','tireoide','hormonio','hormônio','hipotireoidismo','pcos','sop','insulina','problema de saude','problema de saúde','doença','medicamento','remedio','remédio','anticoncepcional'],
+    text: `Isso é muito sério e eu não vou minimizar. Problemas hormonais, tireoide, PCOS — eles realmente impactam o metabolismo.\n\nMas deixa eu te perguntar: o que o médico disse sobre alimentação? Na maioria dos casos, a recomendação é exatamente isso — reduzir ultra-processados, açúcar e inflamação. É exatamente o que a Dieta da Selva propõe.\n\nEla não substitui o acompanhamento médico — e a gente deixa isso claro no app. Mas ela funciona junto com o tratamento, não contra ele.\n\nMulheres com hipotireoidismo relatam melhora significativa quando cortam os inflamatórios da dieta. Não é milagre — é o corpo respondendo a comida de verdade.\n\nExperimente por 7 dias. Se não sentir diferença, você pede o dinheiro de volta. Mas e se sentir?`,
+    suggestions: ['É seguro para quem tem tireoide?','E a garantia?','Quero tentar os 7 dias'],
+    showCTA: true,
   },
+  // OBJEÇÃO 10 — É seguro? Posso confiar?
   {
-    triggers: ['pagar','pagamento','pix','cartao','cartão','boleto','parcelar','parcelamento','como pago'],
-    text: `O pagamento é 100% via PIX. 💳\n\nVantagens:\n✅ Confirmação em menos de 30 segundos\n✅ Acesso liberado imediatamente\n✅ Sem dados de cartão\n✅ 100% seguro pelo app do seu banco\n\nAinda não aceitamos cartão, mas o PIX garante acesso na hora — sem espera.`,
-    suggestions: ['Como acesso o app?','E a garantia?','Quero garantir agora'],
+    triggers: ['seguro','confiar','confiavel','confiável','golpe','fraude','fake','enganar','mentira','verdadeiro','legitimo','legítimo','serio','sério'],
+    text: `Faz bem em perguntar.\n\nA Dieta da Selva não é uma dieta radical de eliminar tudo. É uma volta à comida de verdade — carne, ovos, frutas, legumes. O tipo de coisa que sua avó comia.\n\nNão tem suplemento obrigatório. Não tem produto pra comprar. Não tem restrição extrema. É simplesmente cortar o industrializado e voltar ao natural.\n\nA compra? Pagamento seguro via PIX, garantia de 7 dias, acesso imediato após confirmar. Qualquer problema, a gente resolve.\n\nA pergunta real é: você está mais segura continuando do jeito que está do que tentando algo diferente por R$27?`,
+    suggestions: ['Como funciona o pagamento?','E a garantia de 7 dias?','Quero garantir agora'],
+    showCTA: true,
   },
+  // Acesso / como funciona
   {
-    triggers: ['seguro','confiança','confiavel','golpe','fraude','suspeita','legitimo','legítimo'],
-    text: `Entendo a dúvida — é válido questionar. 🛡️\n\n• Garantia de 7 dias com devolução integral\n• +10.000 mulheres já usaram o protocolo\n• Pagamento via PIX — você vê a transação no app do seu banco\n• Acesso imediato após pagamento\n\nSe não confiar após experimentar 7 dias, devolvemos tudo.`,
-    suggestions: ['E a garantia?','Como funciona o acesso?','Funciona mesmo?'],
+    triggers: ['como acesso','onde acesso','como uso','baixar','instalar','link','apos pagar','depois de pagar','acessar','entrar no app'],
+    text: `Super simples! 📱\n\nAssim que o PIX for confirmado — em menos de 30 segundos — você recebe um link direto no celular pra acessar o app.\n\nNão precisa instalar nada. Funciona no navegador do seu celular igual ao Instagram. Você adiciona ao atalho da tela inicial e vira um app de verdade.\n\nTodo o conteúdo fica lá: receitas, plano alimentar, treinos, desafio dos 21 dias, a IA Selva pra tirar suas dúvidas.`,
+    suggestions: ['Como é feito o pagamento?','E a garantia?','Quero garantir agora'],
+    showCTA: true,
   },
+  // Pagamento / PIX
   {
-    triggers: ['comecar','começar','inicio','início','hoje','agora','quero','garantir','comprar'],
-    text: `Que ótimo! 🎉\n\nClique em "PAGAR COM PIX — R$27" aqui em cima, preencha e-mail e CPF, e pague pelo app do seu banco.\n\nEm menos de 30 segundos o acesso é liberado e você começa hoje mesmo!`,
-    suggestions: ['Como funciona o pagamento?','E a garantia?','Funciona mesmo?'],
+    triggers: ['pagar','pagamento','pix','cartao','cartão','boleto','parcelar','parcelamento','como pago','forma de pagamento'],
+    text: `O pagamento é 100% via PIX. 💳\n\n✅ Confirmação em menos de 30 segundos\n✅ Acesso liberado imediatamente\n✅ Sem dados de cartão — sem risco\n✅ Você vê tudo no app do seu banco\n\nÉ só gerar o QR Code aqui, abrir o app do banco e pagar. Simples assim.`,
+    suggestions: ['Como acesso depois?','E a garantia?','Quero garantir agora'],
+    showCTA: true,
+  },
+  // Garantia
+  {
+    triggers: ['garantia','devolver','devolucao','devolução','dinheiro de volta','reembolso','7 dias','risco'],
+    text: `Garantia incondicional de 7 dias. ✅\n\nSe em 7 dias você não sentir nenhuma diferença — no inchaço, na energia, na saciedade — basta mandar uma mensagem e devolvemos 100% do seu dinheiro. Sem perguntas. Sem burocracia.\n\nO risco é zero do seu lado. A única coisa que você pode perder é mais tempo no mesmo ciclo.`,
+    suggestions: ['Quero começar hoje','Como acesso o app?','Tá, me convenci'],
+    showCTA: true,
+  },
+  // Quero comprar / fechar
+  {
+    triggers: ['quero','comprar','garantir','comecar','começar','hoje','agora','me convenci','ta bom','tá bom','vamos','bora','sim','fechou'],
+    text: `Que ótimo! Fico feliz que você tomou essa decisão por você. 🌿\n\nClica no botão abaixo, garante o seu acesso por R$27 e começa hoje. Se em 7 dias não sentir que valeu, a gente devolve tudo.\n\nVocê não tem nada a perder — só o peso que está carregando.`,
+    suggestions: [],
+    showCTA: true,
   },
 ];
+
+const ABERTURA_INICIAL = `Você chegou até aqui. Isso não foi por acaso — tem algo que você quer mudar.\n\nSou a SELVA, consultora especialista em transformação corporal feminina. Estou aqui pra tirar qualquer dúvida antes de você garantir seu acesso.\n\nMe conta: qual é a coisa que mais te incomoda hoje quando você pensa no seu corpo?`;
 
 function getSelvaResponse(text, name) {
   const t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   for (const entry of CHAT_KB) {
     if (entry.triggers.some(tr => t.includes(tr.normalize('NFD').replace(/[\u0300-\u036f]/g, '')))) {
-      return { text: entry.text, suggestions: entry.suggestions };
+      return { text: entry.text, suggestions: entry.suggestions, showCTA: entry.showCTA ?? false };
     }
   }
+  // Resposta padrão empática — segue o fluxo da IA Closer
   return {
-    text: `Boa pergunta${name ? `, ${name}` : ''}! 🌿\n\nPosso te ajudar com informações sobre o protocolo. Me fala mais o que você quer saber — sobre os resultados, como funciona, pagamento ou acesso?`,
-    suggestions: ['Funciona mesmo?','Como acesso?','E a garantia?','Por que R$ 27?'],
+    text: `Entendo o que você está sentindo${name ? `, ${name}` : ''}.\n\nMe conta mais — o que especificamente ainda te impede de dar esse passo? Pode ser sobre o método, o preço, o tempo ou qualquer outra coisa. A gente resolve juntas agora.`,
+    suggestions: ['Já tentei tanta coisa','Medo de passar fome','Não tenho tempo','R$27 parece barato demais'],
+    showCTA: false,
   };
 }
 
@@ -508,7 +550,7 @@ function SelvaChat({ name }) {
     setTyping(true);
     setTimeout(() => {
       setTyping(false);
-      setMsgs([{ from:'bot', text:`Oi${firstName ? `, ${firstName}` : ''}! 🌿\n\nSou a Selva IA. Alguma dúvida antes de garantir seu acesso? Pode perguntar!`, suggestions:['Funciona mesmo?','Vou passar fome?','E a garantia?','Como acesso?','Por que R$ 27?'] }]);
+      setMsgs([{ from:'bot', text: ABERTURA_INICIAL, suggestions:['Já tentei tanta coisa','Vou passar fome?','E a garantia?','Como acesso?','Por que R$ 27?'], showCTA: false }]);
     }, 1100);
   }, [open]);
 
@@ -549,6 +591,11 @@ function SelvaChat({ name }) {
                 <div className={`s-msg s-${m.from}`}>
                   {m.text.split('\n').map((line, li, arr) => <span key={li}>{line}{li < arr.length - 1 && <br/>}</span>)}
                 </div>
+                {m.from === 'bot' && m.showCTA && (
+                  <button className="s-cta" onClick={() => { setOpen(false); setTimeout(() => document.querySelector('.price-card')?.scrollIntoView({ behavior:'smooth', block:'center' }), 150); }}>
+                    🔒 Garantir acesso por R$27 agora
+                  </button>
+                )}
                 {m.suggestions?.length > 0 && (
                   <div className="s-chips">
                     {m.suggestions.map((s, j) => <button key={j} className="s-chip" onClick={() => sendMsg(s)}>{s}</button>)}
@@ -1441,6 +1488,8 @@ const CSS = `
 .s-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8CB369,#6B9B45);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
 .s-send:hover:not(:disabled){transform:scale(1.08);box-shadow:0 4px 16px rgba(140,179,105,0.28)}
 .s-send:disabled{opacity:.3;cursor:default}
+.s-cta{display:block;width:calc(100% - 4px);margin:6px 2px 2px;padding:11px 16px;border-radius:12px;background:linear-gradient(135deg,#E8A838,#D4941A);border:none;color:#000;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;text-align:center;transition:all .2s;box-shadow:0 4px 16px rgba(232,168,56,0.3)}
+.s-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,168,56,0.45)}
 
 @media(max-width:440px){.s-chat{max-width:100%;border-radius:16px 16px 0 0}.s-fab{bottom:88px;right:16px}}
 `;
