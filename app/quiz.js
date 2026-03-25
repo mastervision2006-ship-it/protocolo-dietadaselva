@@ -8,35 +8,34 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const CHECKOUT_URL = "https://SEU-CHECKOUT-GG.com/protocolo-dieta-da-selva";
 
-/* ── SCREENS FLOW ──
-  1. landing
-  2. name        → Pega nome
-  3. quiz (8 perguntas)
-  4. body-data   → Peso, altura, meta
-  5. edu-glp1    → Tela educacional GLP-1
-  6. edu-science → Tela ciência da saciedade
-  7. social-proof → Tela prova social pesada
-  8. analyzing   → Loading
-  9. diagnosis   → Diagnóstico personalizado
-  10. result     → Oferta final + CTA
+/* ── SCREENS FLOW v3.0 ──
+  1. landing        → Landing com matéria Fogaça
+  2. name           → Pega nome
+  3. quiz (9 perguntas com segmentação)
+  4. [medo-screen]  → Só para quem responde "medo de falhar" na Q9
+  5. body-data      → Peso, altura, meta
+  6. edu-unificada  → GLP-1 + mecanismo + 2 depoimentos em 1 tela
+  7. analyzing      → Loading com progresso
+  8. diagnosis      → Diagnóstico personalizado por perfil
+  9. result         → Oferta com headline dinâmica por segmento
 */
 
 const QUIZ_QUESTIONS = [
   {
     id: "goal",
-    question: "{{name}}, qual é o seu principal objetivo hoje?",
-    subtitle: "Escolha o que mais te representa neste momento",
+    question: "{{name}}, qual é o seu maior objetivo agora?",
+    subtitle: "Seja honesta — isso define todo o seu protocolo",
     options: [
-      { text: "Perder peso de forma definitiva", emoji: "🔥", value: "peso" },
+      { text: "Perder peso de vez", emoji: "🔥", value: "peso" },
       { text: "Desinchar e me sentir leve", emoji: "✨", value: "desinchar" },
-      { text: "Ter mais energia e disposição", emoji: "⚡", value: "energia" },
-      { text: "Todas as anteriores", emoji: "💎", value: "todas" },
+      { text: "Recuperar minha energia", emoji: "⚡", value: "energia" },
+      { text: "Tudo isso junto", emoji: "💎", value: "todas" },
     ],
   },
   {
     id: "age",
     question: "Qual a sua faixa de idade?",
-    subtitle: "Isso nos ajuda a calibrar seu protocolo, {{name}}",
+    subtitle: "O protocolo é calibrado por fase metabólica, {{name}}",
     options: [
       { text: "25 a 34 anos", emoji: "🌸", value: "25-34" },
       { text: "35 a 44 anos", emoji: "🌺", value: "35-44" },
@@ -46,68 +45,79 @@ const QUIZ_QUESTIONS = [
   },
   {
     id: "frustration",
-    question: "{{name}}, qual dessas situações mais te frustra?",
-    subtitle: "Seja honesta consigo mesma — isso é importante",
+    question: "Qual dessas frases te representa mais, {{name}}?",
+    subtitle: "Não julgamos — só precisamos entender seu padrão",
     options: [
-      { text: "Já tentei várias dietas e nada funciona", emoji: "😞", value: "dietas" },
-      { text: "Perco peso mas sempre volto a engordar", emoji: "🔄", value: "sanfona" },
-      { text: "Sinto fome o tempo todo nas dietas", emoji: "😫", value: "fome" },
-      { text: "Não tenho tempo para dietas complicadas", emoji: "⏰", value: "tempo" },
+      { text: "Já tentei várias dietas e nenhuma durou", emoji: "😞", value: "dietas" },
+      { text: "Sempre emagreço e volto a engordar", emoji: "🔄", value: "sanfona" },
+      { text: "Sinto fome demais em qualquer dieta", emoji: "😫", value: "fome" },
+      { text: "Não tenho tempo para coisas complicadas", emoji: "⏰", value: "tempo" },
     ],
   },
   {
     id: "meals",
-    question: "Como é sua alimentação hoje?",
-    subtitle: "Não se preocupe, aqui não tem julgamento",
+    question: "Como você descreveria sua alimentação hoje?",
+    subtitle: "Sem julgamento — só queremos entender seu ponto de partida",
     options: [
-      { text: "Como muito pão, massa e doces", emoji: "🍞", value: "carboidratos" },
+      { text: "Muita massa, pão e doce no dia a dia", emoji: "🍞", value: "carboidratos" },
       { text: "Pulo refeições com frequência", emoji: "⏭️", value: "pula" },
-      { text: "Tento comer saudável mas não consigo manter", emoji: "🥗", value: "tenta" },
-      { text: "Como de tudo sem controle", emoji: "🍕", value: "descontrole" },
+      { text: "Tento comer bem mas não consigo manter", emoji: "🥗", value: "tenta" },
+      { text: "Como de tudo, sem padrão definido", emoji: "🍕", value: "descontrole" },
     ],
   },
   {
     id: "symptoms",
-    question: "Você sente algum desses sintomas, {{name}}?",
-    subtitle: "Esses sinais podem estar ligados à sua alimentação",
+    question: "Você sente algum desses sinais, {{name}}?",
+    subtitle: "Esses sintomas revelam seu perfil metabólico real",
     options: [
-      { text: "Inchaço abdominal constante", emoji: "🎈", value: "inchaço" },
-      { text: "Cansaço e falta de energia", emoji: "😴", value: "cansaço" },
-      { text: "Ansiedade e compulsão alimentar", emoji: "🧠", value: "ansiedade" },
-      { text: "Dores articulares e inflamação", emoji: "🦴", value: "inflamação" },
+      { text: "Barriga inchada quase todo dia", emoji: "🎈", value: "inchaço" },
+      { text: "Cansaço mesmo dormindo bem", emoji: "😴", value: "cansaço" },
+      { text: "Vontade de comer doce ou compulsão", emoji: "🧠", value: "ansiedade" },
+      { text: "Dores nas juntas ou sensação de inflamação", emoji: "🦴", value: "inflamação" },
     ],
   },
   {
-    id: "knowledge",
-    question: "Você já ouviu falar da Dieta da Selva?",
-    subtitle: "O método que fez o chef Fogaça perder 17kg em 3 meses",
+    id: "tentativas",
+    question: "Quantas vezes você já tentou emagrecer de verdade?",
+    subtitle: "Cada tentativa revela algo sobre o seu metabolismo, {{name}}",
     options: [
-      { text: "Sim! Quero começar logo", emoji: "🙋‍♀️", value: "sim-quer" },
-      { text: "Sim, mas não sei como fazer direito", emoji: "🤔", value: "sim-duvida" },
-      { text: "Já ouvi falar mas nunca pesquisei", emoji: "👀", value: "ouviu" },
-      { text: "Não, é a primeira vez", emoji: "🆕", value: "nao" },
+      { text: "Esta seria minha primeira tentativa", emoji: "🆕", value: "primeira" },
+      { text: "Já tentei 1 ou 2 vezes", emoji: "🌱", value: "poucas" },
+      { text: "Já tentei muitas vezes (mais de 3)", emoji: "📉", value: "muitas" },
+      { text: "Perdi as contas — é um ciclo sem fim", emoji: "🔁", value: "ciclo" },
+    ],
+  },
+  {
+    id: "motivacao",
+    question: "O que mais te motivaria a começar, {{name}}?",
+    subtitle: "Queremos entender o que realmente importa para você",
+    options: [
+      { text: "Sentir diferença rápida no meu corpo", emoji: "⚡", value: "resultado-rapido" },
+      { text: "Um método simples que cabe na minha rotina", emoji: "🌿", value: "simplicidade" },
+      { text: "Comer bem sem passar fome jamais", emoji: "🥩", value: "sem-fome" },
+      { text: "Ter energia e bem-estar, não só emagrecer", emoji: "✨", value: "bemestar" },
     ],
   },
   {
     id: "commitment",
-    question: "Se existisse um método simples e gostoso para emagrecer...",
-    subtitle: "Imagine comer o que ama e ainda perder peso, {{name}}",
+    question: "Se você tivesse o método certo em mãos agora...",
+    subtitle: "Imagine: sem fome, sem academia obrigatória, comendo o que ama",
     options: [
-      { text: "Eu começaria HOJE mesmo", emoji: "🚀", value: "hoje" },
-      { text: "Eu tentaria se fosse fácil de seguir", emoji: "👍", value: "tentaria" },
-      { text: "Preciso saber mais antes", emoji: "📖", value: "saber" },
-      { text: "Estou cansada de promessas", emoji: "😒", value: "descrente" },
+      { text: "Começaria ainda hoje", emoji: "🚀", value: "hoje" },
+      { text: "Começaria se fosse fácil de seguir", emoji: "👍", value: "tentaria" },
+      { text: "Precisaria entender melhor primeiro", emoji: "📖", value: "saber" },
+      { text: "Já ouvi muita promessa — estou cansada", emoji: "😒", value: "descrente" },
     ],
   },
   {
     id: "ready",
-    question: "{{name}}, você está pronta para mudar sua relação com a comida?",
-    subtitle: "Esta é a pergunta mais importante do quiz",
+    question: "{{name}}, como você se sente em relação a mudar agora?",
+    subtitle: "Esta resposta é a mais importante de todas",
     options: [
-      { text: "SIM! Estou pronta para mudar", emoji: "💪", value: "pronta" },
-      { text: "Sim, se o método for comprovado", emoji: "✅", value: "comprovado" },
+      { text: "Estou pronta — quero começar agora", emoji: "💪", value: "pronta" },
+      { text: "Estou pronta se o método for comprovado", emoji: "✅", value: "comprovado" },
       { text: "Tenho medo de falhar de novo", emoji: "🥺", value: "medo" },
-      { text: "Quero ver meu resultado primeiro", emoji: "📊", value: "resultado" },
+      { text: "Preciso ver resultado antes de acreditar", emoji: "📊", value: "resultado" },
     ],
   },
 ];
@@ -120,6 +130,21 @@ const TESTIMONIALS = [
   { name:"Fernanda L.", age:"36", city:"Salvador", text:"Voltei a caber nas minhas roupas de 5 anos atrás. E o melhor: sem academia, só com alimentação e os exercícios do app.", result:"-7kg / 30 dias", stars:5, img:"/testimonials/prova5.jpg" },
   { name:"Juliana C.", age:"44", city:"Porto Alegre", text:"Achei que era mais uma dieta da moda. Me enganei. No 7º dia já não sentia mais aquela fome ansiosa. Perdi 9kg em 5 semanas.", result:"-9kg / 35 dias", stars:5, img:"/testimonials/prova6.webp" },
 ];
+
+/* ══════════════════════
+   SEGMENTATION ENGINE
+   ══════════════════════ */
+function getLeadProfile(answers) {
+  const { goal, age, frustration, tentativas, motivacao, commitment, ready } = answers || {};
+  if (ready === 'medo') return 'medo';
+  if (commitment === 'hoje' && (ready === 'pronta' || goal === 'todas')) return 'decidida';
+  if (tentativas === 'muitas' || tentativas === 'ciclo' || commitment === 'descrente') return 'cetica';
+  if ((age === '45-54' || age === '55+') && answers?.symptoms) return 'hormonal';
+  if (frustration === 'tempo' || motivacao === 'simplicidade') return 'ocupada';
+  if (commitment === 'saber' || ready === 'resultado') return 'economica';
+  if (frustration === 'dietas' && tentativas !== 'primeira') return 'cetica';
+  return 'cetica';
+}
 
 /* ══════════════════════
    MAIN COMPONENT
@@ -160,14 +185,18 @@ export default function Quiz() {
       if (currentQ < QUIZ_QUESTIONS.length - 1) {
         t(() => setCurrentQ(q => q + 1));
       } else {
-        t(() => setScreen("body-data"));
+        if (val === 'medo') {
+          t(() => setScreen("medo-screen"));
+        } else {
+          t(() => setScreen("body-data"));
+        }
       }
     }, 500);
   };
 
   const handleBodySubmit = () => {
     if (bodyData.weight && bodyData.height && bodyData.goal) {
-      t(() => setScreen("edu-glp1"));
+      t(() => setScreen("edu-unificada"));
     }
   };
 
@@ -214,13 +243,6 @@ export default function Quiz() {
     return { label:"Obesidade grau II+", color:"#DC2626" };
   };
 
-  const frustrationText = {
-    dietas: "que já tentou diversas dietas sem sucesso duradouro",
-    sanfona: "que sofre com o efeito sanfona e não consegue manter o peso",
-    fome: "que sente fome constante em qualquer dieta restritiva",
-    tempo: "que não tem tempo para dietas complicadas",
-  };
-
   return (
     <div style={S.page}>
       <div style={S.grain} />
@@ -230,13 +252,12 @@ export default function Quiz() {
         {screen === "landing" && <Landing onStart={goNext("name")} />}
         {screen === "name" && <NameScreen value={nameInput} onChange={setNameInput} onSubmit={handleName} />}
         {screen === "quiz" && <QuizScreen q={QUIZ_QUESTIONS[currentQ]} progress={progress} cur={currentQ} total={QUIZ_QUESTIONS.length} onAnswer={handleAnswer} sel={selectedOpt} n={n} />}
+        {screen === "medo-screen" && <MedoScreen name={userName} onNext={goNext("body-data")} />}
         {screen === "body-data" && <BodyDataScreen data={bodyData} onChange={setBodyData} onSubmit={handleBodySubmit} name={userName} />}
-        {screen === "edu-glp1" && <EduGLP1 name={userName} onNext={goNext("edu-science")} />}
-        {screen === "edu-science" && <EduScience name={userName} onNext={goNext("social-proof")} />}
-        {screen === "social-proof" && <SocialProof name={userName} onNext={startAnalysis} />}
+        {screen === "edu-unificada" && <EduUnificada name={userName} answers={answers} onNext={startAnalysis} />}
         {screen === "analyzing" && <Analyzing progress={analysisProgress} name={userName} />}
         {screen === "diagnosis" && <Diagnosis name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} onNext={goNext("result")} />}
-        {screen === "result" && <Result name={userName} weightToLose={weightToLose} timeWeeks={timeWeeks} bmi={bmi} bmiCat={getBmiCategory(bmi)} />}
+        {screen === "result" && <Result name={userName} weightToLose={weightToLose} timeWeeks={timeWeeks} bmi={bmi} bmiCat={getBmiCategory(bmi)} answers={answers} />}
       </div>
       {screen === "result" && <SelvaChat name={userName} />}
       <style>{CSS}</style>
@@ -887,106 +908,112 @@ function BodyDataScreen({ data, onChange, onSubmit, name }) {
 }
 
 /* ══════════════════════
-   5. EDU GLP-1
+   5. MEDO SCREEN
    ══════════════════════ */
-function EduGLP1({ name, onNext }) {
+function MedoScreen({ name, onNext }) {
   return (
-    <div style={{paddingTop:"32px"}}>
-      <div className="edu-card">
-        <div className="edu-badge">🧬 CIÊNCIA POR TRÁS DO PROTOCOLO</div>
-        <h2 className="edu-title">{name}, você sabia que seu corpo produz um "Ozempic natural"?</h2>
-        <div className="edu-body">
-          <p>Existe um hormônio chamado <strong style={{color:"#A8D08D"}}>GLP-1</strong> que é produzido naturalmente pelo seu intestino. Ele é <strong>o mesmo hormônio que o Ozempic e a Semaglutida imitam</strong> — aqueles medicamentos que custam milhares de reais.</p>
-          <p>O GLP-1 faz 3 coisas poderosas no seu corpo:</p>
-          <div className="edu-list">
-            <div className="edu-item"><span className="edu-icon">🎯</span><div><strong>Elimina a fome</strong><br/><span className="dim">Envia sinais de saciedade para o cérebro — você se sente satisfeita por horas</span></div></div>
-            <div className="edu-item"><span className="edu-icon">🔥</span><div><strong>Ativa a queima de gordura</strong><br/><span className="dim">Reduz insulina e força o corpo a usar gordura como combustível</span></div></div>
-            <div className="edu-item"><span className="edu-icon">⚡</span><div><strong>Estabiliza sua energia</strong><br/><span className="dim">Acaba com os picos e quedas de açúcar que causam cansaço e compulsão</span></div></div>
-          </div>
-          <div className="edu-highlight">
-            <p>💡 <strong>A grande descoberta:</strong> Estudos mostram que dietas ricas em <strong>proteínas e gorduras boas</strong> — como carnes, ovos, queijos — <strong>aumentam naturalmente a produção de GLP-1</strong>, gerando saciedade sem precisar de medicamentos.</p>
-          </div>
-          <p style={{fontSize:"14px",color:"#9CA88E",textAlign:"center"}}>É exatamente isso que o Protocolo Dieta da Selva faz no seu corpo.</p>
+    <div style={{paddingTop:"32px",maxWidth:"480px",margin:"0 auto"}}>
+      <div style={{textAlign:"center",marginBottom:"28px"}}>
+        <div style={{fontSize:"48px",marginBottom:"16px"}}>🌿</div>
+        <h2 className="screen-title">Esse medo não é fraqueza,<br/>{name}.</h2>
+        <p style={{fontSize:"15px",color:"#9CA88E",lineHeight:"1.7",marginTop:"12px"}}>
+          É uma cicatriz de cada vez que você tentou e algo falhou. Mas deixa eu te fazer uma pergunta honesta:
+        </p>
+      </div>
+
+      <div className="medo-card">
+        <p className="medo-card-title">📌 Cada vez que você "falhou"...</p>
+        <p className="medo-card-body">
+          O método te mandava passar fome? Cortar tudo que você ama? Contar caloria e viver com ansiedade?
+        </p>
+        <p className="medo-card-body" style={{marginTop:"12px",color:"#F2F0E8",fontWeight:"600"}}>
+          Você não falhou. O método falhou com você.
+        </p>
+        <p className="medo-card-body" style={{marginTop:"10px"}}>
+          A Dieta da Selva não pede sacrifício. Ela pede que você <strong>coma de verdade</strong> — carne, ovos, queijo, gordura boa — até ficar completamente saciada. O corpo faz o resto.
+        </p>
+      </div>
+
+      <div className="medo-guarantee">
+        <span style={{fontSize:"28px"}}>🛡️</span>
+        <div>
+          <p style={{fontSize:"14px",fontWeight:"700",color:"#F2F0E8",marginBottom:"5px"}}>Garantia incondicional de 7 dias</p>
+          <p style={{fontSize:"13px",color:"#9CA88E",lineHeight:"1.6"}}>Se em 7 dias você não sentir diferença no inchaço, na energia ou na fome — devolvemos cada centavo. Sem pergunta. Sem burocracia.</p>
         </div>
       </div>
-      <button className="cta" onClick={onNext} style={{width:"100%",marginTop:"20px"}}>Entendi! Continuar →</button>
+
+      <button className="cta" onClick={onNext} style={{width:"100%",marginTop:"24px"}}>
+        Continuar — quero ver meu diagnóstico →
+      </button>
+      <p className="micro" style={{marginTop:"10px",textAlign:"center"}}>Você não tem nada a perder. Só o peso que está carregando.</p>
     </div>
   );
 }
 
 /* ══════════════════════
-   6. EDU SCIENCE
+   6. EDU UNIFICADA
    ══════════════════════ */
-function EduScience({ name, onNext }) {
-  return (
-    <div style={{paddingTop:"32px"}}>
-      <div className="edu-card">
-        <div className="edu-badge">🥩 POR QUE A DIETA DA SELVA FUNCIONA</div>
-        <h2 className="edu-title">{name}, entenda por que você vai emagrecer comendo comidas que ama</h2>
-        <div className="edu-body">
-          <p>Nas dietas tradicionais, você corta calorias e passa fome. O resultado? Seu corpo <strong style={{color:"#E85D4A"}}>diminui o metabolismo</strong>, você fica irritada, ansiosa e desiste em semanas.</p>
-          <p>O Protocolo Dieta da Selva funciona ao contrário:</p>
-          <div className="edu-compare">
-            <div className="edu-compare-col edu-bad">
-              <div className="compare-header">❌ Dietas comuns</div>
-              <div className="compare-item">Cortam calorias drasticamente</div>
-              <div className="compare-item">Causam fome constante</div>
-              <div className="compare-item">Grelina (hormônio da fome) dispara</div>
-              <div className="compare-item">Metabolismo desacelera</div>
-              <div className="compare-item">Efeito sanfona garantido</div>
-            </div>
-            <div className="edu-compare-col edu-good">
-              <div className="compare-header">✅ Dieta da Selva</div>
-              <div className="compare-item">Alimenta o corpo com proteínas e gorduras</div>
-              <div className="compare-item">GLP-1 gera saciedade natural</div>
-              <div className="compare-item">Grelina controlada automaticamente</div>
-              <div className="compare-item">Metabolismo acelerado pela proteína</div>
-              <div className="compare-item">Perda de peso sustentável</div>
-            </div>
-          </div>
-          <div className="edu-quote">
-            <p>"Emagreci 17kg nos últimos três meses fazendo a dieta da selva. Cortei praticamente todo o carboidrato e incluí mais gordura animal."</p>
-            <span className="edu-quote-author">— Chef Henrique Fogaça, jurado do MasterChef</span>
-          </div>
-        </div>
-      </div>
-      <button className="cta" onClick={onNext} style={{width:"100%",marginTop:"20px"}}>Quero ver as provas →</button>
-    </div>
-  );
-}
+function EduUnificada({ name, answers, onNext }) {
+  const profile = getLeadProfile(answers);
 
-/* ══════════════════════
-   7. SOCIAL PROOF
-   ══════════════════════ */
-function SocialProof({ name, onNext }) {
+  const profileMsg = {
+    decidida: `você já sabe o que quer — veja como o protocolo vai entregar.`,
+    cetica: `entendemos o ceticismo. Veja o mecanismo biológico — não é promessa, é fisiologia.`,
+    medo: `antes do diagnóstico, entenda por que seu corpo vai responder diferente desta vez.`,
+    ocupada: `em 30 segundos, veja por que este é o único método que cabe na sua rotina.`,
+    hormonal: `a ciência explica por que mulheres acima de 45 respondem melhor a este protocolo.`,
+    economica: `antes de decidir, entenda exatamente o que acontece no seu corpo.`,
+  };
+
   return (
-    <div style={{paddingTop:"32px"}}>
-      <div style={{textAlign:"center",marginBottom:"24px"}}>
-        <h2 className="screen-title">{name}, veja o que mulheres reais estão dizendo</h2>
-        <p className="screen-sub">Resultados de mulheres que seguiram o Protocolo Dieta da Selva</p>
-      </div>
-      <div className="testimonials">
-        {TESTIMONIALS.map((t,i)=>(
-          <div key={i} className="testi-card">
-            {t.img && <img src={t.img} alt={`Resultado ${t.name}`} className="testi-img" />}
-            <div className="testi-stars">{"★★★★★"}</div>
-            <p className="testi-text">"{t.text}"</p>
-            <div className="testi-footer">
-              <div className="testi-avatar">{t.name.charAt(0)}</div>
+    <div style={{paddingTop:"24px"}}>
+      <div className="edu-card">
+        <div className="edu-badge">🧬 O QUE VAI ACONTECER NO SEU CORPO</div>
+        <h2 className="edu-title">{name}, {profileMsg[profile] || profileMsg.cetica}</h2>
+
+        <div className="edu-body">
+          <div className="edu-mechanism">
+            <div className="edu-mech-item">
+              <span className="edu-mech-icon">🧬</span>
               <div>
-                <div className="testi-name">{t.name} — {t.age} anos</div>
-                <div className="testi-city">{t.city}</div>
+                <strong>GLP-1 Natural — o Ozempic do seu corpo</strong>
+                <p>Proteína + gordura animal ativam o mesmo hormônio que o Ozempic imita. Em 3-5 dias a fome ansiosa desaparece — sem medicamento.</p>
               </div>
-              <div className="testi-result">{t.result}</div>
+            </div>
+            <div className="edu-mech-item">
+              <span className="edu-mech-icon">🔥</span>
+              <div>
+                <strong>Queima de Gordura 24h</strong>
+                <p>Sem carboidrato como combustível, o corpo migra para gordura — inclusive a visceral abdominal — dia e noite, mesmo parada.</p>
+              </div>
+            </div>
+            <div className="edu-mech-item">
+              <span className="edu-mech-icon">⚡</span>
+              <div>
+                <strong>Energia que não cai mais</strong>
+                <p>Sem picos de insulina, sem crashes de açúcar. Energia constante e estável do acordar ao dormir.</p>
+              </div>
             </div>
           </div>
-        ))}
+
+          <p style={{fontSize:"11px",fontWeight:"700",color:"#5C6652",letterSpacing:".06em",textTransform:"uppercase",margin:"18px 0 10px",textAlign:"center"}}>QUEM SEGUIU O PROTOCOLO</p>
+          <div className="edu-provas">
+            {[TESTIMONIALS[0], TESTIMONIALS[2]].map((t,i)=>(
+              <div key={i} className="edu-prova">
+                <div className="edu-prova-stars">★★★★★</div>
+                <p className="edu-prova-txt">"{t.text.substring(0,110)}..."</p>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span className="edu-prova-name">{t.name}, {t.age} anos</span>
+                  <span className="edu-prova-result">{t.result}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <div className="social-counter">
-        <div className="counter-dot" />
-        <span>3.847 mulheres já começaram o protocolo este mês</span>
-      </div>
-      <button className="cta" onClick={onNext} style={{width:"100%",marginTop:"20px"}}>Ver meu diagnóstico personalizado →</button>
+      <button className="cta" onClick={onNext} style={{width:"100%",marginTop:"20px"}}>
+        Ver meu diagnóstico personalizado →
+      </button>
     </div>
   );
 }
@@ -1025,7 +1052,7 @@ function Analyzing({ progress, name }) {
    9. DIAGNOSIS ENGINE
    ══════════════════════ */
 function buildDiagnosis(answers, bmi, bmiCat, weightToLose, timeWeeks) {
-  const { age, symptoms, meals, frustration, commitment, ready, goal } = answers;
+  const { age, symptoms, meals, frustration, commitment, ready, goal, tentativas, motivacao } = answers;
 
   // ── Perfil Metabólico ──────────────────────────────────────
   let perfil, perfilEmoji, perfilColor, perfilDesc;
@@ -1098,30 +1125,41 @@ function buildDiagnosis(answers, bmi, bmiCat, weightToLose, timeWeeks) {
   const semana1 = semana1Map[symptoms] || { dia: 'Dias 2-4', evento: 'Primeiros resultados visíveis de desinchamento e energia' };
 
   // ── Score de Compatibilidade ──────────────────────────────
-  let score = 72;
+  let score = 70;
   if (goal === 'todas') score += 9;
   else if (goal === 'peso' || goal === 'desinchar') score += 7;
   if (commitment === 'hoje') score += 9;
   else if (commitment === 'tentaria') score += 5;
   if (ready === 'pronta') score += 7;
-  else if (ready === 'comprovado') score += 4;
+  else if (ready === 'comprovado' || ready === 'medo') score += 5;
   if (meals === 'carboidratos') score += 6;
   if (meals === 'descontrole') score += 4;
   if (symptoms === 'inchaço' || symptoms === 'ansiedade') score += 4;
+  // Histórico de tentativas → mais tentativas = mais compatível (corpo já reagiu antes)
+  if (tentativas === 'muitas' || tentativas === 'ciclo') score += 5;
+  else if (tentativas === 'poucas') score += 3;
+  // Motivação → sem fome e resultado rápido são ideais para este protocolo
+  if (motivacao === 'sem-fome' || motivacao === 'resultado-rapido') score += 4;
   score = Math.min(99, score);
 
   // ── Urgência por Idade ────────────────────────────────────
   const urgenciaMap = { '55+': ['ALTA','#E85D4A'], '45-54': ['ALTA','#E85D4A'], '35-44': ['MODERADA-ALTA','#E8A838'], '25-34': ['MODERADA','#8CB369'] };
   const [urgencia, urgenciaColor] = urgenciaMap[age] || ['MODERADA','#8CB369'];
 
-  // ── Protocolo recomendado por perfil ─────────────────────
+  // ── Protocolo recomendado — combina padrão alimentar + motivação ─────
   const protocoloMap = {
     carboidratos: 'Protocolo Detox de Carboidratos — eliminação gradual em 3 fases',
     pula:         'Protocolo de Estruturação de Refeições — 3 refeições fixas com proteína',
     tenta:        'Protocolo de Ancoragem de Hábitos — sistema de check-in diário',
-    descontrole:  'Protocolo de Saciedade — foco em GLP-1 e controle natural do apetite',
+    descontrole:  'Protocolo de Saciedade — GLP-1 e controle natural do apetite',
   };
-  const protocolo = protocoloMap[meals] || 'Protocolo Dieta da Selva 21 Dias';
+  const motivacaoProtocolo = {
+    'resultado-rapido': 'Protocolo Acelerado — máxima queima nas 3 primeiras semanas',
+    'simplicidade':     'Protocolo Express — receitas de até 4 ingredientes, 10 minutos',
+    'sem-fome':         'Protocolo de Saciedade — GLP-1 natural ativado desde o Dia 1',
+    'bemestar':         'Protocolo Integral — energia, humor e emagrecimento juntos',
+  };
+  const protocolo = motivacaoProtocolo[motivacao] || protocoloMap[meals] || 'Protocolo Dieta da Selva 21 Dias';
 
   return { perfil, perfilEmoji, perfilColor, perfilDesc, padrao, bloqueador, semana1, score, urgencia, urgenciaColor, protocolo };
 }
@@ -1249,7 +1287,26 @@ function Diagnosis({ name, bmi, bmiCat, weightToLose, timeWeeks, answers, onNext
 /* ══════════════════════
    10. RESULT + OFFER
    ══════════════════════ */
-function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
+function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
+  const profile = getLeadProfile(answers);
+  const headlines = {
+    decidida:  `${name}, você está pronta. Só falta começar.`,
+    cetica:    `${name}, você tentou o método errado. Esse é diferente.`,
+    medo:      `E se desta vez funcionasse de verdade, ${name}?`,
+    ocupada:   `${name}, em 15 minutos por dia seu corpo vai mudar.`,
+    hormonal:  `${name}, seu metabolismo não é o problema — a alimentação é a solução.`,
+    economica: `${name}, R$27 para testar. 7 dias para provar. Risco zero.`,
+  };
+  const subtitles = {
+    decidida:  'Você tem tudo que precisa para começar hoje — incluindo o protocolo certo.',
+    cetica:    'Desta vez você tem evidências, um método que respeita seu corpo e 7 dias de garantia.',
+    medo:      'Você merece uma chance justa. Esta é ela — com garantia total de devolução.',
+    ocupada:   'Simples, sem academia, sem fome. Cabe na sua vida como ela é agora.',
+    hormonal:  'O protocolo que trabalha com o seu metabolismo, não contra ele.',
+    economica: 'Menos que um lanche. Risco zero. Resultado garantido ou dinheiro de volta.',
+  };
+  const headline = headlines[profile] || `${name}, tudo está pronto para sua transformação`;
+  const subtitle = subtitles[profile] || 'Você tem alta compatibilidade com o Protocolo Dieta da Selva';
   const [pixStep, setPixStep] = useState("idle"); // idle | form | loading | qr | paid
   const [pixData, setPixData] = useState(null);   // { transactionId, pixPayload, qrCodeSrc }
   const [form, setForm] = useState({ email:"", phone:"", cpf:"" });
@@ -1456,8 +1513,8 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat }) {
   return (
     <div style={{paddingTop:"24px"}}>
       <div style={{textAlign:"center",marginBottom:"32px"}}>
-        <h2 className="screen-title" style={{fontSize:"26px"}}>{name}, tudo está pronto para sua transformação</h2>
-        <p className="screen-sub">Você tem 97% de compatibilidade com o Protocolo Dieta da Selva</p>
+        <h2 className="screen-title" style={{fontSize:"26px"}}>{headline}</h2>
+        <p className="screen-sub">{subtitle}</p>
       </div>
 
       {/* App Demo */}
@@ -1912,4 +1969,24 @@ const CSS = `
 .s-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,168,56,0.45)}
 
 @media(max-width:440px){.s-chat{max-width:100%;border-radius:16px 16px 0 0}.s-fab{bottom:88px;right:16px}}
+
+/* ── Medo Screen ── */
+.medo-card{background:rgba(12,16,9,0.9);border:1px solid rgba(140,179,105,0.15);border-left:3px solid #8CB369;border-radius:0 16px 16px 0;padding:20px;margin-bottom:16px}
+.medo-card-title{font-size:13px;font-weight:700;color:#F2F0E8;margin-bottom:10px}
+.medo-card-body{font-size:14px;color:#9CA88E;line-height:1.7}
+.medo-guarantee{display:flex;align-items:flex-start;gap:14px;background:rgba(140,179,105,0.05);border:1px solid rgba(140,179,105,0.18);border-radius:16px;padding:18px}
+
+/* ── Edu Unificada ── */
+.edu-mechanism{display:flex;flex-direction:column;gap:14px;margin:0 0 16px}
+.edu-mech-item{display:flex;gap:12px;align-items:flex-start;background:rgba(8,12,6,0.6);border:1px solid rgba(140,179,105,0.08);border-radius:12px;padding:12px 14px}
+.edu-mech-item strong{display:block;font-size:13px;font-weight:700;color:#F2F0E8;margin-bottom:3px}
+.edu-mech-item p{font-size:12px;color:#9CA88E;line-height:1.6;margin:0}
+.edu-mech-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+.edu-provas{display:flex;flex-direction:column;gap:10px}
+.edu-prova{background:rgba(8,12,6,0.7);border:1px solid rgba(140,179,105,0.1);border-radius:12px;padding:12px 14px}
+.edu-prova-stars{color:#E8A838;font-size:12px;letter-spacing:2px;margin-bottom:6px}
+.edu-prova-txt{font-size:12px;color:#9CA88E;line-height:1.6;font-style:italic;margin-bottom:8px}
+.edu-prova-name{font-size:11px;font-weight:600;color:#F2F0E8}
+.edu-prova-result{font-size:11px;font-weight:700;color:#E8A838;padding:2px 8px;background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.2);border-radius:100px}
 `;
+
