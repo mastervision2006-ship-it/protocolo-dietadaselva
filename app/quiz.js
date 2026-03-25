@@ -295,6 +295,34 @@ function track(event, data = {}) {
 }
 
 /* ══════════════════════
+   ANSWER NORMALIZER
+   Maps new screen values → internal engine values (diagnosis, profiles, loading)
+   ══════════════════════ */
+const ANSWER_NORMALIZE = {
+  age: {
+    '18–29': '25-34',
+    '30–39': '35-44',
+    '40–49': '45-54',
+    '50+':   '55+',
+  },
+  goal: {
+    'emagrecer': 'peso',
+    // desinchar, energia, todas → unchanged
+  },
+  frustration: {
+    'parou':  'dietas',   // "metabolismo parou" → histórico de dietas
+    'sanfona': 'sanfona', // unchanged
+    'inicio':  'tempo',   // "estou começando" → quer simplicidade
+  },
+  meals: {
+    '1-2':       'pula',         // poucas refeições → pula
+    '3':         'tenta',        // regular mas não funciona
+    '4-5':       'carboidratos', // muitas refeições → padrão carb-driven
+    'irregular': 'descontrole',  // sem padrão → descontrole
+  },
+};
+
+/* ══════════════════════
    MAIN COMPONENT
    ══════════════════════ */
 export default function Quiz() {
@@ -319,8 +347,9 @@ export default function Quiz() {
   const go = (next) => t(() => setScreen(next));
 
   const answer = (key, val, next) => {
-    setAnswers(p => ({ ...p, [key]: val }));
-    track('quiz_answer', { question: key, answer: val });
+    const normalized = ANSWER_NORMALIZE[key]?.[val] ?? val;
+    setAnswers(p => ({ ...p, [key]: normalized }));
+    track('quiz_answer', { question: key, answer: val, normalized });
     setTimeout(() => go(next), 400);
   };
 
@@ -2476,6 +2505,14 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
         ))}
       </div>
 
+      {/* WhatsApp social proof */}
+      <h3 className="section-title">O que dizem quem já fez</h3>
+      <div className="whatsapp-grid">
+        {["/depo-3.webp","/depo-4.webp","/depo-5.webp","/depo-6.webp"].map((src,i) => (
+          <img key={i} src={src} alt={`Depoimento ${i+1}`} className="whatsapp-img" />
+        ))}
+      </div>
+
       {/* Guarantee */}
       <div className="guarantee">
         <div style={{fontSize:"36px"}}>🛡️</div>
@@ -2768,6 +2805,8 @@ const CSS = `
 .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:36px}
 .feat-card{display:flex;gap:12px;padding:16px;border-radius:14px;border:1px solid rgba(140,179,105,0.08);background:rgba(18,24,14,0.7);align-items:flex-start}
 
+.whatsapp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:36px}
+.whatsapp-img{width:100%;border-radius:14px;object-fit:cover;display:block}
 .guarantee{text-align:center;padding:28px 22px;border-radius:20px;margin-bottom:36px;background:linear-gradient(135deg,rgba(140,179,105,0.06),rgba(140,179,105,0.02));border:1px solid rgba(140,179,105,0.15)}
 
 .price-card{text-align:center;padding:32px 24px;border-radius:24px;background:linear-gradient(180deg,rgba(140,179,105,0.08) 0%,rgba(18,24,14,0.95) 100%);border:2px solid rgba(140,179,105,0.2);box-shadow:0 0 60px rgba(140,179,105,0.06);margin-bottom:8px}
