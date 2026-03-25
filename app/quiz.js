@@ -269,6 +269,32 @@ function getOfferNote(answers, name) {
 }
 
 /* ══════════════════════
+   FUNNEL TRACKING
+   ══════════════════════ */
+function getSessionId() {
+  if (typeof window === 'undefined') return '';
+  let sid = sessionStorage.getItem('_sds_sid');
+  if (!sid) {
+    sid = Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
+    sessionStorage.setItem('_sds_sid', sid);
+  }
+  return sid;
+}
+
+function track(event, data = {}) {
+  try {
+    const sid = getSessionId();
+    if (!sid) return;
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sid, event, ...data }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch (_) {}
+}
+
+/* ══════════════════════
    MAIN COMPONENT
    ══════════════════════ */
 export default function Quiz() {
@@ -282,6 +308,16 @@ export default function Quiz() {
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
   const formRef = useRef(null);
+
+  // Track every screen change
+  useEffect(() => {
+    if (screen !== 'quiz') track('screen_view', { screen });
+  }, [screen]);
+
+  // Track each quiz question separately (for per-question drop-off)
+  useEffect(() => {
+    if (screen === 'quiz') track('screen_view', { screen: `quiz_q${currentQ + 1}` });
+  }, [screen, currentQ]);
 
   const t = useCallback((cb) => {
     setFadeIn(false);
@@ -300,6 +336,7 @@ export default function Quiz() {
   };
 
   const handleAnswer = (qId, val) => {
+    track('quiz_answer', { question: qId, answer: val, index: currentQ });
     setSelectedOpt(val);
     setTimeout(() => {
       setAnswers(p => ({ ...p, [qId]: val }));
@@ -325,6 +362,7 @@ export default function Quiz() {
   const goNext = (next) => () => t(() => setScreen(next));
 
   const startAnalysis = () => {
+    track('lead_profile', { profile: getLeadProfile(answers) });
     t(() => {
       setScreen("analyzing");
       let p = 0;
@@ -1725,6 +1763,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
         const json = await res.json();
         if (json.paid) {
           clearInterval(pollRef.current);
+          track('payment_confirmed', {});
           if (typeof fbq !== "undefined") fbq("track", "Purchase", { value: 27, currency: "BRL" });
           setPixStep("paid");
         }
@@ -1768,6 +1807,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
       }
       setPixData(data);
       setPixStep("qr");
+      track('checkout_initiated', {});
       if (typeof fbq !== "undefined") fbq("track", "InitiateCheckout", { value: 27, currency: "BRL" });
     } catch (err) {
       console.error("[PIX create] fetch error:", err);
