@@ -395,7 +395,7 @@ export default function Quiz() {
   };
 
   // total steps for progress bar
-  const STEPS = ["gender","age","social-proof","objective","authority","difficulty","mechanism","awareness","habits","symptoms","lifestyle-sleep","lifestyle-water","lifestyle-exercise","data"];
+  const STEPS = ["gender","age","social-proof","objective","authority","difficulty","mechanism","awareness","habits","symptoms","sleep-q","sleep-edu","water-q","water-edu","exercise-q","exercise-edu","data"];
   const stepIdx = STEPS.indexOf(screen);
   const progress = stepIdx >= 0 ? Math.round(((stepIdx + 1) / STEPS.length) * 100) : 100;
 
@@ -414,10 +414,13 @@ export default function Quiz() {
         {screen === "mechanism"    && <MechanismScreen  progress={progress} onNext={() => go('awareness')} />}
         {screen === "awareness"    && <AwarenessScreen  progress={progress} onAnswer={(v) => answer('awareness', v, 'habits')} />}
         {screen === "habits"       && <HabitsScreen     progress={progress} onAnswer={(v) => answer('meals', v, 'symptoms')} />}
-        {screen === "symptoms"        && <SymptomsScreen      progress={progress} onAnswer={(v) => answer('symptoms', v, 'lifestyle-sleep')} />}
-        {screen === "lifestyle-sleep" && <LifestyleSleepScreen progress={progress} onAnswer={(v) => answer('sleep', v, 'lifestyle-water')} />}
-        {screen === "lifestyle-water" && <LifestyleWaterScreen progress={progress} onAnswer={(v) => answer('water', v, 'lifestyle-exercise')} />}
-        {screen === "lifestyle-exercise" && <LifestyleExerciseScreen progress={progress} onAnswer={(v) => answer('exercise', v, 'data')} />}
+        {screen === "symptoms"    && <SymptomsScreen    progress={progress} onAnswer={(v) => answer('symptoms', v, 'sleep-q')} />}
+        {screen === "sleep-q"     && <SleepQuestion     progress={progress} onAnswer={(v) => { answer('sleep', v, 'sleep-edu'); }} />}
+        {screen === "sleep-edu"   && <SleepEdu          progress={progress} onNext={() => go('water-q')} />}
+        {screen === "water-q"     && <WaterQuestion     progress={progress} onAnswer={(v) => { answer('water', v, 'water-edu'); }} />}
+        {screen === "water-edu"   && <WaterEdu          progress={progress} onNext={() => go('exercise-q')} />}
+        {screen === "exercise-q"  && <ExerciseQuestion  progress={progress} onAnswer={(v) => { answer('exercise', v, 'exercise-edu'); }} />}
+        {screen === "exercise-edu"&& <ExerciseEdu       progress={progress} onNext={() => go('data')} />}
         {screen === "data"         && <DataScreen       nameInput={nameInput} onNameChange={setNameInput} bodyData={bodyData} onBodyChange={setBodyData} onSubmit={handleDataSubmit} />}
         {screen === "analyzing"    && <Analyzing        progress={analysisProgress} name={userName || nameInput} answers={answers} />}
         {screen === "diagnosis"    && <Diagnosis        name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} onNext={() => go('result')} />}
@@ -1384,27 +1387,27 @@ function SymptomsScreen({ progress, onAnswer }) {
 }
 
 /* ══════════════════════════════════════════
-   11. LIFESTYLE SCREENS (3 telas separadas)
-   Sono · Hidratação · Exercício
+   11. LIFESTYLE — 3 pares (pergunta + edu)
    ══════════════════════════════════════════ */
-function LifestyleSleepScreen({ progress, onAnswer }) {
+
+/* ── SONO ── */
+function SleepQuestion({ progress, onAnswer }) {
   const opts = [
-    { value:"bem",        text:"Durmo bem, 7h ou mais por noite" },
-    { value:"irregular",  text:"Durmo irregular, às vezes pouco" },
-    { value:"mal",        text:"Durmo mal ou menos de 6h sempre" },
+    { value:"bem",       emoji:"😴", text:"Durmo bem, 7h ou mais" },
+    { value:"irregular", emoji:"😶", text:"Irregular, às vezes pouco" },
+    { value:"mal",       emoji:"😩", text:"Durmo mal ou menos de 6h" },
   ];
   return (
     <div style={{paddingTop:"0"}}>
       <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
-      <img src="/dormindo.webp" alt="Sono" className="lifestyle-hero-img" />
-      <div style={{textAlign:"center",margin:"16px 0 20px"}}>
+      <div style={{textAlign:"center",margin:"24px 0 20px"}}>
         <h2 className="question">Como está o seu sono?</h2>
-        <p className="question-sub">O sono regula cortisol e queima de gordura diretamente</p>
+        <p className="question-sub">O sono influencia diretamente o seu metabolismo</p>
       </div>
       <div className="opt-chips">
         {opts.map(o => (
           <button key={o.value} className="opt-chip" onClick={() => onAnswer(o.value)}>
-            <span className="opt-chip-emoji">{o.value==='bem'?'😴':o.value==='irregular'?'😶':' 😩'}</span>
+            <span className="opt-chip-emoji">{o.emoji}</span>
             <span>{o.text}</span>
           </button>
         ))}
@@ -1412,25 +1415,101 @@ function LifestyleSleepScreen({ progress, onAnswer }) {
     </div>
   );
 }
+function SleepEdu({ progress, onNext }) {
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <img src="/dormindo.webp" alt="Sono e metabolismo" className="lifestyle-hero-img" />
+      <div style={{padding:"20px 0 0",maxWidth:"480px",margin:"0 auto"}}>
+        <div className="lifestyle-edu-badge">😴 Sono &amp; Metabolismo</div>
+        <h2 className="question" style={{fontSize:"20px",marginBottom:"12px"}}>
+          O sono ruim é um dos maiores sabotadores do emagrecimento
+        </h2>
+        <div className="lifestyle-edu-card">
+          <p className="lifestyle-edu-body">
+            Dormir menos de 7h eleva o <strong>cortisol</strong> — o hormônio do estresse que sinaliza ao corpo para <strong>armazenar gordura</strong>, especialmente na barriga.
+          </p>
+          <p className="lifestyle-edu-body" style={{marginTop:"10px"}}>
+            A boa notícia: a Dieta da Selva regula o cortisol naturalmente. A proteína animal e a gordura boa <strong>estabilizam o açúcar no sangue</strong>, o que melhora a qualidade do sono ainda na primeira semana.
+          </p>
+        </div>
+        <button className="cta" style={{width:"100%",marginTop:"20px"}} onClick={onNext}>
+          Entendi — continuar →
+        </button>
+      </div>
+    </div>
+  );
+}
 
-function LifestyleWaterScreen({ progress, onAnswer }) {
+/* ── HIDRATAÇÃO ── */
+function WaterQuestion({ progress, onAnswer }) {
   const opts = [
-    { value:"bastante", text:"Bebo mais de 1,5L por dia" },
-    { value:"pouco",    text:"Bebo pouco, preciso me lembrar" },
-    { value:"quase",    text:"Quase não bebo água pura" },
+    { value:"bastante", emoji:"💧", text:"Mais de 1,5L por dia" },
+    { value:"pouco",    emoji:"🥤", text:"Pouco, preciso me lembrar" },
+    { value:"quase",    emoji:"😬", text:"Quase não bebo água pura" },
   ];
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{textAlign:"center",margin:"24px 0 20px"}}>
+        <h2 className="question">Quantos litros de água você bebe por dia?</h2>
+        <p className="question-sub">A hidratação afeta inchaço, energia e queima de gordura</p>
+      </div>
+      <div className="opt-chips">
+        {opts.map(o => (
+          <button key={o.value} className="opt-chip" onClick={() => onAnswer(o.value)}>
+            <span className="opt-chip-emoji">{o.emoji}</span>
+            <span>{o.text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+function WaterEdu({ progress, onNext }) {
   return (
     <div style={{paddingTop:"0"}}>
       <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
       <img src="/agua.webp" alt="Hidratação" className="lifestyle-hero-img" />
-      <div style={{textAlign:"center",margin:"16px 0 20px"}}>
-        <h2 className="question">Quantos litros de água você bebe por dia?</h2>
-        <p className="question-sub">A hidratação acelera a eliminação de toxinas e inchaço</p>
+      <div style={{padding:"20px 0 0",maxWidth:"480px",margin:"0 auto"}}>
+        <div className="lifestyle-edu-badge">💧 Hidratação &amp; Inchaço</div>
+        <h2 className="question" style={{fontSize:"20px",marginBottom:"12px"}}>
+          Beber pouca água é uma das causas do inchaço crônico
+        </h2>
+        <div className="lifestyle-edu-card">
+          <p className="lifestyle-edu-body">
+            Quando o corpo recebe pouca água, ele <strong>retém líquido como mecanismo de defesa</strong> — gerando inchaço, peso extra na balança e aquela sensação de barriga estufada.
+          </p>
+          <p className="lifestyle-edu-body" style={{marginTop:"10px"}}>
+            No protocolo Dieta da Selva, a hidratação adequada acelera a eliminação das toxinas liberadas pela quebra de gordura. Você vai notar a diferença no inchaço <strong>já nos primeiros dias</strong>.
+          </p>
+        </div>
+        <button className="cta" style={{width:"100%",marginTop:"20px"}} onClick={onNext}>
+          Entendi — continuar →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ── EXERCÍCIO ── */
+function ExerciseQuestion({ progress, onAnswer }) {
+  const opts = [
+    { value:"regularmente", emoji:"🏋️", text:"Me exercito regularmente" },
+    { value:"as-vezes",     emoji:"🚶", text:"Às vezes, sem constância" },
+    { value:"nao",          emoji:"🛋️", text:"Não faço exercício hoje" },
+  ];
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{textAlign:"center",margin:"24px 0 20px"}}>
+        <h2 className="question">Você pratica alguma atividade física?</h2>
+        <p className="question-sub">O protocolo funciona com ou sem exercício</p>
       </div>
       <div className="opt-chips">
         {opts.map(o => (
           <button key={o.value} className="opt-chip" onClick={() => onAnswer(o.value)}>
-            <span className="opt-chip-emoji">{o.value==='bastante'?'💧':o.value==='pouco'?'🥤':'😬'}</span>
+            <span className="opt-chip-emoji">{o.emoji}</span>
             <span>{o.text}</span>
           </button>
         ))}
@@ -1438,28 +1517,27 @@ function LifestyleWaterScreen({ progress, onAnswer }) {
     </div>
   );
 }
-
-function LifestyleExerciseScreen({ progress, onAnswer }) {
-  const opts = [
-    { value:"regularmente", text:"Me exercito regularmente" },
-    { value:"as-vezes",     text:"Me exercito às vezes, sem constância" },
-    { value:"nao",          text:"Não faço exercício atualmente" },
-  ];
+function ExerciseEdu({ progress, onNext }) {
   return (
     <div style={{paddingTop:"0"}}>
       <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
       <img src="/exercicio.webp" alt="Exercício" className="lifestyle-hero-img" />
-      <div style={{textAlign:"center",margin:"16px 0 20px"}}>
-        <h2 className="question">Você pratica alguma atividade física?</h2>
-        <p className="question-sub">O protocolo funciona com ou sem exercício — mas isso ajusta o plano</p>
-      </div>
-      <div className="opt-chips">
-        {opts.map(o => (
-          <button key={o.value} className="opt-chip" onClick={() => onAnswer(o.value)}>
-            <span className="opt-chip-emoji">{o.value==='regularmente'?'🏋️':o.value==='as-vezes'?'🚶':'🛋️'}</span>
-            <span>{o.text}</span>
-          </button>
-        ))}
+      <div style={{padding:"20px 0 0",maxWidth:"480px",margin:"0 auto"}}>
+        <div className="lifestyle-edu-badge">🏋️ Exercício &amp; Protocolo</div>
+        <h2 className="question" style={{fontSize:"20px",marginBottom:"12px"}}>
+          Academia não é obrigatória — mas o movimento acelera tudo
+        </h2>
+        <div className="lifestyle-edu-card">
+          <p className="lifestyle-edu-body">
+            A <strong>alimentação responde por 80% dos resultados</strong> de emagrecimento. O protocolo Dieta da Selva foi desenhado para funcionar mesmo sem academia.
+          </p>
+          <p className="lifestyle-edu-body" style={{marginTop:"10px"}}>
+            Se você já se exercita, vai potencializar os resultados. Se não, o app inclui <strong>treinos de 15 minutos em casa</strong> — pensados especificamente para mulheres que querem começar do zero.
+          </p>
+        </div>
+        <button className="cta" style={{width:"100%",marginTop:"20px"}} onClick={onNext}>
+          Entendi — continuar →
+        </button>
       </div>
     </div>
   );
