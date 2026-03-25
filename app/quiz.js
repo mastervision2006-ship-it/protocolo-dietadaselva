@@ -395,7 +395,7 @@ export default function Quiz() {
   };
 
   // total steps for progress bar
-  const STEPS = ["gender","age","social-proof","objective","authority","difficulty","mechanism","awareness","habits","symptoms","data"];
+  const STEPS = ["gender","age","social-proof","objective","authority","difficulty","mechanism","awareness","habits","symptoms","lifestyle-sleep","lifestyle-water","lifestyle-exercise","data"];
   const stepIdx = STEPS.indexOf(screen);
   const progress = stepIdx >= 0 ? Math.round(((stepIdx + 1) / STEPS.length) * 100) : 100;
 
@@ -414,7 +414,10 @@ export default function Quiz() {
         {screen === "mechanism"    && <MechanismScreen  progress={progress} onNext={() => go('awareness')} />}
         {screen === "awareness"    && <AwarenessScreen  progress={progress} onAnswer={(v) => answer('awareness', v, 'habits')} />}
         {screen === "habits"       && <HabitsScreen     progress={progress} onAnswer={(v) => answer('meals', v, 'symptoms')} />}
-        {screen === "symptoms"     && <SymptomsScreen   progress={progress} onAnswer={(v) => answer('symptoms', v, 'data')} />}
+        {screen === "symptoms"        && <SymptomsScreen      progress={progress} onAnswer={(v) => answer('symptoms', v, 'lifestyle-sleep')} />}
+        {screen === "lifestyle-sleep" && <LifestyleSleepScreen progress={progress} onAnswer={(v) => answer('sleep', v, 'lifestyle-water')} />}
+        {screen === "lifestyle-water" && <LifestyleWaterScreen progress={progress} onAnswer={(v) => answer('water', v, 'lifestyle-exercise')} />}
+        {screen === "lifestyle-exercise" && <LifestyleExerciseScreen progress={progress} onAnswer={(v) => answer('exercise', v, 'data')} />}
         {screen === "data"         && <DataScreen       nameInput={nameInput} onNameChange={setNameInput} bodyData={bodyData} onBodyChange={setBodyData} onSubmit={handleDataSubmit} />}
         {screen === "analyzing"    && <Analyzing        progress={analysisProgress} name={userName || nameInput} answers={answers} />}
         {screen === "diagnosis"    && <Diagnosis        name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} onNext={() => go('result')} />}
@@ -1318,10 +1321,10 @@ function AwarenessScreen({ progress, onAnswer }) {
    ══════════════════════ */
 function HabitsScreen({ progress, onAnswer }) {
   const opts = [
-    { value:"1-2",       img:"/dormindo.webp",  text:"1 a 2 refeições por dia" },
-    { value:"3",         img:"/agua.webp",       text:"3 refeições (café, almoço, jantar)" },
-    { value:"4-5",       img:"/exercicio.webp",  text:"4 a 5 refeições ou lanches frequentes" },
-    { value:"irregular", img:null,               text:"Irregular — como quando lembro" },
+    { value:"1-2",       emoji:"🍳", text:"1 a 2 refeições por dia" },
+    { value:"3",         emoji:"🥩", text:"3 refeições (café, almoço, jantar)" },
+    { value:"4-5",       emoji:"🍽️", text:"4 a 5 refeições ou lanches frequentes" },
+    { value:"irregular", emoji:"😅", text:"Irregular — como quando lembro" },
   ];
   return (
     <div style={{paddingTop:"0"}}>
@@ -1333,12 +1336,7 @@ function HabitsScreen({ progress, onAnswer }) {
       <div className="opt-card-list">
         {opts.map(o => (
           <button key={o.value} className="opt-card-icon" onClick={() => onAnswer(o.value)}>
-            {o.img
-              ? <div className="opt-card-icon-img" style={{borderRadius:"10px",overflow:"hidden"}}>
-                  <img src={o.img} alt="" style={{width:"52px",height:"52px",objectFit:"cover",display:"block"}} />
-                </div>
-              : <div className="opt-card-icon-emoji">😅</div>
-            }
+            <div className="opt-card-icon-emoji">{o.emoji}</div>
             <span className="opt-card-icon-title">{o.text}</span>
           </button>
         ))}
@@ -1385,8 +1383,90 @@ function SymptomsScreen({ progress, onAnswer }) {
   );
 }
 
+/* ══════════════════════════════════════════
+   11. LIFESTYLE SCREENS (3 telas separadas)
+   Sono · Hidratação · Exercício
+   ══════════════════════════════════════════ */
+function LifestyleSleepScreen({ progress, onAnswer }) {
+  const opts = [
+    { value:"bem",        text:"Durmo bem, 7h ou mais por noite" },
+    { value:"irregular",  text:"Durmo irregular, às vezes pouco" },
+    { value:"mal",        text:"Durmo mal ou menos de 6h sempre" },
+  ];
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <img src="/dormindo.webp" alt="Sono" className="lifestyle-hero-img" />
+      <div style={{textAlign:"center",margin:"16px 0 20px"}}>
+        <h2 className="question">Como está o seu sono?</h2>
+        <p className="question-sub">O sono regula cortisol e queima de gordura diretamente</p>
+      </div>
+      <div className="opt-chips">
+        {opts.map(o => (
+          <button key={o.value} className="opt-chip" onClick={() => onAnswer(o.value)}>
+            <span className="opt-chip-emoji">{o.value==='bem'?'😴':o.value==='irregular'?'😶':' 😩'}</span>
+            <span>{o.text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LifestyleWaterScreen({ progress, onAnswer }) {
+  const opts = [
+    { value:"bastante", text:"Bebo mais de 1,5L por dia" },
+    { value:"pouco",    text:"Bebo pouco, preciso me lembrar" },
+    { value:"quase",    text:"Quase não bebo água pura" },
+  ];
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <img src="/agua.webp" alt="Hidratação" className="lifestyle-hero-img" />
+      <div style={{textAlign:"center",margin:"16px 0 20px"}}>
+        <h2 className="question">Quantos litros de água você bebe por dia?</h2>
+        <p className="question-sub">A hidratação acelera a eliminação de toxinas e inchaço</p>
+      </div>
+      <div className="opt-chips">
+        {opts.map(o => (
+          <button key={o.value} className="opt-chip" onClick={() => onAnswer(o.value)}>
+            <span className="opt-chip-emoji">{o.value==='bastante'?'💧':o.value==='pouco'?'🥤':'😬'}</span>
+            <span>{o.text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LifestyleExerciseScreen({ progress, onAnswer }) {
+  const opts = [
+    { value:"regularmente", text:"Me exercito regularmente" },
+    { value:"as-vezes",     text:"Me exercito às vezes, sem constância" },
+    { value:"nao",          text:"Não faço exercício atualmente" },
+  ];
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <img src="/exercicio.webp" alt="Exercício" className="lifestyle-hero-img" />
+      <div style={{textAlign:"center",margin:"16px 0 20px"}}>
+        <h2 className="question">Você pratica alguma atividade física?</h2>
+        <p className="question-sub">O protocolo funciona com ou sem exercício — mas isso ajusta o plano</p>
+      </div>
+      <div className="opt-chips">
+        {opts.map(o => (
+          <button key={o.value} className="opt-chip" onClick={() => onAnswer(o.value)}>
+            <span className="opt-chip-emoji">{o.value==='regularmente'?'🏋️':o.value==='as-vezes'?'🚶':'🛋️'}</span>
+            <span>{o.text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ══════════════════════
-   11. DATA SCREEN (replaces NameScreen + BodyDataScreen)
+   12. DATA SCREEN (replaces NameScreen + BodyDataScreen)
    ══════════════════════ */
 function DataScreen({ nameInput, onNameChange, bodyData, onBodyChange, onSubmit }) {
   const set = (k,v) => onBodyChange({...bodyData,[k]:v});
@@ -2826,6 +2906,8 @@ const CSS = `
 .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:36px}
 .feat-card{display:flex;gap:12px;padding:16px;border-radius:14px;border:1px solid rgba(140,179,105,0.08);background:rgba(18,24,14,0.7);align-items:flex-start}
 
+/* ── Lifestyle screens ── */
+.lifestyle-hero-img{width:100%;max-height:220px;object-fit:cover;object-position:center;border-radius:0 0 20px 20px;display:block}
 .whatsapp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:36px}
 .whatsapp-img{width:100%;border-radius:14px;object-fit:cover;display:block}
 .guarantee{text-align:center;padding:28px 22px;border-radius:20px;margin-bottom:36px;background:linear-gradient(135deg,rgba(140,179,105,0.06),rgba(140,179,105,0.02));border:1px solid rgba(140,179,105,0.15)}
