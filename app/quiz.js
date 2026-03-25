@@ -400,6 +400,26 @@ const PLANO_S1 = [
   {dia:7,titulo:'Dia 7 — Virada!',subtitulo:'Uma semana concluída 🎉',cafe:{emoji:'☀️',tipo:'Café da manhã',hora:'7h',titulo:'Omelete especial',descricao:'3 ovos + cogumelo + queijo',calorias:380,proteinas:28},almoco:{emoji:'🥩',tipo:'Almoço',hora:'12h',titulo:'Churrasco especial',descricao:'Picanha + costela + frango',calorias:900,proteinas:72},lanche:{emoji:'🧀',tipo:'Lanche',hora:'15h',titulo:'Mix de queijos',descricao:'Minas + coalho + parmesão',calorias:250,proteinas:18},jantar:{emoji:'🌙',tipo:'Jantar',hora:'19h',titulo:'Caldo de ossobuco',descricao:'Ossobuco + legumes + ervas',calorias:420,proteinas:40}},
 ];
 
+const RECEITAS_DEMO = [
+  { emoji:'🥚', nome:'Omelete de Queijo com Bacon',     cat:'Café da manhã', tempo:'10 min', kcal:420, prot:32, locked:false },
+  { emoji:'🥩', nome:'Picanha na Manteiga de Alho',     cat:'Almoço',        tempo:'15 min', kcal:680, prot:52, locked:false },
+  { emoji:'🐟', nome:'Salmão com Limão e Ervas',        cat:'Jantar',        tempo:'12 min', kcal:480, prot:46, locked:true  },
+  { emoji:'🥓', nome:'Costelinha Assada com Alho',      cat:'Almoço',        tempo:'20 min', kcal:720, prot:54, locked:true  },
+  { emoji:'🧀', nome:'Omelete de Brie e Presunto',      cat:'Café da manhã', tempo:'8 min',  kcal:390, prot:28, locked:true  },
+];
+
+const TREINOS_DEMO = [
+  { dia:'Dia 1', nome:'Ativação Metabólica', tempo:'15 min', nivel:'Iniciante', locked:false,
+    exercicios:[
+      { nome:'Agachamento livre', reps:'3 × 15', emoji:'🦵' },
+      { nome:'Flexão de braço',   reps:'3 × 10', emoji:'💪' },
+      { nome:'Prancha isométrica',reps:'3 × 30s',emoji:'🏋️' },
+    ]},
+  { dia:'Dia 2', nome:'Força Leve',          tempo:'15 min', nivel:'Iniciante', locked:true,  exercicios:[] },
+  { dia:'Dia 3', nome:'Cardio Suave',        tempo:'20 min', nivel:'Iniciante', locked:true,  exercicios:[] },
+  { dia:'Dia 4', nome:'Descanso Ativo',      tempo:'10 min', nivel:'Leve',      locked:true,  exercicios:[] },
+];
+
 function AppDemo({ onComprar }) {
   const [tab, setTab]       = useState('inicio');
   const [locked, setLocked] = useState(false);
@@ -411,10 +431,11 @@ function AppDemo({ onComprar }) {
 
   const diaData = PLANO_S1.find(d => d.dia === diaPlano) ?? PLANO_S1[0];
 
-  const IcoHome  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-  const IcoPlano = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.8"/><path d="M3 9h18M8 3v3M16 3v3M8 14h4M8 17h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>;
-  const IcoDesaf = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C9 7 6 9 8 14c1 2.5 3 4 4 4-2-3-1-6 1-8 0 3 2 5 3 7 1-2 1-5-1-7 2 1 4 4 3 7 2-2 4-6 1-10C17 4 14 2 12 2z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-  const IcoChat  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  const IcoHome     = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  const IcoPlano    = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.8"/><path d="M3 9h18M8 3v3M16 3v3M8 14h4M8 17h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>;
+  const IcoReceitas = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2a5 5 0 00-5 5v6h3.5M21 22v-7h-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  const IcoTreinos  = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 4v16M18 4v16M2 9h4M18 9h4M2 15h4M18 15h4M6 12h12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>;
+  const IcoChat     = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 
   return (
     <div className="demo-wrap">
@@ -535,6 +556,106 @@ function AppDemo({ onComprar }) {
             </div>
           )}
 
+          {tab==='receitas' && (
+            <div className="app-section">
+              <p className="app-page-title">Receitas</p>
+              <p style={{fontSize:'10px',color:'#9CA88E',marginTop:'-4px',marginBottom:'10px'}}>Biblioteca carnívora · +50 receitas exclusivas</p>
+
+              {/* Filtros de categoria */}
+              <div style={{display:'flex',gap:'5px',overflowX:'auto',marginBottom:'10px',scrollbarWidth:'none',paddingBottom:'2px'}}>
+                {['Todas','Café','Almoço','Jantar','Rápidas'].map((c,i)=>(
+                  <button key={i} style={{flexShrink:0,padding:'3px 9px',borderRadius:'100px',fontSize:'9px',fontWeight:'600',background:i===0?'#E8A838':'#1A2010',color:i===0?'#000':'#9CA88E',border:'none',fontFamily:"'DM Sans',sans-serif",cursor:'pointer'}}>{c}</button>
+                ))}
+              </div>
+
+              {/* Cards visíveis */}
+              {RECEITAS_DEMO.filter(r=>!r.locked).map((r,i)=>(
+                <div key={i} className="app-ref-card" onClick={()=>tryAccess(r.nome)}>
+                  <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'6px'}}>
+                    <div style={{width:'36px',height:'36px',background:'#1A2010',borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'18px',flexShrink:0}}>{r.emoji}</div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <p style={{fontSize:'11px',fontWeight:'700',color:'#F2F0E8',marginBottom:'1px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.nome}</p>
+                      <p style={{fontSize:'9px',color:'#E8A838'}}>{r.cat}</p>
+                    </div>
+                    <span style={{fontSize:'9px',color:'#5C6652',background:'#1A2010',padding:'2px 6px',borderRadius:'100px',flexShrink:0,border:'1px solid rgba(140,179,105,0.1)'}}>{r.tempo}</span>
+                  </div>
+                  <div style={{display:'flex',gap:'12px'}}>
+                    <span><span style={{fontSize:'9px',color:'#5C6652'}}>Kcal </span><strong style={{fontSize:'10px',color:'#E8A838'}}>{r.kcal}</strong></span>
+                    <span><span style={{fontSize:'9px',color:'#5C6652'}}>Prot </span><strong style={{fontSize:'10px',color:'#8CB369'}}>{r.prot}g</strong></span>
+                    <span style={{fontSize:'9px',color:'#8CB369',marginLeft:'auto'}}>✓ Carnívoro</span>
+                  </div>
+                </div>
+              ))}
+
+              {/* Cards bloqueados com overlay */}
+              <div style={{position:'relative'}}>
+                {RECEITAS_DEMO.filter(r=>r.locked).map((r,i)=>(
+                  <div key={i} className="app-ref-card" style={{filter:'blur(3px)',userSelect:'none',marginBottom:'6px',pointerEvents:'none'}}>
+                    <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                      <div style={{width:'36px',height:'36px',background:'#1A2010',borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'18px'}}>{r.emoji}</div>
+                      <div style={{flex:1}}><p style={{fontSize:'11px',fontWeight:'700',color:'#F2F0E8'}}>{r.nome}</p><p style={{fontSize:'9px',color:'#E8A838'}}>{r.cat}</p></div>
+                      <span style={{fontSize:'9px',padding:'2px 6px',background:'#1A2010',borderRadius:'100px'}}>{r.tempo}</span>
+                    </div>
+                  </div>
+                ))}
+                <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'rgba(6,9,4,0.65)',backdropFilter:'blur(3px)',borderRadius:'10px',cursor:'pointer'}} onClick={()=>tryAccess('+48 Receitas Exclusivas')}>
+                  <span style={{fontSize:'20px'}}>🔒</span>
+                  <p style={{fontSize:'11px',fontWeight:'700',color:'#F2F0E8',marginTop:'5px'}}>+48 receitas desbloqueadas</p>
+                  <p style={{fontSize:'10px',color:'#E8A838',marginTop:'2px'}}>acesso por R$27</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {tab==='treinos' && (
+            <div className="app-section">
+              <p className="app-page-title">Exercícios</p>
+              <p style={{fontSize:'10px',color:'#9CA88E',marginTop:'-4px',marginBottom:'10px'}}>Em casa · 15 min · Sem equipamento</p>
+
+              {/* Semana selector */}
+              <div className="app-semana-row" style={{marginBottom:'10px'}}>
+                {['Semana 1','Semana 2','Semana 3'].map((s,i)=>(
+                  <button key={i} className={'app-semana-btn'+(i===0?' app-semana-active':'')} onClick={()=>i>0&&tryAccess(s+' de Exercícios')}>{s}</button>
+                ))}
+              </div>
+
+              {/* Dia 1 expandido */}
+              {TREINOS_DEMO.filter(t=>!t.locked).map((t,i)=>(
+                <div key={i} className="app-card" style={{marginBottom:'8px'}}>
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'8px'}}>
+                    <div>
+                      <p style={{fontSize:'11px',fontWeight:'700',color:'#F2F0E8'}}>{t.dia} — {t.nome}</p>
+                      <p style={{fontSize:'9px',color:'#9CA88E'}}>{t.tempo} · {t.nivel}</p>
+                    </div>
+                    <span style={{fontSize:'9px',padding:'2px 7px',background:'rgba(140,179,105,0.1)',color:'#8CB369',borderRadius:'100px',border:'1px solid rgba(140,179,105,0.2)'}}>Hoje</span>
+                  </div>
+                  {t.exercicios.map((ex,j)=>(
+                    <div key={j} style={{display:'flex',alignItems:'center',gap:'8px',padding:'5px 0',borderBottom:j<t.exercicios.length-1?'1px solid rgba(140,179,105,0.06)':'none'}}>
+                      <span style={{fontSize:'14px'}}>{ex.emoji}</span>
+                      <span style={{fontSize:'10px',color:'#D4D9CC',flex:1}}>{ex.nome}</span>
+                      <span style={{fontSize:'9px',fontWeight:'700',color:'#E8A838'}}>{ex.reps}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+
+              {/* Dias bloqueados */}
+              <div style={{position:'relative'}}>
+                {TREINOS_DEMO.filter(t=>t.locked).map((t,i)=>(
+                  <div key={i} className="app-ref-card" style={{filter:'blur(3px)',userSelect:'none',marginBottom:'6px',pointerEvents:'none'}}>
+                    <p style={{fontSize:'11px',fontWeight:'700',color:'#F2F0E8'}}>{t.dia} — {t.nome}</p>
+                    <p style={{fontSize:'9px',color:'#9CA88E'}}>{t.tempo} · Sem equipamento</p>
+                  </div>
+                ))}
+                <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'rgba(6,9,4,0.65)',backdropFilter:'blur(3px)',borderRadius:'10px',cursor:'pointer'}} onClick={()=>tryAccess('21 Dias de Exercícios')}>
+                  <span style={{fontSize:'20px'}}>🔒</span>
+                  <p style={{fontSize:'11px',fontWeight:'700',color:'#F2F0E8',marginTop:'5px'}}>21 dias de treino desbloqueados</p>
+                  <p style={{fontSize:'10px',color:'#E8A838',marginTop:'2px'}}>acesso por R$27</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {tab==='desafio' && (
             <div className="app-section">
               <p className="app-page-title">Desafio 21 Dias</p>
@@ -606,10 +727,11 @@ function AppDemo({ onComprar }) {
 
         <div className="phone-nav">
           {[
-            {id:'inicio',  Ic:IcoHome,  label:'Início'},
-            {id:'plano',   Ic:IcoPlano, label:'Plano'},
-            {id:'desafio', Ic:IcoDesaf, label:'Desafio'},
-            {id:'chat',    Ic:IcoChat,  label:'Selva IA'},
+            {id:'inicio',   Ic:IcoHome,     label:'Início'},
+            {id:'plano',    Ic:IcoPlano,    label:'Plano'},
+            {id:'receitas', Ic:IcoReceitas, label:'Receitas'},
+            {id:'treinos',  Ic:IcoTreinos,  label:'Treinos'},
+            {id:'chat',     Ic:IcoChat,     label:'Chat IA'},
           ].map(({id,Ic,label})=>(
             <button key={id} className={`pnav-btn${tab===id?' pnav-active':''}`} onClick={()=>setTab(id)}>
               <Ic/>
