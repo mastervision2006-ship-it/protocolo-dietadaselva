@@ -298,84 +298,49 @@ function track(event, data = {}) {
    MAIN COMPONENT
    ══════════════════════ */
 export default function Quiz() {
-  const [screen, setScreen] = useState("landing");
-  const [userName, setUserName] = useState("");
-  const [nameInput, setNameInput] = useState("");
-  const [currentQ, setCurrentQ] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [selectedOpt, setSelectedOpt] = useState(null);
-  const [bodyData, setBodyData] = useState({ weight:"", height:"", goal:"" });
+  const [screen, setScreen]         = useState("gender");
+  const [answers, setAnswers]       = useState({});
+  const [userName, setUserName]     = useState("");
+  const [nameInput, setNameInput]   = useState("");
+  const [bodyData, setBodyData]     = useState({ weight:"", height:"", goal:"" });
   const [analysisProgress, setAnalysisProgress] = useState(0);
-  const [fadeIn, setFadeIn] = useState(true);
-  const formRef = useRef(null);
+  const [fadeIn, setFadeIn]         = useState(true);
 
-  // Track every screen change
   useEffect(() => {
-    if (screen !== 'quiz') track('screen_view', { screen });
+    track('screen_view', { screen });
+    if (typeof window !== 'undefined') window.scrollTo(0,0);
   }, [screen]);
-
-  // Track each quiz question separately (for per-question drop-off)
-  useEffect(() => {
-    if (screen === 'quiz') track('screen_view', { screen: `quiz_q${currentQ + 1}` });
-  }, [screen, currentQ]);
 
   const t = useCallback((cb) => {
     setFadeIn(false);
     setTimeout(() => { cb(); setFadeIn(true); }, 380);
   }, []);
 
-  const n = (text) => text.replace(/\{\{name\}\}/g, userName || "");
+  const go = (next) => t(() => setScreen(next));
 
-  const handleName = () => {
-    if (nameInput.trim().length >= 2) {
-      const first = nameInput.trim().split(" ")[0];
-      const capitalized = first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
-      setUserName(capitalized);
-      t(() => setScreen("quiz"));
-    }
+  const answer = (key, val, next) => {
+    setAnswers(p => ({ ...p, [key]: val }));
+    track('quiz_answer', { question: key, answer: val });
+    setTimeout(() => go(next), 400);
   };
 
-  const handleAnswer = (qId, val) => {
-    track('quiz_answer', { question: qId, answer: val, index: currentQ });
-    setSelectedOpt(val);
-    setTimeout(() => {
-      setAnswers(p => ({ ...p, [qId]: val }));
-      setSelectedOpt(null);
-      if (currentQ < QUIZ_QUESTIONS.length - 1) {
-        t(() => setCurrentQ(q => q + 1));
-      } else {
-        if (val === 'medo') {
-          t(() => setScreen("medo-screen"));
-        } else {
-          t(() => setScreen("body-data"));
-        }
-      }
-    }, 500);
-  };
+  const n = (text) => text.replace(/\{\{name\}\}/g, userName || "você");
 
-  const handleBodySubmit = () => {
-    if (bodyData.weight && bodyData.height && bodyData.goal) {
-      t(() => setScreen("edu-unificada"));
-    }
-  };
-
-  const goNext = (next) => () => t(() => setScreen(next));
-
-  const startAnalysis = () => {
+  const handleDataSubmit = () => {
+    if (!nameInput.trim() || !bodyData.weight || !bodyData.height || !bodyData.goal) return;
+    const first = nameInput.trim().split(" ")[0];
+    setUserName(first.charAt(0).toUpperCase() + first.slice(1).toLowerCase());
     track('lead_profile', { profile: getLeadProfile(answers) });
     t(() => {
       setScreen("analyzing");
       let p = 0;
-      const steps = [
-        {to:18,d:45},{to:35,d:55},{to:52,d:35},{to:70,d:65},{to:88,d:40},{to:100,d:50}
-      ];
+      const steps = [{to:18,d:45},{to:35,d:55},{to:52,d:35},{to:70,d:65},{to:88,d:40},{to:100,d:50}];
       let si = 0;
       const run = () => {
         if (si >= steps.length) { setTimeout(() => t(() => setScreen("diagnosis")), 700); return; }
         const {to,d} = steps[si];
         const iv = setInterval(() => {
-          p++;
-          setAnalysisProgress(p);
+          p++; setAnalysisProgress(p);
           if (p >= to) { clearInterval(iv); si++; setTimeout(run, 250); }
         }, d);
       };
@@ -383,25 +348,27 @@ export default function Quiz() {
     });
   };
 
-  const bmi = bodyData.weight && bodyData.height ? (
-    parseFloat(bodyData.weight) / ((parseFloat(bodyData.height)/100) ** 2)
-  ).toFixed(1) : 0;
-
-  const weightToLose = bodyData.weight && bodyData.goal ? Math.max(0, parseFloat(bodyData.weight) - parseFloat(bodyData.goal)) : 0;
-
+  const bmi = bodyData.weight && bodyData.height
+    ? (parseFloat(bodyData.weight) / ((parseFloat(bodyData.height)/100) ** 2)).toFixed(1)
+    : 0;
+  const weightToLose = bodyData.weight && bodyData.goal
+    ? Math.max(0, parseFloat(bodyData.weight) - parseFloat(bodyData.goal))
+    : 0;
   const timeWeeks = Math.max(3, Math.ceil(weightToLose / 1.2));
-
-  const progress = screen === "quiz" ? ((currentQ + 1) / QUIZ_QUESTIONS.length) * 100 :
-                   screen === "body-data" ? 100 : 0;
 
   const getBmiCategory = (v) => {
     const b = parseFloat(v);
-    if (b < 18.5) return { label:"Abaixo do peso", color:"#60A5FA" };
-    if (b < 25) return { label:"Peso normal", color:"#8CB369" };
-    if (b < 30) return { label:"Sobrepeso", color:"#E8A838" };
-    if (b < 35) return { label:"Obesidade grau I", color:"#E85D4A" };
-    return { label:"Obesidade grau II+", color:"#DC2626" };
+    if (b < 18.5) return { label:"Abaixo do peso",   color:"#60A5FA" };
+    if (b < 25)   return { label:"Peso normal",       color:"#8CB369" };
+    if (b < 30)   return { label:"Sobrepeso",         color:"#E8A838" };
+    if (b < 35)   return { label:"Obesidade grau I",  color:"#E85D4A" };
+    return               { label:"Obesidade grau II+",color:"#DC2626" };
   };
+
+  // total steps for progress bar
+  const STEPS = ["gender","age","social-proof","objective","authority","difficulty","mechanism","awareness","habits","symptoms","data"];
+  const stepIdx = STEPS.indexOf(screen);
+  const progress = stepIdx >= 0 ? Math.round(((stepIdx + 1) / STEPS.length) * 100) : 100;
 
   return (
     <div style={S.page}>
@@ -409,15 +376,20 @@ export default function Quiz() {
       <div style={S.glow1} />
       <div style={S.glow2} />
       <div style={{...S.container, opacity: fadeIn?1:0, transform: fadeIn?"translateY(0)":"translateY(14px)", transition:"all 0.4s ease"}}>
-        {screen === "landing" && <Landing onStart={goNext("name")} />}
-        {screen === "name" && <NameScreen value={nameInput} onChange={setNameInput} onSubmit={handleName} />}
-        {screen === "quiz" && <QuizScreen q={getContextualQuestion(QUIZ_QUESTIONS[currentQ], answers)} progress={progress} cur={currentQ} total={QUIZ_QUESTIONS.length} onAnswer={handleAnswer} sel={selectedOpt} n={n} />}
-        {screen === "medo-screen" && <MedoScreen name={userName} onNext={goNext("body-data")} />}
-        {screen === "body-data" && <BodyDataScreen data={bodyData} onChange={setBodyData} onSubmit={handleBodySubmit} name={userName} />}
-        {screen === "edu-unificada" && <EduUnificada name={userName} answers={answers} onNext={startAnalysis} />}
-        {screen === "analyzing" && <Analyzing progress={analysisProgress} name={userName} answers={answers} />}
-        {screen === "diagnosis" && <Diagnosis name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} onNext={goNext("result")} />}
-        {screen === "result" && <Result name={userName} weightToLose={weightToLose} timeWeeks={timeWeeks} bmi={bmi} bmiCat={getBmiCategory(bmi)} answers={answers} />}
+        {screen === "gender"       && <GenderScreen     onAnswer={(v) => answer('gender', v, 'age')} />}
+        {screen === "age"          && <AgeScreen        progress={progress} onAnswer={(v) => answer('age', v, 'social-proof')} />}
+        {screen === "social-proof" && <SocialProofScreen progress={progress} onNext={() => go('objective')} />}
+        {screen === "objective"    && <ObjectiveScreen  progress={progress} onAnswer={(v) => answer('goal', v, 'authority')} />}
+        {screen === "authority"    && <AuthorityScreen  progress={progress} onNext={() => go('difficulty')} />}
+        {screen === "difficulty"   && <DifficultyScreen progress={progress} onAnswer={(v) => answer('frustration', v, 'mechanism')} />}
+        {screen === "mechanism"    && <MechanismScreen  progress={progress} onNext={() => go('awareness')} />}
+        {screen === "awareness"    && <AwarenessScreen  progress={progress} onAnswer={(v) => answer('awareness', v, 'habits')} />}
+        {screen === "habits"       && <HabitsScreen     progress={progress} onAnswer={(v) => answer('meals', v, 'symptoms')} />}
+        {screen === "symptoms"     && <SymptomsScreen   progress={progress} onAnswer={(v) => answer('symptoms', v, 'data')} />}
+        {screen === "data"         && <DataScreen       nameInput={nameInput} onNameChange={setNameInput} bodyData={bodyData} onBodyChange={setBodyData} onSubmit={handleDataSubmit} />}
+        {screen === "analyzing"    && <Analyzing        progress={analysisProgress} name={userName || nameInput} answers={answers} />}
+        {screen === "diagnosis"    && <Diagnosis        name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} onNext={() => go('result')} />}
+        {screen === "result"       && <Result           name={userName} weightToLose={weightToLose} timeWeeks={timeWeeks} bmi={bmi} bmiCat={getBmiCategory(bmi)} answers={answers} />}
       </div>
       {screen === "result" && <SelvaChat name={userName} />}
       <style>{CSS}</style>
@@ -1024,88 +996,380 @@ function SelvaChat({ name }) {
 }
 
 /* ══════════════════════
-   1. LANDING
+   1. GENDER SCREEN
    ══════════════════════ */
-function Landing({ onStart }) {
+function GenderScreen({ onAnswer }) {
   return (
-    <div className="landing-wrap">
-
-      {/* Tag de fonte */}
-      <div className="landing-source">
-        <span className="landing-source-dot"/>
-        <span>Notícia verificada · <strong>UOL VivaBem</strong> · Nov 2025</span>
-      </div>
-
-      {/* Headline */}
-      <h1 className="hero-title">
-        Fogaça secou <span className="hl-accent">17 kg</span> com a <span className="hl">'dieta da selva'</span> — e funciona para mulheres?
-      </h1>
-
-      {/* Card compacto — foto + quote inline */}
-      <div className="fogaca-card fogaca-card-compact">
-        <img src="/fogaca.webp" alt="Henrique Fogaça — Dieta da Selva" className="fogaca-img-compact" />
-        <div className="fogaca-caption-compact">
-          <span className="fogaca-caption-tag">📰 UOL VivaBem · 26/11/2025</span>
-          <p>"Parei o carboidrato, comi mais carne e gordura. O peso caiu rápido."</p>
+    <div className="gen-wrap">
+      <div style={{textAlign:"center",marginBottom:"28px"}}>
+        <div className="landing-source" style={{display:"inline-flex",marginBottom:"16px"}}>
+          <span className="landing-source-dot"/>
+          <span>Análise gratuita · <strong>Dieta da Selva</strong></span>
         </div>
+        <h1 className="hero-title" style={{fontSize:"22px",marginBottom:"8px"}}>
+          Você está muito perto de descobrir qual o melhor protocolo para o seu metabolismo
+        </h1>
+        <p style={{fontSize:"14px",color:"#9CA88E"}}>Para personalizar sua análise, nos diga:</p>
       </div>
-
-      {/* Números */}
-      <div className="proof-row proof-row-sm">
-        <div className="proof-item"><span className="proof-num">17kg</span><span className="proof-lbl">perdidos</span></div>
-        <div className="proof-div"/>
-        <div className="proof-item"><span className="proof-num">+10mil</span><span className="proof-lbl">mulheres</span></div>
-        <div className="proof-div"/>
-        <div className="proof-item"><span className="proof-num">2 min</span><span className="proof-lbl">de teste</span></div>
-      </div>
-
-      {/* Bullets compactos */}
-      <div className="landing-bullets landing-bullets-sm">
-        {[
-          ['🥩','Carne, ovos e gordura boa — sem passar fome'],
-          ['⚡','Energia sobe na 1ª semana'],
-          ['📱','Plano personalizado para o seu perfil'],
-        ].map(([e,t],i)=>(
-          <div key={i} className="landing-bullet">
-            <span className="landing-bullet-em">{e}</span>
-            <span className="landing-bullet-txt">{t}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* CTA principal */}
-      <button className="cta" onClick={onStart}>Descobrir se funciona para mim →</button>
-      <p className="micro">⏱️ Gratuito · 2 minutos · Resultado personalizado</p>
-
-      {/* Prova social */}
-      <div className="faces-row">
-        {["M","C","P","A","R"].map((l,i)=>(<div key={i} className="face">{l}</div>))}
-        <span className="faces-txt">+2.847 mulheres fizeram o quiz hoje</span>
+      <div className="gen-cards">
+        <button className="gen-card" onClick={() => onAnswer('mulher')}>
+          <img src="/gen-mulher.webp" alt="Mulher" className="gen-card-img" onError={e => { e.target.style.display='none'; }} />
+          <span className="gen-card-label">Mulher</span>
+        </button>
+        <button className="gen-card" onClick={() => onAnswer('homem')}>
+          <img src="/gen-homem.webp" alt="Homem" className="gen-card-img" onError={e => { e.target.style.display='none'; }} />
+          <span className="gen-card-label">Homem</span>
+        </button>
       </div>
     </div>
   );
 }
 
 /* ══════════════════════
-   2. NAME SCREEN
+   2. AGE SCREEN
    ══════════════════════ */
-function NameScreen({ value, onChange, onSubmit }) {
+function AgeScreen({ progress, onAnswer }) {
+  const ranges = [
+    { label:"18–29", img:"/age-18.webp" },
+    { label:"30–39", img:"/age-30.webp" },
+    { label:"40–49", img:"/age-40.webp" },
+    { label:"50–59", img:"/age-50.webp" },
+    { label:"60+",   img:"/age-60.webp" },
+  ];
   return (
-    <div style={{textAlign:"center",paddingTop:"60px",maxWidth:"440px",margin:"0 auto"}}>
-      <div style={{fontSize:"48px",marginBottom:"20px"}}>🌿</div>
-      <h2 className="screen-title">Antes de começarmos...</h2>
-      <p className="screen-sub">Como você gostaria de ser chamada?</p>
-      <input
-        type="text" placeholder="Seu primeiro nome" value={value}
-        onChange={e => onChange(e.target.value)}
-        onKeyDown={e => e.key === "Enter" && onSubmit()}
-        className="name-input"
-        autoFocus
-      />
-      <button className="cta" onClick={onSubmit} style={{marginTop:"16px",width:"100%"}} disabled={value.trim().length < 2}>
-        Continuar →
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{textAlign:"center",margin:"24px 0 20px"}}>
+        <h2 className="question">Qual é a sua faixa etária?</h2>
+        <p className="question-sub">Isso ajusta o protocolo para o seu metabolismo atual</p>
+      </div>
+      <div className="age-grid">
+        {ranges.map(r => (
+          <button key={r.label} className="age-card" onClick={() => onAnswer(r.label)}>
+            <img src={r.img} alt={r.label} className="age-card-img" onError={e => { e.target.style.display='none'; }} />
+            <span className="age-card-label">{r.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════
+   3. SOCIAL PROOF SCREEN
+   ══════════════════════ */
+function SocialProofScreen({ progress, onNext }) {
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{textAlign:"center",padding:"32px 16px 0"}}>
+        <div style={{fontSize:"48px",marginBottom:"16px"}}>🌿</div>
+        <h2 className="screen-title" style={{fontSize:"28px",marginBottom:"12px"}}>
+          Mais de <span style={{color:"#E8A838"}}>12.400 mulheres</span> já usaram este protocolo para queimar gordura de forma natural
+        </h2>
+        <p style={{fontSize:"14px",color:"#9CA88E",marginBottom:"24px",lineHeight:"1.6"}}>
+          Sem academia obrigatória. Sem passar fome. Sem contar caloria.
+        </p>
+        <img src="/comunidade.webp" alt="Comunidade Dieta da Selva" className="comunidade-img" onError={e => { e.target.style.display='none'; }} />
+        <div className="sp-depo-row">
+          {["-12kg / 6 semanas","-8kg / 30 dias","-15kg / 2 meses"].map((r,i) => (
+            <div key={i} className="sp-depo-badge">{r}</div>
+          ))}
+        </div>
+        <button className="cta" style={{width:"100%",marginTop:"24px"}} onClick={onNext}>
+          Sim, quero descobrir meu protocolo →
+        </button>
+        <p className="micro" style={{marginTop:"10px"}}>Você está prestes a conhecer seu perfil metabólico</p>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════
+   4. OBJECTIVE SCREEN
+   ══════════════════════ */
+function ObjectiveScreen({ progress, onAnswer }) {
+  const opts = [
+    { value:"emagrecer",  emoji:"🔥", text:"Emagrecer de vez, sem efeito sanfona" },
+    { value:"desinchar",  emoji:"✨", text:"Desinchar e me sentir mais leve" },
+    { value:"energia",    emoji:"⚡", text:"Ter mais energia e disposição" },
+    { value:"todas",      emoji:"🌿", text:"Tudo isso ao mesmo tempo" },
+  ];
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{textAlign:"center",margin:"24px 0 20px"}}>
+        <h2 className="question">Qual é o seu principal objetivo hoje?</h2>
+        <p className="question-sub">Sua resposta define o foco do protocolo</p>
+      </div>
+      <div className="opt-card-list">
+        {opts.map(o => (
+          <button key={o.value} className="opt-card-icon" onClick={() => onAnswer(o.value)}>
+            <div className="opt-card-icon-emoji">{o.emoji}</div>
+            <span className="opt-card-icon-title">{o.text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════
+   5. AUTHORITY SCREEN
+   ══════════════════════ */
+function AuthorityScreen({ progress, onNext }) {
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{textAlign:"center",margin:"24px 0 16px"}}>
+        <div className="landing-source" style={{display:"inline-flex",marginBottom:"12px"}}>
+          <span className="landing-source-dot"/>
+          <span>Notícia verificada · <strong>UOL VivaBem</strong> · Nov 2025</span>
+        </div>
+        <h2 className="question" style={{fontSize:"20px"}}>
+          Fogaça eliminou <span style={{color:"#E8A838"}}>17 kg</span> com a Dieta da Selva — e especialistas explicam como funciona para mulheres
+        </h2>
+      </div>
+      <div className="auth-news-card">
+        <div className="auth-news-header">
+          <span className="auth-news-tag">📰 UOL VivaBem — Matéria Verificada</span>
+          <span className="auth-news-date">26/11/2025</span>
+        </div>
+        <div className="auth-news-body">
+          <img src="/fogaca.webp" alt="Henrique Fogaça" className="auth-news-img" />
+          <div className="auth-news-text">
+            <p>"Parei o carboidrato, comecei a comer mais carne e gordura boa. O peso caiu em semanas. A fome ansiosa desapareceu."</p>
+            <p style={{marginTop:"8px",fontSize:"12px",color:"#5C6652"}}>— Henrique Fogaça, chef e apresentador</p>
+          </div>
+        </div>
+        <div className="auth-stats-row">
+          <div className="auth-stat"><span className="auth-stat-num">17kg</span><span className="auth-stat-lbl">perdidos</span></div>
+          <div className="auth-stat-div"/>
+          <div className="auth-stat"><span className="auth-stat-num">3 meses</span><span className="auth-stat-lbl">de protocolo</span></div>
+          <div className="auth-stat-div"/>
+          <div className="auth-stat"><span className="auth-stat-num">+12mil</span><span className="auth-stat-lbl">mulheres</span></div>
+        </div>
+      </div>
+      <button className="cta" style={{width:"100%",marginTop:"20px"}} onClick={onNext}>
+        Continuar minha análise →
       </button>
-      <p className="micro" style={{marginTop:"12px"}}>🔒 Seu nome é usado apenas para personalizar sua experiência</p>
+    </div>
+  );
+}
+
+/* ══════════════════════
+   6. DIFFICULTY SCREEN
+   ══════════════════════ */
+function DifficultyScreen({ progress, onAnswer }) {
+  const opts = [
+    { value:"parou",  emoji:"😫", text:"Muito difícil — sinto que meu metabolismo parou" },
+    { value:"sanfona",emoji:"🔄", text:"Consigo perder, mas ganho tudo de volta" },
+    { value:"inicio", emoji:"🚀", text:"Estou começando e quero o caminho certo" },
+  ];
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{textAlign:"center",margin:"24px 0 20px"}}>
+        <h2 className="question">O quão difícil é para você perder peso hoje?</h2>
+        <p className="question-sub">Seja honesta — sem julgamento aqui</p>
+      </div>
+      <div className="opt-chips">
+        {opts.map(o => (
+          <button key={o.value} className="opt-chip" onClick={() => onAnswer(o.value)}>
+            <span className="opt-chip-emoji">{o.emoji}</span>
+            <span>{o.text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════
+   7. MECHANISM SCREEN
+   ══════════════════════ */
+function MechanismScreen({ progress, onNext }) {
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{padding:"24px 0 0",maxWidth:"480px",margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:"20px"}}>
+          <div style={{fontSize:"40px",marginBottom:"12px"}}>🔬</div>
+          <h2 className="question" style={{fontSize:"21px"}}>
+            Você sente que come pouco e mesmo assim não emagrece?
+          </h2>
+        </div>
+        <div className="mech-card">
+          <div className="mech-card-badge">⚠️ Por que isso acontece</div>
+          <p className="mech-card-body">
+            Isso não é falta de força de vontade. É um <strong>bloqueio inflamatório nas células</strong>, causado pelo excesso de carboidratos processados na dieta moderna.
+          </p>
+          <p className="mech-card-body" style={{marginTop:"10px"}}>
+            Quando as células estão inflamadas, o corpo <strong>resiste à queima de gordura</strong> — não importa quanto você se esforce ou restrinja. O metabolismo trava.
+          </p>
+        </div>
+        <div className="mech-compare">
+          <div className="mech-compare-col mech-bad">
+            <div className="mech-compare-head">❌ Célula inflamada</div>
+            <p>Retém gordura</p>
+            <p>Aumenta o inchaço</p>
+            <p>Bloqueia a energia</p>
+          </div>
+          <div className="mech-compare-col mech-good">
+            <div className="mech-compare-head">✅ Célula limpa</div>
+            <p>Queima gordura</p>
+            <p>Reduz o inchaço</p>
+            <p>Energia real</p>
+          </div>
+        </div>
+        <div className="mech-solucao">
+          <p style={{fontSize:"14px",color:"#A8D08D",fontWeight:"700",marginBottom:"6px"}}>🥩 A solução: Protocolo Carnívoro Ancestral</p>
+          <p style={{fontSize:"13px",color:"#9CA88E",lineHeight:"1.6"}}>
+            A Dieta da Selva remove diretamente a causa do bloqueio — tratando a inflamação celular com proteína animal, gordura boa e zero carboidrato processado.
+          </p>
+        </div>
+        <button className="cta" style={{width:"100%",marginTop:"20px"}} onClick={onNext}>
+          Entendi — continuar →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════
+   8. AWARENESS SCREEN
+   ══════════════════════ */
+function AwarenessScreen({ progress, onAnswer }) {
+  const opts = [
+    { value:"sim-quero",    emoji:"💚", text:"Sim, e quero começar agora" },
+    { value:"ouvi-duvidas", emoji:"🤔", text:"Já ouvi falar, mas tenho dúvidas" },
+    { value:"nunca",        emoji:"👀", text:"Nunca ouvi falar, mas estou curiosa" },
+  ];
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{textAlign:"center",margin:"24px 0 20px"}}>
+        <h2 className="question">Você já conhecia a Dieta da Selva?</h2>
+        <p className="question-sub">O protocolo carnívoro que reseta o metabolismo feminino</p>
+      </div>
+      <div className="opt-chips">
+        {opts.map(o => (
+          <button key={o.value} className="opt-chip" onClick={() => onAnswer(o.value)}>
+            <span className="opt-chip-emoji">{o.emoji}</span>
+            <span>{o.text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════
+   9. HABITS SCREEN
+   ══════════════════════ */
+function HabitsScreen({ progress, onAnswer }) {
+  const opts = [
+    { value:"1-2",    emoji:"🕐", text:"1 a 2 refeições por dia" },
+    { value:"3",      emoji:"🕐", text:"3 refeições (café, almoço, jantar)" },
+    { value:"4-5",    emoji:"🕐", text:"4 a 5 refeições ou lanches frequentes" },
+    { value:"irregular", emoji:"😅", text:"Irregular — como quando lembro" },
+  ];
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{textAlign:"center",margin:"24px 0 20px"}}>
+        <h2 className="question">Quantas refeições você faz por dia?</h2>
+        <p className="question-sub">Isso ajusta a distribuição do seu protocolo</p>
+      </div>
+      <div className="opt-card-list">
+        {opts.map(o => (
+          <button key={o.value} className="opt-card-icon" onClick={() => onAnswer(o.value)}>
+            <div className="opt-card-icon-emoji">{o.emoji}</div>
+            <span className="opt-card-icon-title">{o.text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════
+   10. SYMPTOMS SCREEN (new, replaces QuizScreen in flow)
+   ══════════════════════ */
+function SymptomsScreen({ progress, onAnswer }) {
+  const q = QUIZ_QUESTIONS.find(q => q.id === 'symptoms');
+  const [sel, setSel] = useState(null);
+  const handleClick = (val) => {
+    if (sel) return;
+    setSel(val);
+    setTimeout(() => onAnswer(val), 500);
+  };
+  return (
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
+      <div style={{textAlign:"center",margin:"24px 0 20px"}}>
+        <h2 className="question">{q.question.replace(/\{\{name\}\}/g,'')}</h2>
+        <p className="question-sub">{q.subtitle}</p>
+      </div>
+      <div className="opt-grid-icons">
+        {q.options.map(o => {
+          const IconComp = Q_ICONS[`symptoms:${o.value}`];
+          return (
+            <button key={o.value}
+              className={`opt-grid-icon-card${sel===o.value?' opt-sel':''}`}
+              onClick={() => handleClick(o.value)}
+              disabled={sel !== null}>
+              <div className="opt-grid-icon-svg">
+                {IconComp ? <IconComp /> : <span style={{fontSize:'32px'}}>{o.emoji}</span>}
+              </div>
+              <span className="opt-grid-icon-label">{o.text}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════
+   11. DATA SCREEN (replaces NameScreen + BodyDataScreen)
+   ══════════════════════ */
+function DataScreen({ nameInput, onNameChange, bodyData, onBodyChange, onSubmit }) {
+  const set = (k,v) => onBodyChange({...bodyData,[k]:v});
+  const valid = nameInput.trim().length >= 2 && bodyData.weight && bodyData.height && bodyData.goal;
+  return (
+    <div style={{paddingTop:"0",maxWidth:"460px",margin:"0 auto"}}>
+      <div style={{textAlign:"center",marginBottom:"24px",paddingTop:"16px"}}>
+        <div style={{fontSize:"32px",marginBottom:"10px"}}>📊</div>
+        <h2 className="screen-title">Quase lá! Dados finais para o seu diagnóstico</h2>
+        <p className="screen-sub">Essas informações geram seu laudo personalizado</p>
+      </div>
+      <div className="input-group">
+        <label className="label">Seu primeiro nome</label>
+        <input type="text" placeholder="Ex: Maria" value={nameInput} onChange={e => onNameChange(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && valid && onSubmit()} className="field" autoFocus />
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+        <div className="input-group" style={{margin:0}}>
+          <label className="label">Peso atual (kg)</label>
+          <input type="number" inputMode="decimal" placeholder="Ex: 78" value={bodyData.weight}
+            onChange={e => set("weight",e.target.value)} className="field" />
+        </div>
+        <div className="input-group" style={{margin:0}}>
+          <label className="label">Altura (cm)</label>
+          <input type="number" inputMode="decimal" placeholder="Ex: 165" value={bodyData.height}
+            onChange={e => set("height",e.target.value)} className="field" />
+        </div>
+      </div>
+      <div className="input-group" style={{marginTop:"12px"}}>
+        <label className="label">Peso desejado (kg)</label>
+        <input type="number" inputMode="decimal" placeholder="Ex: 65" value={bodyData.goal}
+          onChange={e => set("goal",e.target.value)} className="field" />
+      </div>
+      <button className="cta" onClick={onSubmit} style={{width:"100%",marginTop:"20px"}} disabled={!valid}>
+        Gerar meu diagnóstico →
+      </button>
+      <p className="micro" style={{marginTop:"10px"}}>🔒 Seus dados são confidenciais e não serão compartilhados</p>
     </div>
   );
 }
@@ -1520,82 +1784,6 @@ function QuizScreen({ q, progress, cur, total, onAnswer, sel, n }) {
 }
 
 /* ══════════════════════
-   4. BODY DATA
-   ══════════════════════ */
-function BodyDataScreen({ data, onChange, onSubmit, name }) {
-  const set = (k,v) => onChange({...data,[k]:v});
-  const valid = data.weight && data.height && data.goal;
-  return (
-    <div style={{paddingTop:"32px",maxWidth:"460px",margin:"0 auto"}}>
-      <div style={{textAlign:"center",marginBottom:"28px"}}>
-        <div style={{fontSize:"36px",marginBottom:"12px"}}>📊</div>
-        <h2 className="screen-title">{name}, agora vamos personalizar</h2>
-        <p className="screen-sub">Esses dados nos permitem criar um diagnóstico exclusivo para o seu corpo</p>
-      </div>
-      <div className="input-group">
-        <label className="label">Peso atual (kg)</label>
-        <input type="number" placeholder="Ex: 78" value={data.weight} onChange={e=>set("weight",e.target.value)} className="field" />
-      </div>
-      <div className="input-group">
-        <label className="label">Altura (cm)</label>
-        <input type="number" placeholder="Ex: 165" value={data.height} onChange={e=>set("height",e.target.value)} className="field" />
-      </div>
-      <div className="input-group">
-        <label className="label">Peso desejado (kg)</label>
-        <input type="number" placeholder="Ex: 65" value={data.goal} onChange={e=>set("goal",e.target.value)} className="field" />
-      </div>
-      <button className="cta" onClick={onSubmit} style={{width:"100%",marginTop:"8px"}} disabled={!valid}>
-        Analisar meu perfil →
-      </button>
-      <p className="micro" style={{marginTop:"12px"}}>🔒 Seus dados são confidenciais e não serão compartilhados</p>
-    </div>
-  );
-}
-
-/* ══════════════════════
-   5. MEDO SCREEN
-   ══════════════════════ */
-function MedoScreen({ name, onNext }) {
-  return (
-    <div style={{paddingTop:"32px",maxWidth:"480px",margin:"0 auto"}}>
-      <div style={{textAlign:"center",marginBottom:"28px"}}>
-        <div style={{fontSize:"48px",marginBottom:"16px"}}>🌿</div>
-        <h2 className="screen-title">Esse medo não é fraqueza,<br/>{name}.</h2>
-        <p style={{fontSize:"15px",color:"#9CA88E",lineHeight:"1.7",marginTop:"12px"}}>
-          É uma cicatriz de cada vez que você tentou e algo falhou. Mas deixa eu te fazer uma pergunta honesta:
-        </p>
-      </div>
-
-      <div className="medo-card">
-        <p className="medo-card-title">📌 Cada vez que você "falhou"...</p>
-        <p className="medo-card-body">
-          O método te mandava passar fome? Cortar tudo que você ama? Contar caloria e viver com ansiedade?
-        </p>
-        <p className="medo-card-body" style={{marginTop:"12px",color:"#F2F0E8",fontWeight:"600"}}>
-          Você não falhou. O método falhou com você.
-        </p>
-        <p className="medo-card-body" style={{marginTop:"10px"}}>
-          A Dieta da Selva não pede sacrifício. Ela pede que você <strong>coma de verdade</strong> — carne, ovos, queijo, gordura boa — até ficar completamente saciada. O corpo faz o resto.
-        </p>
-      </div>
-
-      <div className="medo-guarantee">
-        <span style={{fontSize:"28px"}}>🛡️</span>
-        <div>
-          <p style={{fontSize:"14px",fontWeight:"700",color:"#F2F0E8",marginBottom:"5px"}}>Garantia incondicional de 7 dias</p>
-          <p style={{fontSize:"13px",color:"#9CA88E",lineHeight:"1.6"}}>Se em 7 dias você não sentir diferença no inchaço, na energia ou na fome — devolvemos cada centavo. Sem pergunta. Sem burocracia.</p>
-        </div>
-      </div>
-
-      <button className="cta" onClick={onNext} style={{width:"100%",marginTop:"24px"}}>
-        Continuar — quero ver meu diagnóstico →
-      </button>
-      <p className="micro" style={{marginTop:"10px",textAlign:"center"}}>Você não tem nada a perder. Só o peso que está carregando.</p>
-    </div>
-  );
-}
-
-/* ══════════════════════
    TESTI SLIDER
    ══════════════════════ */
 function TestiSlider() {
@@ -1648,63 +1836,6 @@ function TestiSlider() {
           <button key={i} className={`tslider-dot${active === i ? ' tsd-active' : ''}`} onClick={() => scrollTo(i)} />
         ))}
       </div>
-    </div>
-  );
-}
-
-/* ══════════════════════
-   6. EDU UNIFICADA
-   ══════════════════════ */
-function EduUnificada({ name, answers, onNext }) {
-  const profile = getLeadProfile(answers);
-
-  const profileMsg = {
-    decidida: `você já sabe o que quer — veja como o protocolo vai entregar.`,
-    cetica: `entendemos o ceticismo. Veja o mecanismo biológico — não é promessa, é fisiologia.`,
-    medo: `antes do diagnóstico, entenda por que seu corpo vai responder diferente desta vez.`,
-    ocupada: `em 30 segundos, veja por que este é o único método que cabe na sua rotina.`,
-    hormonal: `a ciência explica por que mulheres acima de 45 respondem melhor a este protocolo.`,
-    economica: `antes de decidir, entenda exatamente o que acontece no seu corpo.`,
-  };
-
-  return (
-    <div style={{paddingTop:"24px"}}>
-      <div className="edu-card">
-        <div className="edu-badge">🧬 O QUE VAI ACONTECER NO SEU CORPO</div>
-        <h2 className="edu-title">{name}, {profileMsg[profile] || profileMsg.cetica}</h2>
-
-        <div className="edu-body">
-          <div className="edu-mechanism">
-            <div className="edu-mech-item">
-              <span className="edu-mech-icon">🧬</span>
-              <div>
-                <strong>GLP-1 Natural — o Ozempic do seu corpo</strong>
-                <p>Proteína + gordura animal ativam o mesmo hormônio que o Ozempic imita. Em 3-5 dias a fome ansiosa desaparece — sem medicamento.</p>
-              </div>
-            </div>
-            <div className="edu-mech-item">
-              <span className="edu-mech-icon">🔥</span>
-              <div>
-                <strong>Queima de Gordura 24h</strong>
-                <p>Sem carboidrato como combustível, o corpo migra para gordura — inclusive a visceral abdominal — dia e noite, mesmo parada.</p>
-              </div>
-            </div>
-            <div className="edu-mech-item">
-              <span className="edu-mech-icon">⚡</span>
-              <div>
-                <strong>Energia que não cai mais</strong>
-                <p>Sem picos de insulina, sem crashes de açúcar. Energia constante e estável do acordar ao dormir.</p>
-              </div>
-            </div>
-          </div>
-
-          <p style={{fontSize:"11px",fontWeight:"700",color:"#5C6652",letterSpacing:".06em",textTransform:"uppercase",margin:"18px 0 10px",textAlign:"center"}}>QUEM SEGUIU O PROTOCOLO</p>
-          <TestiSlider />
-        </div>
-      </div>
-      <button className="cta" onClick={onNext} style={{width:"100%",marginTop:"20px"}}>
-        Ver meu diagnóstico personalizado →
-      </button>
     </div>
   );
 }
@@ -2878,5 +3009,50 @@ const CSS = `
 .edu-prova-txt{font-size:12px;color:#9CA88E;line-height:1.6;font-style:italic;margin-bottom:8px}
 .edu-prova-name{font-size:11px;font-weight:600;color:#F2F0E8}
 .edu-prova-result{font-size:11px;font-weight:700;color:#E8A838;padding:2px 8px;background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.2);border-radius:100px}
+
+/* ── Gender screen ── */
+.gen-wrap{padding-top:20px;max-width:480px;margin:0 auto}
+.gen-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+.gen-card{display:flex;flex-direction:column;align-items:center;gap:0;border-radius:20px;border:1.5px solid rgba(140,179,105,0.12);background:rgba(18,24,14,0.85);overflow:hidden;transition:all .3s;cursor:pointer;padding:0}
+.gen-card:hover{border-color:rgba(140,179,105,0.4);transform:translateY(-3px)}
+.gen-card-img{width:100%;height:180px;object-fit:cover;object-position:top;display:block}
+.gen-card-label{font-family:'DM Sans',sans-serif;font-size:18px;font-weight:700;color:#F2F0E8;padding:14px 0;width:100%;text-align:center;background:rgba(10,14,8,0.6)}
+
+/* ── Age screen ── */
+.age-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.age-card{display:flex;flex-direction:column;align-items:center;gap:0;border-radius:14px;border:1.5px solid rgba(140,179,105,0.1);background:rgba(18,24,14,0.85);overflow:hidden;transition:all .3s;cursor:pointer;padding:0}
+.age-card:hover{border-color:rgba(140,179,105,0.4);transform:translateY(-2px)}
+.age-card-img{width:100%;height:100px;object-fit:cover;object-position:top;display:block}
+.age-card-label{font-size:13px;font-weight:700;color:#F2F0E8;padding:8px 0;width:100%;text-align:center;font-family:'DM Sans',sans-serif}
+
+/* ── Social proof screen ── */
+.comunidade-img{width:100%;border-radius:16px;max-height:200px;object-fit:cover;margin-bottom:16px;display:block}
+.sp-depo-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.sp-depo-badge{padding:5px 12px;border-radius:100px;background:rgba(140,179,105,0.08);border:1px solid rgba(140,179,105,0.2);font-size:12px;font-weight:700;color:#A8D08D}
+
+/* ── Authority screen ── */
+.auth-news-card{border-radius:18px;border:1px solid rgba(140,179,105,0.15);background:rgba(10,14,8,0.9);overflow:hidden}
+.auth-news-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(140,179,105,0.08)}
+.auth-news-tag{font-size:10px;font-weight:700;color:#8CB369;letter-spacing:.05em;text-transform:uppercase}
+.auth-news-date{font-size:10px;color:#354030}
+.auth-news-body{display:flex;gap:12px;padding:14px}
+.auth-news-img{width:90px;height:90px;border-radius:10px;object-fit:cover;object-position:top;flex-shrink:0}
+.auth-news-text p{font-size:13px;color:#C8D4B8;line-height:1.55;font-style:italic}
+.auth-stats-row{display:flex;align-items:center;justify-content:center;gap:16px;padding:12px 14px;border-top:1px solid rgba(140,179,105,0.08)}
+.auth-stat{text-align:center}
+.auth-stat-num{display:block;font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:#E8A838}
+.auth-stat-lbl{font-size:11px;color:#5C6652}
+.auth-stat-div{width:1px;height:28px;background:rgba(140,179,105,0.1)}
+
+/* ── Mechanism screen ── */
+.mech-card{border-radius:16px;border:1px solid rgba(140,179,105,0.12);background:rgba(18,24,14,0.85);padding:18px;margin-bottom:14px}
+.mech-card-badge{font-size:11px;font-weight:700;color:#E8A838;letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px}
+.mech-card-body{font-size:14px;color:#C8D4B8;line-height:1.65}
+.mech-compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.mech-compare-col{border-radius:14px;padding:14px;font-size:13px;color:#9CA88E;line-height:1.7}
+.mech-bad{background:rgba(232,85,74,0.06);border:1px solid rgba(232,85,74,0.15)}
+.mech-good{background:rgba(140,179,105,0.06);border:1px solid rgba(140,179,105,0.15)}
+.mech-compare-head{font-weight:700;font-size:13px;color:#F2F0E8;margin-bottom:6px}
+.mech-solucao{padding:14px 16px;border-radius:14px;background:rgba(140,179,105,0.05);border-left:3px solid #8CB369}
 `;
 
