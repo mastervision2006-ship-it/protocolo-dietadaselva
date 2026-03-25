@@ -423,7 +423,8 @@ export default function Quiz() {
         {screen === "exercise-edu"&& <ExerciseEdu       progress={progress} onNext={() => go('data')} />}
         {screen === "data"         && <DataScreen       nameInput={nameInput} onNameChange={setNameInput} bodyData={bodyData} onBodyChange={setBodyData} onSubmit={handleDataSubmit} />}
         {screen === "analyzing"    && <Analyzing        progress={analysisProgress} name={userName || nameInput} answers={answers} />}
-        {screen === "diagnosis"    && <Diagnosis        name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} onNext={() => go('result')} />}
+        {screen === "diagnosis"    && <Diagnosis        name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} onNext={() => go('testimonials-screen')} />}
+        {screen === "testimonials-screen" && <TestimonialsScreen onNext={() => go('result')} />}
         {screen === "result"       && <Result           name={userName} weightToLose={weightToLose} timeWeeks={timeWeeks} bmi={bmi} bmiCat={getBmiCategory(bmi)} answers={answers} />}
       </div>
       {screen === "result" && <SelvaChat name={userName} />}
@@ -1991,6 +1992,42 @@ function QuizScreen({ q, progress, cur, total, onAnswer, sel, n }) {
           <span>{hint}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ══════════════════════
+   TESTIMONIALS SCREEN
+   ══════════════════════ */
+function TestimonialsScreen({ onNext }) {
+  return (
+    <div style={{paddingTop:"0",maxWidth:"480px",margin:"0 auto"}}>
+      <div style={{textAlign:"center",padding:"28px 0 20px"}}>
+        <div style={{display:"inline-block",background:"rgba(140,179,105,0.08)",border:"1px solid rgba(140,179,105,0.25)",borderRadius:"100px",padding:"5px 16px",fontSize:"12px",fontWeight:"700",color:"#8CB369",letterSpacing:"0.08em",marginBottom:"14px"}}>
+          RESULTADOS REAIS
+        </div>
+        <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"22px",fontWeight:"700",color:"#F2F0E8",lineHeight:"1.3",margin:"0 0 8px"}}>
+          Mais de 14.000 mulheres já transformaram o corpo
+        </h2>
+        <p style={{fontSize:"14px",color:"#9CA88E",margin:"0"}}>
+          Sem academia, sem fome, sem efeito sanfona
+        </p>
+      </div>
+
+      <TestiSlider />
+
+      <div style={{margin:"24px 0 8px",display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px",textAlign:"center"}}>
+        {[["14.217","alunas ativas"],["4,9★","avaliação média"],["92%","recomendam"]].map(([n,l]) => (
+          <div key={n} style={{background:"rgba(8,12,6,0.6)",border:"1px solid rgba(140,179,105,0.15)",borderRadius:"12px",padding:"12px 8px"}}>
+            <div style={{fontFamily:"'Playfair Display',serif",fontSize:"20px",fontWeight:"700",color:"#8CB369"}}>{n}</div>
+            <div style={{fontSize:"11px",color:"#9CA88E",marginTop:"2px"}}>{l}</div>
+          </div>
+        ))}
+      </div>
+
+      <button className="cta" style={{width:"100%",marginTop:"20px"}} onClick={onNext}>
+        Ver meu protocolo personalizado →
+      </button>
     </div>
   );
 }
