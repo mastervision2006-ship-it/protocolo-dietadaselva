@@ -1092,6 +1092,63 @@ function MedoScreen({ name, onNext }) {
 }
 
 /* ══════════════════════
+   TESTI SLIDER
+   ══════════════════════ */
+function TestiSlider() {
+  const scrollRef = useRef(null);
+  const [active, setActive] = useState(0);
+
+  function scrollTo(i) {
+    const el = scrollRef.current;
+    if (!el) return;
+    const card = el.children[i];
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    setActive(i);
+  }
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const cardW = el.children[0]?.offsetWidth || 1;
+      setActive(Math.round(el.scrollLeft / (cardW + 10)));
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <div className="tslider-wrap">
+      <div className="tslider-track" ref={scrollRef}>
+        {TESTIMONIALS.map((t, i) => (
+          <div key={i} className="tslider-card">
+            {t.img && (
+              <img src={t.img} alt={t.name} className="tslider-photo" />
+            )}
+            <div className="tslider-body">
+              <div className="tslider-stars">★★★★★</div>
+              <p className="tslider-text">"{t.text.substring(0, 90)}..."</p>
+              <div className="tslider-footer">
+                <div>
+                  <p className="tslider-name">{t.name}, {t.age} anos</p>
+                  <p className="tslider-city">{t.city}</p>
+                </div>
+                <span className="tslider-result">{t.result}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="tslider-dots">
+        {TESTIMONIALS.map((_, i) => (
+          <button key={i} className={`tslider-dot${active === i ? ' tsd-active' : ''}`} onClick={() => scrollTo(i)} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════
    6. EDU UNIFICADA
    ══════════════════════ */
 function EduUnificada({ name, answers, onNext }) {
@@ -1138,18 +1195,7 @@ function EduUnificada({ name, answers, onNext }) {
           </div>
 
           <p style={{fontSize:"11px",fontWeight:"700",color:"#5C6652",letterSpacing:".06em",textTransform:"uppercase",margin:"18px 0 10px",textAlign:"center"}}>QUEM SEGUIU O PROTOCOLO</p>
-          <div className="edu-provas">
-            {[TESTIMONIALS[0], TESTIMONIALS[2]].map((t,i)=>(
-              <div key={i} className="edu-prova">
-                <div className="edu-prova-stars">★★★★★</div>
-                <p className="edu-prova-txt">"{t.text.substring(0,110)}..."</p>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span className="edu-prova-name">{t.name}, {t.age} anos</span>
-                  <span className="edu-prova-result">{t.result}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+          <TestiSlider />
         </div>
       </div>
       <button className="cta" onClick={onNext} style={{width:"100%",marginTop:"20px"}}>
@@ -2237,6 +2283,23 @@ const CSS = `
 .medo-card-title{font-size:13px;font-weight:700;color:#F2F0E8;margin-bottom:10px}
 .medo-card-body{font-size:14px;color:#9CA88E;line-height:1.7}
 .medo-guarantee{display:flex;align-items:flex-start;gap:14px;background:rgba(140,179,105,0.05);border:1px solid rgba(140,179,105,0.18);border-radius:16px;padding:18px}
+
+/* ── Testi Slider ── */
+.tslider-wrap{margin:0 -4px}
+.tslider-track{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 4px 8px;-webkit-overflow-scrolling:touch}
+.tslider-track::-webkit-scrollbar{display:none}
+.tslider-card{flex:0 0 220px;scroll-snap-align:start;border-radius:14px;border:1px solid rgba(140,179,105,0.1);background:rgba(10,14,8,0.85);overflow:hidden}
+.tslider-photo{width:100%;height:130px;object-fit:cover;object-position:top;display:block}
+.tslider-body{padding:10px 12px 12px}
+.tslider-stars{color:#E8A838;font-size:10px;letter-spacing:2px;margin-bottom:5px}
+.tslider-text{font-size:11px;color:#9CA88E;line-height:1.55;font-style:italic;margin-bottom:8px}
+.tslider-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:6px}
+.tslider-name{font-size:11px;font-weight:700;color:#F2F0E8;line-height:1.2}
+.tslider-city{font-size:10px;color:#5C6652;margin-top:1px}
+.tslider-result{font-size:10px;font-weight:700;color:#E8A838;white-space:nowrap;padding:2px 7px;border-radius:100px;background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.18);flex-shrink:0}
+.tslider-dots{display:flex;justify-content:center;gap:5px;margin-top:6px}
+.tslider-dot{width:6px;height:6px;border-radius:50%;background:rgba(140,179,105,0.2);border:none;cursor:pointer;padding:0;transition:all .2s}
+.tsd-active{background:#8CB369;width:18px;border-radius:3px}
 
 /* ── Edu Unificada ── */
 .edu-mechanism{display:flex;flex-direction:column;gap:14px;margin:0 0 16px}
