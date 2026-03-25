@@ -1075,7 +1075,7 @@ function AgeScreen({ progress, onAnswer }) {
         {ranges.map(r => (
           <button key={r.label} className="age-card" onClick={() => onAnswer(r.label)}>
             <img src={r.img} alt={r.label} className="age-card-img" onError={e => { e.target.style.display='none'; }} />
-            <span className="age-card-label">{r.label}</span>
+            <span className="age-card-label">{r.label} anos</span>
           </button>
         ))}
       </div>
@@ -1149,38 +1149,59 @@ function AuthorityScreen({ progress, onNext }) {
   return (
     <div style={{paddingTop:"0"}}>
       <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
-      <div style={{textAlign:"center",margin:"24px 0 16px"}}>
-        <div className="landing-source" style={{display:"inline-flex",marginBottom:"12px"}}>
-          <span className="landing-source-dot"/>
-          <span>Notícia verificada · <strong>UOL VivaBem</strong> · Nov 2025</span>
-        </div>
-        <h2 className="question" style={{fontSize:"20px"}}>
-          Fogaça eliminou <span style={{color:"#E8A838"}}>17 kg</span> com a Dieta da Selva — e especialistas explicam como funciona para mulheres
-        </h2>
+
+      {/* Barra de portal de notícias */}
+      <div className="news-portal-bar">
+        <span className="news-portal-logo">UOL <span style={{color:"#E8A838"}}>VivaBem</span></span>
+        <span className="news-portal-section">SAÚDE &amp; BEM-ESTAR</span>
+        <span className="news-portal-date">26 nov. 2025</span>
       </div>
-      <div className="auth-news-card">
-        <div className="auth-news-header">
-          <span className="auth-news-tag">📰 UOL VivaBem — Matéria Verificada</span>
-          <span className="auth-news-date">26/11/2025</span>
+
+      {/* Manchete */}
+      <div className="news-article-wrap">
+        <div className="news-tag-row">
+          <span className="news-tag-cat">EMAGRECIMENTO</span>
+          <span className="news-tag-verified">✓ Verificado</span>
         </div>
-        <div className="auth-news-body">
-          <img src="/fogaca.webp" alt="Henrique Fogaça" className="auth-news-img" />
-          <div className="auth-news-text">
-            <p>"Parei o carboidrato, comecei a comer mais carne e gordura boa. O peso caiu em semanas. A fome ansiosa desapareceu."</p>
-            <p style={{marginTop:"8px",fontSize:"12px",color:"#5C6652"}}>— Henrique Fogaça, chef e apresentador</p>
-          </div>
-        </div>
-        <div className="auth-stats-row">
-          <div className="auth-stat"><span className="auth-stat-num">17kg</span><span className="auth-stat-lbl">perdidos</span></div>
-          <div className="auth-stat-div"/>
-          <div className="auth-stat"><span className="auth-stat-num">3 meses</span><span className="auth-stat-lbl">de protocolo</span></div>
-          <div className="auth-stat-div"/>
-          <div className="auth-stat"><span className="auth-stat-num">+12mil</span><span className="auth-stat-lbl">mulheres</span></div>
+        <h1 className="news-headline">
+          Fogaça diz ter eliminado <span style={{color:"#E8A838"}}>17 kg</span> com a 'Dieta da Selva': como funciona e por que especialistas aprovam?
+        </h1>
+        <p className="news-byline">Por Redação UOL VivaBem · 26/11/2025 às 14h32</p>
+
+        {/* Foto principal */}
+        <img src="/fogaca.webp" alt="Henrique Fogaça" className="news-main-img" />
+        <p className="news-img-caption">Henrique Fogaça revelou a dieta que usou para perder 17 kg em 3 meses — Crédito: Divulgação</p>
+
+        {/* Lead */}
+        <p className="news-lead">
+          O chef e apresentador Henrique Fogaça surpreendeu seguidores ao revelar que eliminou <strong>17 quilos em menos de 3 meses</strong> seguindo o que ele chama de "dieta da selva" — um protocolo baseado em carnes, ovos, queijos e gorduras boas, com eliminação quase total de carboidratos processados.
+        </p>
+
+        {/* Citação destacada */}
+        <blockquote className="news-quote">
+          "Parei o carboidrato do dia para a noite. Comecei a comer mais carne, gordura boa, ovos. Em três semanas já havia perdido 6 kg. A fome ansiosa simplesmente desapareceu."
+          <cite>— Henrique Fogaça</cite>
+        </blockquote>
+
+        {/* Corpo */}
+        <p className="news-body">
+          Segundo o chef, a mudança mais surpreendente não foi a balança — foi a energia. <strong>"Acordei disposto pela primeira vez em anos"</strong>, contou ele em entrevista. Nutricionistas ouvidos pela reportagem confirmam que a dieta ancestral, rica em proteína animal, ativa o hormônio GLP-1 — o mesmo mecanismo dos novos medicamentos de emagrecimento, mas de forma natural.
+        </p>
+
+        {/* Stats */}
+        <div className="news-stats-row">
+          <div className="news-stat"><span className="news-stat-num">17kg</span><span className="news-stat-lbl">em 3 meses</span></div>
+          <div className="news-stat-div"/>
+          <div className="news-stat"><span className="news-stat-num">+12 mil</span><span className="news-stat-lbl">mulheres no método</span></div>
+          <div className="news-stat-div"/>
+          <div className="news-stat"><span className="news-stat-num">7 dias</span><span className="news-stat-lbl">primeiros resultados</span></div>
         </div>
       </div>
+
       <button className="cta" style={{width:"100%",marginTop:"20px"}} onClick={onNext}>
-        Continuar minha análise →
+        Quero saber se funciona para mim →
       </button>
+      <p className="micro" style={{marginTop:"8px"}}>Análise personalizada gratuita em 2 minutos</p>
     </div>
   );
 }
@@ -3081,11 +3102,11 @@ const CSS = `
 .gen-card-label{font-family:'DM Sans',sans-serif;font-size:18px;font-weight:700;color:#F2F0E8;padding:14px 0;width:100%;text-align:center;background:rgba(10,14,8,0.6)}
 
 /* ── Age screen ── */
-.age-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.age-card{display:flex;flex-direction:column;align-items:center;gap:0;border-radius:14px;border:1.5px solid rgba(140,179,105,0.1);background:rgba(18,24,14,0.85);overflow:hidden;transition:all .3s;cursor:pointer;padding:0}
-.age-card:hover{border-color:rgba(140,179,105,0.4);transform:translateY(-2px)}
-.age-card-img{width:100%;height:100px;object-fit:cover;object-position:top;display:block}
-.age-card-label{font-size:13px;font-weight:700;color:#F2F0E8;padding:8px 0;width:100%;text-align:center;font-family:'DM Sans',sans-serif}
+.age-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.age-card{display:flex;flex-direction:column;align-items:center;gap:0;border-radius:18px;border:1.5px solid rgba(140,179,105,0.1);background:rgba(18,24,14,0.85);overflow:hidden;transition:all .3s;cursor:pointer;padding:0}
+.age-card:hover{border-color:rgba(140,179,105,0.4);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.age-card-img{width:100%;height:160px;object-fit:cover;object-position:top center;display:block}
+.age-card-label{font-size:15px;font-weight:700;color:#F2F0E8;padding:12px 0;width:100%;text-align:center;font-family:'DM Sans',sans-serif}
 
 /* ── Social proof screen ── */
 .comunidade-img{width:100%;border-radius:16px;max-height:200px;object-fit:cover;margin-bottom:16px;display:block}
@@ -3093,6 +3114,29 @@ const CSS = `
 .sp-depo-badge{padding:5px 12px;border-radius:100px;background:rgba(140,179,105,0.08);border:1px solid rgba(140,179,105,0.2);font-size:12px;font-weight:700;color:#A8D08D}
 
 /* ── Authority screen ── */
+/* ── News portal (AuthorityScreen) ── */
+.news-portal-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:2px solid rgba(140,179,105,0.2);margin-bottom:0}
+.news-portal-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:#F2F0E8;letter-spacing:-.02em}
+.news-portal-section{font-size:10px;font-weight:700;letter-spacing:.08em;color:#5C6652;text-transform:uppercase}
+.news-portal-date{font-size:11px;color:#5C6652}
+.news-article-wrap{padding:0}
+.news-tag-row{display:flex;align-items:center;gap:8px;margin:16px 0 10px}
+.news-tag-cat{font-size:10px;font-weight:700;letter-spacing:.08em;color:#E8A838;text-transform:uppercase;border-left:3px solid #E8A838;padding-left:7px}
+.news-tag-verified{font-size:10px;font-weight:700;color:#8CB369;background:rgba(140,179,105,0.1);padding:2px 8px;border-radius:100px}
+.news-headline{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;line-height:1.3;color:#F2F0E8;margin-bottom:8px}
+.news-byline{font-size:11px;color:#5C6652;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(140,179,105,0.08)}
+.news-main-img{width:100%;border-radius:12px;object-fit:cover;object-position:top;max-height:280px;display:block;margin-bottom:6px}
+.news-img-caption{font-size:11px;color:#5C6652;font-style:italic;margin-bottom:14px;text-align:center}
+.news-lead{font-size:15px;color:#D4D9CC;line-height:1.7;margin-bottom:14px;font-weight:500}
+.news-quote{margin:14px 0;padding:12px 16px;border-left:3px solid #E8A838;background:rgba(232,168,56,0.05);border-radius:0 10px 10px 0;font-size:14px;color:#C8D4B8;font-style:italic;line-height:1.65}
+.news-quote cite{display:block;margin-top:8px;font-style:normal;font-size:12px;font-weight:700;color:#E8A838}
+.news-body{font-size:14px;color:#9CA88E;line-height:1.7;margin-bottom:16px}
+.news-stats-row{display:flex;align-items:center;justify-content:center;gap:16px;padding:16px;background:rgba(140,179,105,0.05);border:1px solid rgba(140,179,105,0.12);border-radius:14px;margin-top:4px}
+.news-stat{text-align:center}
+.news-stat-num{display:block;font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#E8A838}
+.news-stat-lbl{font-size:11px;color:#5C6652}
+.news-stat-div{width:1px;height:32px;background:rgba(140,179,105,0.15)}
+/* auth legacy kept for any residual refs */
 .auth-news-card{border-radius:18px;border:1px solid rgba(140,179,105,0.15);background:rgba(10,14,8,0.9);overflow:hidden}
 .auth-news-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(140,179,105,0.08)}
 .auth-news-tag{font-size:10px;font-weight:700;color:#8CB369;letter-spacing:.05em;text-transform:uppercase}
