@@ -972,7 +972,20 @@ function NameScreen({ value, onChange, onSubmit }) {
 /* ══════════════════════
    3. QUIZ SCREEN
    ══════════════════════ */
+const OPEN_LOOP_HINTS = [
+  "Seu perfil está tomando forma.",                              // Q1 goal
+  "Sua fase metabólica foi identificada.",                       // Q2 age
+  "Suas respostas já mostram um padrão importante.",             // Q3 frustration
+  "Encontramos a raiz do seu comportamento alimentar.",          // Q4 meals
+  "Seus sintomas revelam muito sobre o seu metabolismo.",        // Q5 symptoms
+  "Entendemos por que as tentativas anteriores não duraram.",    // Q6 tentativas
+  "Sabemos o que vai funcionar para você.",                      // Q7 motivacao
+  "Seu perfil está quase completo.",                             // Q8 commitment
+  "Estamos identificando o que mais trava seus resultados.",     // Q9 ready
+];
+
 function QuizScreen({ q, progress, cur, total, onAnswer, sel, n }) {
+  const hint = OPEN_LOOP_HINTS[cur];
   return (
     <div style={{paddingTop:"16px"}}>
       <div className="progress-wrap">
@@ -992,6 +1005,12 @@ function QuizScreen({ q, progress, cur, total, onAnswer, sel, n }) {
           </button>
         ))}
       </div>
+      {sel && hint && (
+        <div className="open-loop-hint">
+          <span className="ol-dot"/>
+          <span>{hint}</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -1141,24 +1160,112 @@ function EduUnificada({ name, answers, onNext }) {
 }
 
 /* ══════════════════════
-   8. ANALYZING
+   8. ANALYZING — 5 versões por perfil
    ══════════════════════ */
+const LOADING_PROFILES = {
+  decidida: {
+    headline: "Calculando o caminho mais rápido para seus resultados...",
+    subheadline: "Você está pronta — estamos definindo o protocolo certo",
+    bullets: [
+      { icon: "🔥", text: "Velocidade de queima pelo seu metabolismo" },
+      { icon: "⚡", text: "Energia disponível na primeira semana" },
+      { icon: "🎯", text: "Protocolo mais direto para o seu objetivo" },
+    ],
+  },
+  cetica: {
+    headline: "Identificando o que falhou nas tentativas anteriores...",
+    subheadline: "Suas respostas estão mostrando um padrão claro",
+    bullets: [
+      { icon: "🔍", text: "Raiz dos métodos que não funcionaram" },
+      { icon: "🧬", text: "Compatibilidade com o protocolo ancestral" },
+      { icon: "🛡️", text: "O que será diferente desta vez" },
+    ],
+  },
+  medo: {
+    headline: "Desenhando um protocolo de transição gentil para você...",
+    subheadline: "Sem pressão — sem obrigações impossíveis",
+    bullets: [
+      { icon: "🌿", text: "Nível de suporte ideal para o seu perfil" },
+      { icon: "🥩", text: "Alimentos que eliminam a fome ansiosa" },
+      { icon: "💚", text: "Primeiros 7 dias sem nenhum impacto brusco" },
+    ],
+  },
+  ocupada: {
+    headline: "Montando o protocolo mais simples para a sua rotina...",
+    subheadline: "Menos de 15 minutos por dia — confirmando isso",
+    bullets: [
+      { icon: "⏱️", text: "Tempo médio de preparo das suas receitas" },
+      { icon: "📱", text: "Frequência ideal de uso do app" },
+      { icon: "🛒", text: "Lista de compras da semana em 10 itens" },
+    ],
+  },
+  hormonal: {
+    headline: "Mapeando seu perfil metabólico hormonal...",
+    subheadline: "Cada fase de vida exige uma abordagem diferente",
+    bullets: [
+      { icon: "🌹", text: "Impacto hormonal no seu metabolismo atual" },
+      { icon: "🔋", text: "Protocolo de reativação energética" },
+      { icon: "🛡️", text: "Alimentos anti-inflamatórios prioritários" },
+    ],
+  },
+  economica: {
+    headline: "Calculando o que faz mais sentido para você...",
+    subheadline: "Queremos mostrar exatamente o que você recebe",
+    bullets: [
+      { icon: "💰", text: "Custo real por dia do protocolo" },
+      { icon: "📊", text: "Resultado esperado nas primeiras 3 semanas" },
+      { icon: "🛡️", text: "Cobertura total da garantia de 7 dias" },
+    ],
+  },
+};
+
 function Analyzing({ progress, name, answers }) {
-  const steps = getAnalysisSteps(answers, name);
-  const cur = [...steps].reverse().find(s=>progress>=s.t);
+  const profile = getLeadProfile(answers);
+  const lp = LOADING_PROFILES[profile] || LOADING_PROFILES.cetica;
+
+  // Cada bullet aparece ao atingir 30%, 60%, 85%
+  const thresholds = [30, 60, 85];
+
   return (
-    <div style={{textAlign:"center",paddingTop:"80px"}}>
-      <div className="pulse-wrap">
-        <div className="pulse-ring" /><div className="pulse-ring pulse-ring-2" />
-        <span style={{fontSize:"40px",position:"relative",zIndex:2}}>🧬</span>
+    <div style={{paddingTop:"48px",maxWidth:"420px",margin:"0 auto"}}>
+      {/* Ícone pulsante */}
+      <div style={{textAlign:"center",marginBottom:"28px"}}>
+        <div className="pulse-wrap" style={{margin:"0 auto"}}>
+          <div className="pulse-ring" /><div className="pulse-ring pulse-ring-2" />
+          <span style={{fontSize:"36px",position:"relative",zIndex:2}}>🧬</span>
+        </div>
       </div>
-      <h2 className="screen-title" style={{marginTop:"28px"}}>Analisando suas respostas...</h2>
-      <p style={{color:"#A8D08D",fontSize:"14px",minHeight:"20px",marginBottom:"24px"}}>{cur?.l}</p>
-      <div className="analysis-bar-wrap">
+
+      {/* Headline personalizada */}
+      <h2 className="analyzing-headline">{lp.headline}</h2>
+      <p className="analyzing-sub">{lp.subheadline}</p>
+
+      {/* Bullets que aparecem progressivamente */}
+      <div className="analyzing-bullets">
+        {lp.bullets.map((b, i) => {
+          const done = progress >= thresholds[i];
+          const active = progress >= (i === 0 ? 5 : thresholds[i-1]) && !done;
+          return (
+            <div key={i} className={`analyzing-bullet${done ? ' ab-done' : active ? ' ab-active' : ' ab-waiting'}`}>
+              <span className="ab-icon">
+                {done ? '✓' : active ? <span className="ab-spinner"/> : '○'}
+              </span>
+              <span className="ab-text">{b.icon} {b.text}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Barra de progresso */}
+      <div className="analysis-bar-wrap" style={{marginTop:"28px"}}>
         <div className="analysis-bar"><div className="analysis-fill" style={{width:`${progress}%`}} /></div>
         <span className="analysis-pct">{progress}%</span>
       </div>
-      <p className="micro" style={{marginTop:"20px"}}>Cruzando seus dados com milhares de perfis de sucesso</p>
+      <p className="micro" style={{marginTop:"14px",textAlign:"center"}}>
+        {progress < 40 ? 'Lendo seu perfil metabólico...' :
+         progress < 75 ? 'Cruzando com milhares de perfis similares...' :
+         'Finalizando seu laudo personalizado...'}
+      </p>
     </div>
   );
 }
@@ -2099,6 +2206,28 @@ const CSS = `
 .s-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,168,56,0.45)}
 
 @media(max-width:440px){.s-chat{max-width:100%;border-radius:16px 16px 0 0}.s-fab{bottom:88px;right:16px}}
+
+/* ── Open loop hint ── */
+@keyframes ol-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.open-loop-hint{display:flex;align-items:center;gap:8px;margin-top:18px;padding:10px 16px;border-radius:100px;background:rgba(140,179,105,0.06);border:1px solid rgba(140,179,105,0.15);font-size:13px;font-weight:600;color:#A8D08D;animation:ol-in .35s ease both;justify-content:center}
+.ol-dot{width:7px;height:7px;border-radius:50%;background:#8CB369;flex-shrink:0;animation:blink 1.4s infinite}
+
+/* ── Analyzing personalized ── */
+.analyzing-headline{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#F2F0E8;text-align:center;line-height:1.35;margin-bottom:8px}
+.analyzing-sub{font-size:14px;color:#9CA88E;text-align:center;margin-bottom:24px}
+.analyzing-bullets{display:flex;flex-direction:column;gap:10px}
+@keyframes ab-spin{to{transform:rotate(360deg)}}
+.analyzing-bullet{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;border:1px solid rgba(140,179,105,0.08);background:rgba(12,16,9,0.7);transition:all .4s}
+.ab-waiting{opacity:.35}
+.ab-active{border-color:rgba(232,168,56,0.25);background:rgba(232,168,56,0.04)}
+.ab-done{border-color:rgba(140,179,105,0.25);background:rgba(140,179,105,0.06)}
+.ab-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.ab-done .ab-icon{color:#8CB369}
+.ab-active .ab-icon{color:#E8A838}
+.ab-waiting .ab-icon{color:#354030}
+.ab-spinner{width:12px;height:12px;border-radius:50%;border:2px solid rgba(232,168,56,0.2);border-top-color:#E8A838;display:inline-block;animation:ab-spin .7s linear infinite}
+.ab-text{font-size:13px;color:#9CA88E;font-weight:500}
+.ab-done .ab-text{color:#C8D4B8}
 
 /* ── Diagnosis note ── */
 .diag-note{display:flex;align-items:flex-start;gap:12px;background:rgba(140,179,105,0.05);border:1px solid rgba(140,179,105,0.18);border-left:3px solid #8CB369;border-radius:0 14px 14px 0;padding:14px 16px;margin-bottom:18px}
