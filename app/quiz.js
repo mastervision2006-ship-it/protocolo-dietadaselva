@@ -1033,8 +1033,7 @@ function AgeScreen({ progress, onAnswer }) {
     { label:"18–29", img:"/age-18.webp" },
     { label:"30–39", img:"/age-30.webp" },
     { label:"40–49", img:"/age-40.webp" },
-    { label:"50–59", img:"/age-50.webp" },
-    { label:"60+",   img:"/age-60.webp" },
+    { label:"50+",   img:"/age-50.webp" },
   ];
   return (
     <div style={{paddingTop:"0"}}>
@@ -1072,7 +1071,7 @@ function SocialProofScreen({ progress, onNext }) {
         </p>
         <img src="/comunidade.webp" alt="Comunidade Dieta da Selva" className="comunidade-img" onError={e => { e.target.style.display='none'; }} />
         <div className="sp-depo-row">
-          {["-12kg / 6 semanas","-8kg / 30 dias","-15kg / 2 meses"].map((r,i) => (
+          {["-35kg ✓","-17kg ✓","-14kg ✓","-13,7kg ✓"].map((r,i) => (
             <div key={i} className="sp-depo-badge">{r}</div>
           ))}
         </div>
@@ -1193,12 +1192,12 @@ function MechanismScreen({ progress, onNext }) {
     <div style={{paddingTop:"0"}}>
       <div className="progress-slim"><div className="progress-slim-fill" style={{width:`${progress}%`}} /></div>
       <div style={{padding:"24px 0 0",maxWidth:"480px",margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:"20px"}}>
-          <div style={{fontSize:"40px",marginBottom:"12px"}}>🔬</div>
-          <h2 className="question" style={{fontSize:"21px"}}>
+        <div style={{textAlign:"center",marginBottom:"16px"}}>
+          <h2 className="question" style={{fontSize:"21px",marginBottom:"12px"}}>
             Você sente que come pouco e mesmo assim não emagrece?
           </h2>
         </div>
+        <img src="/inflamacao.webp" alt="Inflamação celular" style={{width:"100%",borderRadius:"14px",marginBottom:"14px",display:"block"}} />
         <div className="mech-card">
           <div className="mech-card-badge">⚠️ Por que isso acontece</div>
           <p className="mech-card-body">
@@ -1269,10 +1268,10 @@ function AwarenessScreen({ progress, onAnswer }) {
    ══════════════════════ */
 function HabitsScreen({ progress, onAnswer }) {
   const opts = [
-    { value:"1-2",    emoji:"🕐", text:"1 a 2 refeições por dia" },
-    { value:"3",      emoji:"🕐", text:"3 refeições (café, almoço, jantar)" },
-    { value:"4-5",    emoji:"🕐", text:"4 a 5 refeições ou lanches frequentes" },
-    { value:"irregular", emoji:"😅", text:"Irregular — como quando lembro" },
+    { value:"1-2",       img:"/dormindo.webp",  text:"1 a 2 refeições por dia" },
+    { value:"3",         img:"/agua.webp",       text:"3 refeições (café, almoço, jantar)" },
+    { value:"4-5",       img:"/exercicio.webp",  text:"4 a 5 refeições ou lanches frequentes" },
+    { value:"irregular", img:null,               text:"Irregular — como quando lembro" },
   ];
   return (
     <div style={{paddingTop:"0"}}>
@@ -1284,7 +1283,12 @@ function HabitsScreen({ progress, onAnswer }) {
       <div className="opt-card-list">
         {opts.map(o => (
           <button key={o.value} className="opt-card-icon" onClick={() => onAnswer(o.value)}>
-            <div className="opt-card-icon-emoji">{o.emoji}</div>
+            {o.img
+              ? <div className="opt-card-icon-img" style={{borderRadius:"10px",overflow:"hidden"}}>
+                  <img src={o.img} alt="" style={{width:"52px",height:"52px",objectFit:"cover",display:"block"}} />
+                </div>
+              : <div className="opt-card-icon-emoji">😅</div>
+            }
             <span className="opt-card-icon-title">{o.text}</span>
           </button>
         ))}
@@ -1900,26 +1904,40 @@ const LOADING_PROFILES = {
   },
 };
 
+const ANALYZING_PHOTOS = [
+  { src:"/ad-1.webp",   label:"Rose Pungan",  result:"-35kg" },
+  { src:"/ad-2.webp",   label:"Márcia Braga", result:"-15kg" },
+  { src:"/ad-3.webp",   label:"Alice",        result:"-14kg" },
+  { src:"/depo-1.webp", label:"",             result:"-17kg" },
+  { src:"/depo-2.webp", label:"",             result:"-13,7kg" },
+];
+
 function Analyzing({ progress, name, answers }) {
   const profile = getLeadProfile(answers);
   const lp = LOADING_PROFILES[profile] || LOADING_PROFILES.cetica;
-
-  // Cada bullet aparece ao atingir 30%, 60%, 85%
   const thresholds = [30, 60, 85];
 
-  return (
-    <div style={{paddingTop:"48px",maxWidth:"420px",margin:"0 auto"}}>
-      {/* Ícone pulsante */}
-      <div style={{textAlign:"center",marginBottom:"28px"}}>
-        <div className="pulse-wrap" style={{margin:"0 auto"}}>
-          <div className="pulse-ring" /><div className="pulse-ring pulse-ring-2" />
-          <span style={{fontSize:"36px",position:"relative",zIndex:2}}>🧬</span>
-        </div>
-      </div>
+  // Cicla foto a cada 2s
+  const [photoIdx, setPhotoIdx] = useState(0);
+  useEffect(() => {
+    const iv = setInterval(() => setPhotoIdx(i => (i + 1) % ANALYZING_PHOTOS.length), 2000);
+    return () => clearInterval(iv);
+  }, []);
 
+  const photo = ANALYZING_PHOTOS[photoIdx];
+
+  return (
+    <div style={{paddingTop:"32px",maxWidth:"420px",margin:"0 auto"}}>
       {/* Headline personalizada */}
       <h2 className="analyzing-headline">{lp.headline}</h2>
       <p className="analyzing-sub">{lp.subheadline}</p>
+
+      {/* Foto rotativa antes/depois */}
+      <div className="analyzing-photo-wrap">
+        <img key={photoIdx} src={photo.src} alt={photo.label || "resultado"} className="analyzing-photo" />
+        <div className="analyzing-photo-badge">{photo.result} 🔥</div>
+        {photo.label && <div className="analyzing-photo-name">{photo.label}</div>}
+      </div>
 
       {/* Bullets que aparecem progressivamente */}
       <div className="analyzing-bullets">
@@ -1938,11 +1956,11 @@ function Analyzing({ progress, name, answers }) {
       </div>
 
       {/* Barra de progresso */}
-      <div className="analysis-bar-wrap" style={{marginTop:"28px"}}>
+      <div className="analysis-bar-wrap" style={{marginTop:"24px"}}>
         <div className="analysis-bar"><div className="analysis-fill" style={{width:`${progress}%`}} /></div>
         <span className="analysis-pct">{progress}%</span>
       </div>
-      <p className="micro" style={{marginTop:"14px",textAlign:"center"}}>
+      <p className="micro" style={{marginTop:"12px",textAlign:"center"}}>
         {progress < 40 ? 'Lendo seu perfil metabólico...' :
          progress < 75 ? 'Cruzando com milhares de perfis similares...' :
          'Finalizando seu laudo personalizado...'}
@@ -2956,6 +2974,11 @@ const CSS = `
 
 /* ── Analyzing personalized ── */
 .analyzing-headline{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#F2F0E8;text-align:center;line-height:1.35;margin-bottom:8px}
+.analyzing-photo-wrap{position:relative;margin:16px auto;max-width:320px;border-radius:16px;overflow:hidden}
+.analyzing-photo{width:100%;max-height:220px;object-fit:cover;display:block;border-radius:16px;animation:fadeIn .5s ease}
+.analyzing-photo-badge{position:absolute;top:12px;right:12px;background:rgba(232,168,56,0.92);color:#0A0E08;font-weight:800;font-size:14px;padding:5px 12px;border-radius:100px}
+.analyzing-photo-name{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.7));padding:18px 14px 10px;font-size:13px;font-weight:600;color:#fff}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .analyzing-sub{font-size:14px;color:#9CA88E;text-align:center;margin-bottom:24px}
 .analyzing-bullets{display:flex;flex-direction:column;gap:10px}
 @keyframes ab-spin{to{transform:rotate(360deg)}}
@@ -3019,7 +3042,7 @@ const CSS = `
 .gen-card-label{font-family:'DM Sans',sans-serif;font-size:18px;font-weight:700;color:#F2F0E8;padding:14px 0;width:100%;text-align:center;background:rgba(10,14,8,0.6)}
 
 /* ── Age screen ── */
-.age-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.age-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .age-card{display:flex;flex-direction:column;align-items:center;gap:0;border-radius:14px;border:1.5px solid rgba(140,179,105,0.1);background:rgba(18,24,14,0.85);overflow:hidden;transition:all .3s;cursor:pointer;padding:0}
 .age-card:hover{border-color:rgba(140,179,105,0.4);transform:translateY(-2px)}
 .age-card-img{width:100%;height:100px;object-fit:cover;object-position:top;display:block}
