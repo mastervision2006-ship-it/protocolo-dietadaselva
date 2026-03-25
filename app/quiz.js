@@ -147,6 +147,128 @@ function getLeadProfile(answers) {
 }
 
 /* ══════════════════════
+   BRANCHING ENGINE
+   ══════════════════════ */
+
+// 1. Pergunta contextual — subtítulo/enunciado muda com base nas respostas anteriores
+function getContextualQuestion(q, answers) {
+  const { age, frustration, tentativas, ready } = answers || {};
+  const overrides = {};
+
+  if (q.id === 'frustration') {
+    if (age === '45-54' || age === '55+')
+      overrides.subtitle = 'Depois dos 45 o metabolismo muda — seja honesta com você mesma';
+  }
+
+  if (q.id === 'tentativas') {
+    if (frustration === 'dietas')
+      overrides.subtitle = 'Cada tentativa que não durou tem uma razão — vamos identificar a sua';
+    else if (frustration === 'sanfona')
+      overrides.subtitle = 'O efeito sanfona tem uma causa hormonal — vamos mapear o seu padrão';
+  }
+
+  if (q.id === 'motivacao') {
+    if (tentativas === 'muitas' || tentativas === 'ciclo')
+      overrides.question = 'O que seria diferente desta vez para você, {{name}}?';
+    else if (frustration === 'tempo')
+      overrides.question = 'O que te faria encaixar uma mudança na sua rotina agora, {{name}}?';
+  }
+
+  if (q.id === 'commitment') {
+    if (frustration === 'tempo')
+      overrides.subtitle = 'A Selva leva menos de 15 min por dia — imagina o impacto disso';
+    else if (frustration === 'fome')
+      overrides.subtitle = 'Imagine comer até ficar saciada e ainda assim emagrecer, {{name}}';
+  }
+
+  if (q.id === 'ready') {
+    if (tentativas === 'ciclo')
+      overrides.subtitle = 'Sua resposta define o tipo de suporte que o protocolo vai te dar';
+    else if (frustration === 'dietas')
+      overrides.subtitle = 'Não precisa de confiança total — só de uma chance justa';
+    else if (ready === 'medo')
+      overrides.subtitle = 'Qualquer resposta é válida aqui — queremos entender, não julgar';
+  }
+
+  return Object.keys(overrides).length ? { ...q, ...overrides } : q;
+}
+
+// 2. Passos do loading personalizados por resposta
+function getAnalysisSteps(answers, name) {
+  const { frustration, tentativas, ready, symptoms, motivacao } = answers || {};
+
+  const step2 =
+    frustration === 'tempo'   ? 'Mapeando receitas de menos de 15 minutos para o seu perfil...' :
+    frustration === 'fome'    ? 'Calculando seu perfil de saciedade e GLP-1 natural...' :
+    frustration === 'dietas'  ? 'Identificando por que os métodos anteriores não funcionaram...' :
+    frustration === 'sanfona' ? 'Analisando padrão hormonal do efeito sanfona...' :
+                                'Calculando taxa de queima de gordura...';
+
+  const step3 =
+    (tentativas === 'muitas' || tentativas === 'ciclo')
+      ? 'Cruzando histórico de ciclos com perfis de sucesso similares...'
+      : 'Estimando produção natural de GLP-1...';
+
+  const step4 =
+    symptoms === 'inchaço'   ? 'Avaliando inflamação e retenção de líquido...' :
+    symptoms === 'cansaço'   ? 'Analisando deficiência energética celular...' :
+    symptoms === 'ansiedade' ? 'Mapeando eixo intestino-cérebro e compulsão...' :
+    symptoms === 'inflamação'? 'Avaliando marcadores inflamatórios e articulares...' :
+                               'Avaliando compatibilidade com o protocolo...';
+
+  const step5 =
+    ready === 'medo'               ? 'Configurando protocolo de transição gentil...' :
+    motivacao === 'simplicidade'   ? 'Selecionando as receitas mais simples do protocolo...' :
+    motivacao === 'resultado-rapido'? 'Calculando cronograma de resultados acelerado...' :
+                                     'Gerando diagnóstico personalizado...';
+
+  return [
+    { l: `Analisando perfil metabólico de ${name}...`, t: 0  },
+    { l: step2,                                         t: 20 },
+    { l: step3,                                         t: 40 },
+    { l: step4,                                         t: 60 },
+    { l: step5,                                         t: 80 },
+    { l: 'Finalizando seu laudo...',                    t: 95 },
+  ];
+}
+
+// 3. Nota de abertura do diagnóstico — frase empática personalizada
+function getDiagnosisNote(answers) {
+  const { frustration, tentativas, ready, motivacao } = answers || {};
+
+  if (ready === 'medo')
+    return { emoji: '🌿', text: 'Identificamos que você tem medo de falhar de novo. Por isso seu protocolo foi desenhado para transições gentis — sem choques, sem obrigações impossíveis.' };
+  if (tentativas === 'ciclo' || (tentativas === 'muitas' && frustration === 'dietas'))
+    return { emoji: '🔄', text: 'Após múltiplas tentativas, encontramos o padrão exato que sabotou cada uma delas. Desta vez o protocolo vai direto nessa raiz.' };
+  if (frustration === 'tempo' || motivacao === 'simplicidade')
+    return { emoji: '⏱️', text: 'Seu protocolo foi otimizado para menos de 15 minutos por dia — sem preparo longo, sem receitas complicadas.' };
+  if (frustration === 'fome' || motivacao === 'sem-fome')
+    return { emoji: '🥩', text: 'Seu protocolo prioriza saciedade máxima desde o Dia 1 — você vai comer até se sentir satisfeita em cada refeição.' };
+  if (frustration === 'sanfona')
+    return { emoji: '⚖️', text: 'Identificamos seu padrão de efeito sanfona. O protocolo foi ajustado para preservar músculo e estabilizar o peso depois da perda.' };
+  return null;
+}
+
+// 4. Nota de abertura da oferta — frase curta e direta por contexto
+function getOfferNote(answers, name) {
+  const { frustration, tentativas, ready, motivacao, commitment } = answers || {};
+
+  if (ready === 'medo')
+    return `Nenhuma promessa impossível. Só 7 dias para você provar para si mesma.`;
+  if (tentativas === 'ciclo')
+    return `Você já deu voltas nesse ciclo tempo suficiente. Esta é a saída, ${name}.`;
+  if (frustration === 'tempo')
+    return `Menos de 15 minutos por dia. Sem academia. Sem complicação.`;
+  if (frustration === 'fome')
+    return `Desta vez você vai comer de verdade — e o peso vai cair mesmo assim.`;
+  if (commitment === 'descrente' || (tentativas === 'muitas' && frustration === 'dietas'))
+    return `Você está cansada de promessas. Por isso existe a garantia de 7 dias — risco zero do seu lado.`;
+  if (motivacao === 'bemestar')
+    return `Não é só sobre emagrecer. É sobre se sentir bem de verdade, todos os dias.`;
+  return null;
+}
+
+/* ══════════════════════
    MAIN COMPONENT
    ══════════════════════ */
 export default function Quiz() {
@@ -251,11 +373,11 @@ export default function Quiz() {
       <div style={{...S.container, opacity: fadeIn?1:0, transform: fadeIn?"translateY(0)":"translateY(14px)", transition:"all 0.4s ease"}}>
         {screen === "landing" && <Landing onStart={goNext("name")} />}
         {screen === "name" && <NameScreen value={nameInput} onChange={setNameInput} onSubmit={handleName} />}
-        {screen === "quiz" && <QuizScreen q={QUIZ_QUESTIONS[currentQ]} progress={progress} cur={currentQ} total={QUIZ_QUESTIONS.length} onAnswer={handleAnswer} sel={selectedOpt} n={n} />}
+        {screen === "quiz" && <QuizScreen q={getContextualQuestion(QUIZ_QUESTIONS[currentQ], answers)} progress={progress} cur={currentQ} total={QUIZ_QUESTIONS.length} onAnswer={handleAnswer} sel={selectedOpt} n={n} />}
         {screen === "medo-screen" && <MedoScreen name={userName} onNext={goNext("body-data")} />}
         {screen === "body-data" && <BodyDataScreen data={bodyData} onChange={setBodyData} onSubmit={handleBodySubmit} name={userName} />}
         {screen === "edu-unificada" && <EduUnificada name={userName} answers={answers} onNext={startAnalysis} />}
-        {screen === "analyzing" && <Analyzing progress={analysisProgress} name={userName} />}
+        {screen === "analyzing" && <Analyzing progress={analysisProgress} name={userName} answers={answers} />}
         {screen === "diagnosis" && <Diagnosis name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} onNext={goNext("result")} />}
         {screen === "result" && <Result name={userName} weightToLose={weightToLose} timeWeeks={timeWeeks} bmi={bmi} bmiCat={getBmiCategory(bmi)} answers={answers} />}
       </div>
@@ -1021,15 +1143,8 @@ function EduUnificada({ name, answers, onNext }) {
 /* ══════════════════════
    8. ANALYZING
    ══════════════════════ */
-function Analyzing({ progress, name }) {
-  const steps = [
-    {l:`Analisando perfil metabólico de ${name}...`,t:0},
-    {l:"Calculando taxa de queima de gordura...",t:20},
-    {l:"Estimando produção natural de GLP-1...",t:40},
-    {l:"Avaliando compatibilidade com o protocolo...",t:60},
-    {l:"Gerando diagnóstico personalizado...",t:80},
-    {l:"Finalizando...",t:95},
-  ];
+function Analyzing({ progress, name, answers }) {
+  const steps = getAnalysisSteps(answers, name);
   const cur = [...steps].reverse().find(s=>progress>=s.t);
   return (
     <div style={{textAlign:"center",paddingTop:"80px"}}>
@@ -1166,9 +1281,18 @@ function buildDiagnosis(answers, bmi, bmiCat, weightToLose, timeWeeks) {
 
 function Diagnosis({ name, bmi, bmiCat, weightToLose, timeWeeks, answers, onNext }) {
   const d = buildDiagnosis(answers, bmi, bmiCat, weightToLose, timeWeeks);
+  const note = getDiagnosisNote(answers);
 
   return (
     <div className="diag-wrap">
+
+      {/* Nota de abertura personalizada */}
+      {note && (
+        <div className="diag-note">
+          <span style={{fontSize:'20px'}}>{note.emoji}</span>
+          <p style={{fontSize:'13px',color:'#A8D08D',lineHeight:'1.65',flex:1}}>{note.text}</p>
+        </div>
+      )}
 
       {/* Header */}
       <div style={{textAlign:'center',marginBottom:'24px'}}>
@@ -1307,6 +1431,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
   };
   const headline = headlines[profile] || `${name}, tudo está pronto para sua transformação`;
   const subtitle = subtitles[profile] || 'Você tem alta compatibilidade com o Protocolo Dieta da Selva';
+  const offerNote = getOfferNote(answers, name);
   const [pixStep, setPixStep] = useState("idle"); // idle | form | loading | qr | paid
   const [pixData, setPixData] = useState(null);   // { transactionId, pixPayload, qrCodeSrc }
   const [form, setForm] = useState({ email:"", phone:"", cpf:"" });
@@ -1515,6 +1640,11 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
       <div style={{textAlign:"center",marginBottom:"32px"}}>
         <h2 className="screen-title" style={{fontSize:"26px"}}>{headline}</h2>
         <p className="screen-sub">{subtitle}</p>
+        {offerNote && (
+          <p style={{marginTop:'12px',fontSize:'14px',fontWeight:'600',color:'#A8D08D',lineHeight:'1.6',maxWidth:'400px',margin:'12px auto 0'}}>
+            {offerNote}
+          </p>
+        )}
       </div>
 
       {/* App Demo */}
@@ -1969,6 +2099,9 @@ const CSS = `
 .s-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,168,56,0.45)}
 
 @media(max-width:440px){.s-chat{max-width:100%;border-radius:16px 16px 0 0}.s-fab{bottom:88px;right:16px}}
+
+/* ── Diagnosis note ── */
+.diag-note{display:flex;align-items:flex-start;gap:12px;background:rgba(140,179,105,0.05);border:1px solid rgba(140,179,105,0.18);border-left:3px solid #8CB369;border-radius:0 14px 14px 0;padding:14px 16px;margin-bottom:18px}
 
 /* ── Medo Screen ── */
 .medo-card{background:rgba(12,16,9,0.9);border:1px solid rgba(140,179,105,0.15);border-left:3px solid #8CB369;border-radius:0 16px 16px 0;padding:20px;margin-bottom:16px}
