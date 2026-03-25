@@ -1144,27 +1144,390 @@ const OPEN_LOOP_HINTS = [
   "Estamos identificando o que mais trava seus resultados.",     // Q9 ready
 ];
 
+/* ══════════════════════════════════════════════════════════
+   QUIZ VISUAL SYSTEM — SVG ILLUSTRATIONS + LAYOUT ENGINE
+   ══════════════════════════════════════════════════════════ */
+
+// Layout type per question id
+const Q_LAYOUT = {
+  goal:        'grid-card',
+  age:         'chip',
+  frustration: 'card-icon',
+  meals:       'chip',
+  symptoms:    'grid-icon',
+  tentativas:  'card-icon',
+  motivacao:   'grid-card',
+  commitment:  'card-icon',
+  ready:       'emoji-centered',
+};
+
+/* ── Q1 Goal illustrations (72px grid cards) ── */
+function IllGoalPeso() {
+  return (
+    <svg viewBox="0 0 72 72" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="36" cy="36" r="32" fill="rgba(140,179,105,0.1)"/>
+      <circle cx="36" cy="22" r="9" fill="#A8D08D"/>
+      <path d="M26 32 Q36 42 46 32 L44 54 L28 54Z" fill="#8CB369" opacity="0.55"/>
+      <rect x="26" y="54" width="20" height="4" rx="2" fill="#8CB369" opacity="0.5"/>
+      <rect x="35" y="50" width="2" height="6" fill="#8CB369" opacity="0.4"/>
+      <ellipse cx="36" cy="58" rx="12" ry="3.5" fill="rgba(140,179,105,0.15)" stroke="#8CB369" strokeWidth="1"/>
+      <circle cx="53" cy="24" r="8" fill="rgba(232,168,56,0.15)"/>
+      <path d="M53 19 L53 27 M50 25 L53 28 L56 25" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+function IllGoalDesinchar() {
+  return (
+    <svg viewBox="0 0 72 72" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="36" cy="36" r="32" fill="rgba(212,133,106,0.1)"/>
+      <circle cx="36" cy="23" r="9" fill="#D4A574"/>
+      <path d="M25 34 Q36 44 47 34 L45 56 L27 56Z" fill="#D4856A" opacity="0.5"/>
+      <path d="M25 37 Q18 34 14 30" stroke="#D4856A" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M47 37 Q54 34 58 30" stroke="#D4856A" strokeWidth="3" strokeLinecap="round"/>
+      <circle cx="13" cy="26" r="3" fill="#E8A838" opacity="0.6"/>
+      <circle cx="59" cy="24" r="2" fill="#E8A838" opacity="0.5"/>
+      <path d="M57 44 L58 41 L59 44 L62 45 L59 46 L58 49 L57 46 L54 45Z" fill="#E8A838" opacity="0.5"/>
+      <path d="M11 43 L12 40 L13 43 L16 44 L13 45 L12 48 L11 45 L8 44Z" fill="#E8A838" opacity="0.4"/>
+    </svg>
+  );
+}
+function IllGoalEnergia() {
+  return (
+    <svg viewBox="0 0 72 72" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="36" cy="36" r="32" fill="rgba(232,168,56,0.1)"/>
+      <path d="M41 12 L27 40 L37 40 L31 60 L45 32 L35 32Z" fill="#E8A838"/>
+      <line x1="54" y1="18" x2="58" y2="14" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+      <line x1="56" y1="28" x2="61" y2="28" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+      <line x1="54" y1="38" x2="59" y2="42" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
+      <line x1="18" y1="18" x2="14" y2="14" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" opacity="0.3"/>
+      <line x1="16" y1="28" x2="11" y2="28" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" opacity="0.3"/>
+    </svg>
+  );
+}
+function IllGoalTodas() {
+  return (
+    <svg viewBox="0 0 72 72" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="36" cy="36" r="32" fill="rgba(140,179,105,0.1)"/>
+      <circle cx="36" cy="24" r="9" fill="#A8D08D"/>
+      <path d="M27 34 Q36 40 45 34 L49 56 L23 56Z" fill="#8CB369" opacity="0.5"/>
+      <path d="M27 36 Q20 30 18 22" stroke="#8CB369" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M45 36 Q52 30 54 22" stroke="#8CB369" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M19 14 L20.2 17.8 L24.2 17.8 L21 20.4 L22.4 24.2 L19 21.6 L15.6 24.2 L17 20.4 L13.8 17.8 L17.8 17.8Z" fill="#E8A838"/>
+      <path d="M52 12 L53 15 L56 15 L53.8 17 L54.6 20 L52 18.4 L49.4 20 L50.2 17 L48 15 L51 15Z" fill="#E8A838" opacity="0.8"/>
+      <circle cx="36" cy="12" r="2.5" fill="#E8A838" opacity="0.7"/>
+    </svg>
+  );
+}
+
+/* ── Q3 Frustration icons (56px in card-icon layout) ── */
+function IllFrustDietas() {
+  return (
+    <svg viewBox="0 0 56 56" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="28" cy="28" r="24" fill="rgba(212,133,106,0.12)"/>
+      <rect x="14" y="14" width="28" height="22" rx="3" fill="rgba(212,133,106,0.2)" stroke="#D4856A" strokeWidth="1.5"/>
+      <line x1="28" y1="14" x2="28" y2="36" stroke="#D4856A" strokeWidth="1" opacity="0.5"/>
+      <line x1="16" y1="20" x2="27" y2="20" stroke="#D4856A" strokeWidth="1" opacity="0.4"/>
+      <line x1="16" y1="24" x2="27" y2="24" stroke="#D4856A" strokeWidth="1" opacity="0.3"/>
+      <line x1="29" y1="22" x2="40" y2="22" stroke="#D4856A" strokeWidth="1" opacity="0.3"/>
+      <line x1="12" y1="40" x2="44" y2="16" stroke="#E85D4A" strokeWidth="3" strokeLinecap="round"/>
+      <line x1="44" y1="40" x2="12" y2="16" stroke="#E85D4A" strokeWidth="3" strokeLinecap="round"/>
+    </svg>
+  );
+}
+function IllFrustSanfona() {
+  return (
+    <svg viewBox="0 0 56 56" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="28" cy="28" r="24" fill="rgba(232,168,56,0.1)"/>
+      <circle cx="28" cy="28" r="14" stroke="#E8A838" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.4"/>
+      <path d="M28 14 A14 14 0 0 1 42 28" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M42 28 A14 14 0 0 1 28 42" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M28 42 A14 14 0 0 1 14 28" stroke="#E8A838" strokeWidth="1.5" strokeLinecap="round" opacity="0.45"/>
+      <path d="M14 28 A14 14 0 0 1 28 14" stroke="#E8A838" strokeWidth="1.5" strokeLinecap="round" opacity="0.45"/>
+      <path d="M38 12 L42 16 L46 12" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M10 30 L14 34 L18 30" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.5"/>
+    </svg>
+  );
+}
+function IllFrustFome() {
+  return (
+    <svg viewBox="0 0 56 56" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="28" cy="28" r="24" fill="rgba(140,179,105,0.08)"/>
+      <path d="M12 28 Q12 44 28 44 Q44 44 44 28Z" fill="rgba(140,179,105,0.1)" stroke="#8CB369" strokeWidth="1.5"/>
+      <line x1="10" y1="28" x2="46" y2="28" stroke="#8CB369" strokeWidth="2" strokeLinecap="round"/>
+      <circle cx="22" cy="36" r="1.5" fill="#9CA88E"/>
+      <circle cx="34" cy="36" r="1.5" fill="#9CA88E"/>
+      <path d="M22 40 Q28 37 34 40" stroke="#9CA88E" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+      <path d="M22 18 Q24 14 22 10" stroke="#9CA88E" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.6"/>
+      <path d="M28 17 Q30 13 28 9" stroke="#9CA88E" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.6"/>
+      <path d="M34 18 Q36 14 34 10" stroke="#9CA88E" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.6"/>
+    </svg>
+  );
+}
+function IllFrustTempo() {
+  return (
+    <svg viewBox="0 0 56 56" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="28" cy="28" r="24" fill="rgba(92,168,232,0.08)"/>
+      <circle cx="28" cy="30" r="16" fill="rgba(92,168,232,0.1)" stroke="#5CA8E8" strokeWidth="1.5"/>
+      <circle cx="28" cy="30" r="2" fill="#5CA8E8"/>
+      <line x1="28" y1="30" x2="28" y2="18" stroke="#5CA8E8" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="28" y1="30" x2="38" y2="30" stroke="#5CA8E8" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="22" y1="14" x2="24" y2="11" stroke="#5CA8E8" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+      <line x1="34" y1="14" x2="32" y2="11" stroke="#5CA8E8" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+      <line x1="46" y1="22" x2="50" y2="20" stroke="#5CA8E8" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+      <line x1="47" y1="30" x2="52" y2="30" stroke="#5CA8E8" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+    </svg>
+  );
+}
+
+/* ── Q5 Symptoms icons (52px grid-icon layout) ── */
+function IllSymInchaco() {
+  return (
+    <svg viewBox="0 0 52 52" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="26" cy="26" r="22" fill="rgba(212,133,106,0.12)"/>
+      <ellipse cx="26" cy="30" rx="15" ry="12" fill="rgba(212,133,106,0.2)" stroke="#D4856A" strokeWidth="1.5"/>
+      <path d="M14 24 Q18 22 22 24 Q26 26 30 24 Q34 22 38 24" stroke="#D4856A" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.7"/>
+      <path d="M11 30 L7 30 M9 28 L7 30 L9 32" stroke="#D4856A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M41 30 L45 30 M43 28 L45 30 L43 32" stroke="#D4856A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+function IllSymCansaco() {
+  return (
+    <svg viewBox="0 0 52 52" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="26" cy="26" r="22" fill="rgba(121,120,200,0.08)"/>
+      <path d="M10 26 Q26 16 42 26 Q26 38 10 26Z" fill="rgba(121,120,200,0.1)" stroke="#8080C0" strokeWidth="1.5"/>
+      <path d="M10 26 Q26 20 42 26" stroke="#8080C0" strokeWidth="3" strokeLinecap="round"/>
+      <circle cx="26" cy="30" r="5" fill="rgba(121,120,200,0.2)"/>
+      <circle cx="26" cy="30" r="2.5" fill="#8080C0"/>
+      <circle cx="38" cy="14" r="2" fill="#8080C0" opacity="0.35"/>
+      <circle cx="43" cy="10" r="1.5" fill="#8080C0" opacity="0.25"/>
+      <circle cx="47" cy="6" r="1" fill="#8080C0" opacity="0.15"/>
+    </svg>
+  );
+}
+function IllSymAnsiedade() {
+  return (
+    <svg viewBox="0 0 52 52" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="26" cy="26" r="22" fill="rgba(155,100,200,0.08)"/>
+      <circle cx="26" cy="26" r="14" fill="rgba(155,100,200,0.12)" stroke="#9B64C8" strokeWidth="1.5"/>
+      <path d="M26 18 Q32 18 32 22 Q32 26 26 26 Q20 26 20 30 Q20 34 26 34" stroke="#9B64C8" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+      <circle cx="26" cy="36" r="1.5" fill="#9B64C8"/>
+      <circle cx="14" cy="16" r="1.5" fill="#9B64C8" opacity="0.25"/>
+      <circle cx="38" cy="14" r="1.5" fill="#9B64C8" opacity="0.2"/>
+    </svg>
+  );
+}
+function IllSymInflamacao() {
+  return (
+    <svg viewBox="0 0 52 52" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="26" cy="26" r="22" fill="rgba(232,120,56,0.08)"/>
+      <circle cx="26" cy="28" r="10" fill="rgba(232,120,56,0.2)" stroke="#E87838" strokeWidth="1.5"/>
+      <circle cx="26" cy="28" r="5" fill="rgba(232,120,56,0.3)"/>
+      <line x1="26" y1="14" x2="26" y2="10" stroke="#E87838" strokeWidth="2" strokeLinecap="round" opacity="0.55"/>
+      <line x1="36" y1="18" x2="39" y2="15" stroke="#E87838" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+      <line x1="40" y1="28" x2="44" y2="28" stroke="#E87838" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+      <line x1="16" y1="18" x2="13" y2="15" stroke="#E87838" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
+      <line x1="12" y1="28" x2="8" y2="28" stroke="#E87838" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
+      <line x1="36" y1="38" x2="39" y2="41" stroke="#E87838" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+    </svg>
+  );
+}
+
+/* ── Q7 Motivação illustrations (72px grid cards) ── */
+function IllMotivRapido() {
+  return (
+    <svg viewBox="0 0 72 72" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="36" cy="36" r="32" fill="rgba(232,168,56,0.1)"/>
+      <rect x="28" y="50" width="16" height="4" rx="2" fill="#E8A838" opacity="0.5"/>
+      <rect x="24" y="46" width="24" height="5" rx="2.5" fill="#E8A838" opacity="0.4"/>
+      <path d="M24 22 L24 46 L48 46 L48 22 Q48 14 36 14 Q24 14 24 22Z" fill="rgba(232,168,56,0.2)" stroke="#E8A838" strokeWidth="1.5"/>
+      <path d="M24 28 Q16 30 16 36 Q16 42 24 42" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M48 28 Q56 30 56 36 Q56 42 48 42" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M36 10 L37.2 13.4 L41 13.4 L38.2 15.8 L39.2 19.4 L36 17.2 L32.8 19.4 L33.8 15.8 L31 13.4 L34.8 13.4Z" fill="#E8A838"/>
+    </svg>
+  );
+}
+function IllMotivSimples() {
+  return (
+    <svg viewBox="0 0 72 72" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="36" cy="36" r="32" fill="rgba(140,179,105,0.1)"/>
+      <path d="M16 40 Q16 56 36 56 Q56 56 56 40Z" fill="rgba(140,179,105,0.2)" stroke="#8CB369" strokeWidth="1.5"/>
+      <line x1="14" y1="40" x2="58" y2="40" stroke="#8CB369" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M36 24 Q44 16 44 24 Q44 32 36 30 Q28 32 28 24 Q28 16 36 24Z" fill="#8CB369" opacity="0.6"/>
+      <line x1="36" y1="24" x2="36" y2="32" stroke="#6B9B45" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M24 50 Q36 54 48 50" stroke="#8CB369" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    </svg>
+  );
+}
+function IllMotivSemFome() {
+  return (
+    <svg viewBox="0 0 72 72" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="36" cy="36" r="32" fill="rgba(212,133,106,0.1)"/>
+      <ellipse cx="36" cy="48" rx="22" ry="7" fill="rgba(212,133,106,0.15)" stroke="#D4856A" strokeWidth="1.5"/>
+      <ellipse cx="36" cy="40" rx="18" ry="12" fill="rgba(212,133,106,0.2)" stroke="#D4856A" strokeWidth="1.5"/>
+      <ellipse cx="28" cy="38" rx="6" ry="4" fill="#D4856A" opacity="0.45"/>
+      <ellipse cx="40" cy="36" rx="5" ry="4" fill="#A8D08D" opacity="0.55"/>
+      <ellipse cx="36" cy="42" rx="5" ry="3" fill="#E8A838" opacity="0.45"/>
+      <path d="M26 24 Q28 20 26 16" stroke="#D4856A" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.5"/>
+      <path d="M36 22 Q38 18 36 14" stroke="#D4856A" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.5"/>
+      <path d="M46 24 Q48 20 46 16" stroke="#D4856A" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.5"/>
+      <circle cx="57" cy="20" r="8" fill="rgba(232,168,56,0.15)"/>
+      <circle cx="54" cy="18" r="1.5" fill="#E8A838"/>
+      <circle cx="60" cy="18" r="1.5" fill="#E8A838"/>
+      <path d="M54 22 Q57 24 60 22" stroke="#E8A838" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+    </svg>
+  );
+}
+function IllMotivBemestar() {
+  return (
+    <svg viewBox="0 0 72 72" fill="none" style={{width:'100%',height:'100%'}}>
+      <circle cx="36" cy="36" r="32" fill="rgba(184,160,208,0.1)"/>
+      <circle cx="36" cy="24" r="9" fill="#C8A8DC" opacity="0.8"/>
+      <path d="M26 34 Q36 44 46 34 L44 56 L28 56Z" fill="#B8A0D0" opacity="0.5"/>
+      <line x1="36" y1="8" x2="36" y2="12" stroke="#B8A0D0" strokeWidth="2.5" strokeLinecap="round" opacity="0.6"/>
+      <line x1="22" y1="12" x2="24" y2="15" stroke="#B8A0D0" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+      <line x1="50" y1="12" x2="48" y2="15" stroke="#B8A0D0" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+      <line x1="14" y1="24" x2="18" y2="24" stroke="#B8A0D0" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
+      <line x1="58" y1="24" x2="54" y2="24" stroke="#B8A0D0" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
+      <path d="M36 50 Q30 46 26 46 Q22 46 22 50 Q22 55 36 60 Q50 55 50 50 Q50 46 46 46 Q42 46 36 50Z" fill="#B8A0D0" opacity="0.35"/>
+    </svg>
+  );
+}
+
+// Map question+value → illustration component
+const Q_ILLUSTRATIONS = {
+  'goal:peso':                  IllGoalPeso,
+  'goal:desinchar':             IllGoalDesinchar,
+  'goal:energia':               IllGoalEnergia,
+  'goal:todas':                 IllGoalTodas,
+  'motivacao:resultado-rapido': IllMotivRapido,
+  'motivacao:simplicidade':     IllMotivSimples,
+  'motivacao:sem-fome':         IllMotivSemFome,
+  'motivacao:bemestar':         IllMotivBemestar,
+};
+
+// Map question+value → icon component (for card-icon and grid-icon layouts)
+const Q_ICONS = {
+  'frustration:dietas':    IllFrustDietas,
+  'frustration:sanfona':   IllFrustSanfona,
+  'frustration:fome':      IllFrustFome,
+  'frustration:tempo':     IllFrustTempo,
+  'symptoms:inchaço':      IllSymInchaco,
+  'symptoms:cansaço':      IllSymCansaco,
+  'symptoms:ansiedade':    IllSymAnsiedade,
+  'symptoms:inflamação':   IllSymInflamacao,
+};
+
 function QuizScreen({ q, progress, cur, total, onAnswer, sel, n }) {
   const hint = OPEN_LOOP_HINTS[cur];
+  const layout = Q_LAYOUT[q.id] || 'card-icon';
+
+  const renderOptions = () => {
+    switch (layout) {
+      case 'grid-card':
+        return (
+          <div className="opt-grid">
+            {q.options.map(o => {
+              const IllComp = Q_ILLUSTRATIONS[`${q.id}:${o.value}`];
+              return (
+                <button key={o.value}
+                  className={`opt-grid-card${sel===o.value?' opt-sel':''}`}
+                  onClick={() => onAnswer(q.id, o.value)}
+                  disabled={sel !== null}>
+                  <div className="opt-grid-illus">
+                    {IllComp ? <IllComp /> : <span style={{fontSize:'40px'}}>{o.emoji}</span>}
+                  </div>
+                  <span className="opt-grid-label">{o.text}</span>
+                </button>
+              );
+            })}
+          </div>
+        );
+
+      case 'chip':
+        return (
+          <div className="opt-chips">
+            {q.options.map(o => (
+              <button key={o.value}
+                className={`opt-chip${sel===o.value?' opt-sel':''}`}
+                onClick={() => onAnswer(q.id, o.value)}
+                disabled={sel !== null}>
+                <span className="opt-chip-emoji">{o.emoji}</span>
+                <span>{o.text}</span>
+                {sel===o.value && <span className="opt-check-pill">✓</span>}
+              </button>
+            ))}
+          </div>
+        );
+
+      case 'grid-icon':
+        return (
+          <div className="opt-grid-icons">
+            {q.options.map(o => {
+              const IconComp = Q_ICONS[`${q.id}:${o.value}`];
+              return (
+                <button key={o.value}
+                  className={`opt-grid-icon-card${sel===o.value?' opt-sel':''}`}
+                  onClick={() => onAnswer(q.id, o.value)}
+                  disabled={sel !== null}>
+                  <div className="opt-grid-icon-svg">
+                    {IconComp ? <IconComp /> : <span style={{fontSize:'32px'}}>{o.emoji}</span>}
+                  </div>
+                  <span className="opt-grid-icon-label">{o.text}</span>
+                </button>
+              );
+            })}
+          </div>
+        );
+
+      case 'emoji-centered':
+        return (
+          <div className="opt-emoji-list">
+            {q.options.map(o => (
+              <button key={o.value}
+                className={`opt-emoji-card${sel===o.value?' opt-sel':''}`}
+                onClick={() => onAnswer(q.id, o.value)}
+                disabled={sel !== null}>
+                <span className="opt-emoji-big">{o.emoji}</span>
+                <span className="opt-emoji-label">{o.text}</span>
+              </button>
+            ))}
+          </div>
+        );
+
+      default: // card-icon
+        return (
+          <div className="opt-card-list">
+            {q.options.map(o => {
+              const IconComp = Q_ICONS[`${q.id}:${o.value}`];
+              return (
+                <button key={o.value}
+                  className={`opt-card-icon${sel===o.value?' opt-sel':''}`}
+                  onClick={() => onAnswer(q.id, o.value)}
+                  disabled={sel !== null}>
+                  <div className={IconComp ? 'opt-card-icon-img' : 'opt-card-icon-emoji'}>
+                    {IconComp ? <IconComp /> : o.emoji}
+                  </div>
+                  <span className="opt-card-icon-title">{o.text}</span>
+                  <span className="opt-card-icon-check">✓</span>
+                </button>
+              );
+            })}
+          </div>
+        );
+    }
+  };
+
   return (
-    <div style={{paddingTop:"16px"}}>
-      <div className="progress-wrap">
-        <div className="progress-bar"><div className="progress-fill" style={{width:`${progress}%`}} /></div>
-        <span className="progress-txt">{cur+1}/{total}</span>
+    <div style={{paddingTop:"0"}}>
+      <div className="progress-slim">
+        <div className="progress-slim-fill" style={{width:`${progress}%`}} />
       </div>
-      <div style={{textAlign:"center",marginBottom:"28px"}}>
+      <div style={{textAlign:"center",marginBottom:"24px",marginTop:"24px"}}>
         <h2 className="question">{n(q.question)}</h2>
         <p className="question-sub">{n(q.subtitle)}</p>
       </div>
-      <div className="options">
-        {q.options.map(o=>(
-          <button key={o.value} className={`option ${sel===o.value?"option-sel":""}`} onClick={()=>onAnswer(q.id,o.value)} disabled={sel!==null}>
-            <span className="opt-emoji">{o.emoji}</span>
-            <span className="opt-text">{o.text}</span>
-            <span className="opt-check">✓</span>
-          </button>
-        ))}
-      </div>
+      {renderOptions()}
       {sel && hint && (
         <div className="open-loop-hint">
           <span className="ol-dot"/>
@@ -2133,6 +2496,53 @@ const CSS = `
 .option-sel{border-color:#8CB369!important;background:rgba(140,179,105,0.1)!important}
 .option-sel .opt-check{opacity:1}
 .opt-emoji{font-size:22px;flex-shrink:0}.opt-text{flex:1;font-weight:500}.opt-check{margin-left:auto;opacity:0;font-weight:700;color:#8CB369;transition:opacity .3s}
+
+/* ── Slim progress bar ── */
+.progress-slim{height:3px;border-radius:10px;background:rgba(140,179,105,0.1);overflow:hidden;margin-bottom:0}
+.progress-slim-fill{height:100%;border-radius:10px;transition:width .5s;background:linear-gradient(90deg,#8CB369,#E8A838)}
+
+/* ── Grid card layout (Q1 goal, Q7 motivacao) ── */
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt-grid-card{display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px;border-radius:18px;border:1.5px solid rgba(140,179,105,0.1);background:rgba(18,24,14,0.85);transition:all .3s;color:#F2F0E8;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-align:center;width:100%;cursor:pointer}
+.opt-grid-card:hover{border-color:rgba(140,179,105,0.35);background:rgba(140,179,105,0.07);transform:translateY(-2px)}
+.opt-grid-card.opt-sel{border-color:#8CB369!important;background:rgba(140,179,105,0.12)!important;box-shadow:0 0 0 3px rgba(140,179,105,0.12)}
+.opt-grid-illus{width:80px;height:80px;flex-shrink:0}
+.opt-grid-label{line-height:1.3;color:#F2F0E8}
+
+/* ── Chip layout (Q2 age, Q4 meals) ── */
+.opt-chips{display:flex;flex-direction:column;gap:10px}
+.opt-chip{display:flex;align-items:center;gap:14px;padding:15px 20px;border-radius:50px;border:1.5px solid rgba(140,179,105,0.1);background:rgba(18,24,14,0.85);transition:all .25s;color:#F2F0E8;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;width:100%;cursor:pointer;text-align:left}
+.opt-chip:hover{border-color:rgba(140,179,105,0.35);background:rgba(140,179,105,0.07)}
+.opt-chip.opt-sel{border-color:#8CB369!important;background:rgba(140,179,105,0.1)!important}
+.opt-chip-emoji{font-size:22px;flex-shrink:0}
+.opt-check-pill{margin-left:auto;font-weight:700;color:#8CB369;font-size:16px}
+
+/* ── Card-icon layout (Q3 frustration, Q6 tentativas, Q8 commitment) ── */
+.opt-card-list{display:flex;flex-direction:column;gap:10px}
+.opt-card-icon{display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:16px;border:1.5px solid rgba(140,179,105,0.1);background:rgba(18,24,14,0.85);transition:all .3s;color:#F2F0E8;font-family:'DM Sans',sans-serif;font-size:15px;width:100%;cursor:pointer;text-align:left}
+.opt-card-icon:hover{border-color:rgba(140,179,105,0.3);background:rgba(140,179,105,0.06);transform:translateX(3px)}
+.opt-card-icon.opt-sel{border-color:#8CB369!important;background:rgba(140,179,105,0.1)!important}
+.opt-card-icon.opt-sel .opt-card-icon-check{opacity:1}
+.opt-card-icon-img{width:52px;height:52px;flex-shrink:0}
+.opt-card-icon-emoji{width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;border-radius:12px;background:rgba(140,179,105,0.08)}
+.opt-card-icon-title{flex:1;font-weight:500;line-height:1.35}
+.opt-card-icon-check{margin-left:auto;opacity:0;font-weight:700;color:#8CB369;font-size:17px;transition:opacity .25s;flex-shrink:0}
+
+/* ── Grid icon layout (Q5 symptoms) ── */
+.opt-grid-icons{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt-grid-icon-card{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 12px;border-radius:18px;border:1.5px solid rgba(140,179,105,0.1);background:rgba(18,24,14,0.85);transition:all .3s;color:#F2F0E8;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;text-align:center;width:100%;cursor:pointer;line-height:1.35}
+.opt-grid-icon-card:hover{border-color:rgba(140,179,105,0.35);background:rgba(140,179,105,0.07);transform:translateY(-2px)}
+.opt-grid-icon-card.opt-sel{border-color:#8CB369!important;background:rgba(140,179,105,0.12)!important;box-shadow:0 0 0 3px rgba(140,179,105,0.12)}
+.opt-grid-icon-svg{width:56px;height:56px;flex-shrink:0}
+.opt-grid-icon-label{color:#F2F0E8}
+
+/* ── Emoji-centered layout (Q9 ready) ── */
+.opt-emoji-list{display:flex;flex-direction:column;gap:10px}
+.opt-emoji-card{display:flex;align-items:center;gap:16px;padding:16px 22px;border-radius:16px;border:1.5px solid rgba(140,179,105,0.1);background:rgba(18,24,14,0.85);transition:all .3s;color:#F2F0E8;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;width:100%;cursor:pointer;text-align:left}
+.opt-emoji-card:hover{border-color:rgba(140,179,105,0.3);background:rgba(140,179,105,0.07)}
+.opt-emoji-card.opt-sel{border-color:#8CB369!important;background:rgba(140,179,105,0.1)!important}
+.opt-emoji-big{font-size:30px;flex-shrink:0}
+.opt-emoji-label{flex:1;line-height:1.35}
 
 .input-group{margin-bottom:14px}.label{display:block;font-size:13px;font-weight:600;color:#9CA88E;margin-bottom:5px}
 .field{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(140,179,105,0.12);background:rgba(10,14,8,0.8);color:#F2F0E8;font-size:16px;font-family:'DM Sans',sans-serif;box-sizing:border-box;transition:border .2s}
