@@ -1030,60 +1030,41 @@ function Landing({ onStart }) {
   return (
     <div className="landing-wrap">
 
-      {/* Tag de fonte — matéria real */}
+      {/* Tag de fonte */}
       <div className="landing-source">
         <span className="landing-source-dot"/>
         <span>Notícia verificada · <strong>UOL VivaBem</strong> · Nov 2025</span>
       </div>
 
-      {/* Headline idêntica ao título da matéria */}
+      {/* Headline */}
       <h1 className="hero-title">
-        Fogaça diz ter secado <span className="hl-accent">17 kg</span> com <span className="hl">'dieta da selva'</span>: funciona? Há riscos?
+        Fogaça secou <span className="hl-accent">17 kg</span> com a <span className="hl">'dieta da selva'</span> — e funciona para mulheres?
       </h1>
 
-      {/* Card estilo matéria com foto */}
-      <div className="fogaca-card">
-        <img src="/fogaca.webp" alt="Henrique Fogaça — Dieta da Selva" className="fogaca-img" />
-        <div className="fogaca-caption">
-          <div className="fogaca-caption-header">
-            <span className="fogaca-caption-tag">📰 UOL VivaBem</span>
-            <span className="fogaca-caption-date">26/11/2025</span>
-          </div>
-          <p>"O chef parou de comer carboidratos e passou a comer mais carne e gordura. O peso caiu rápido. Especialistas explicam como funciona e quais são os cuidados."</p>
+      {/* Card compacto — foto + quote inline */}
+      <div className="fogaca-card fogaca-card-compact">
+        <img src="/fogaca.webp" alt="Henrique Fogaça — Dieta da Selva" className="fogaca-img-compact" />
+        <div className="fogaca-caption-compact">
+          <span className="fogaca-caption-tag">📰 UOL VivaBem · 26/11/2025</span>
+          <p>"Parei o carboidrato, comi mais carne e gordura. O peso caiu rápido."</p>
         </div>
       </div>
 
-      {/* O que o artigo diz — estilo lead de matéria */}
-      <div className="landing-article-block">
-        <p className="landing-article-lead">
-          O chef Henrique Fogaça afirma ter perdido <strong>17 kg</strong> com a "dieta da selva" — uma alimentação baseada em <strong>carnes, ovos, queijos e laticínios</strong>, com quase nenhum carboidrato.
-        </p>
-        <p className="landing-article-body">
-          Segundo o próprio Fogaça, ele parou de comer carboidratos e passou a priorizar proteína animal e gordura boa. O resultado: o peso caiu rápido, a energia aumentou e a fome ansiosa desapareceu.
-        </p>
-      </div>
-
       {/* Números */}
-      <div className="proof-row">
-        <div className="proof-item"><span className="proof-num">17kg</span><span className="proof-lbl">perdidos por Fogaça</span></div>
+      <div className="proof-row proof-row-sm">
+        <div className="proof-item"><span className="proof-num">17kg</span><span className="proof-lbl">perdidos</span></div>
         <div className="proof-div"/>
-        <div className="proof-item"><span className="proof-num">3 meses</span><span className="proof-lbl">de protocolo</span></div>
+        <div className="proof-item"><span className="proof-num">+10mil</span><span className="proof-lbl">mulheres</span></div>
         <div className="proof-div"/>
-        <div className="proof-item"><span className="proof-num">+10mil</span><span className="proof-lbl">mulheres no método</span></div>
+        <div className="proof-item"><span className="proof-num">2 min</span><span className="proof-lbl">de teste</span></div>
       </div>
 
-      {/* Divisor */}
-      <div className="landing-divider">
-        <span>O método adaptado para mulheres acima de 30</span>
-      </div>
-
-      {/* Bullets */}
-      <div className="landing-bullets">
+      {/* Bullets compactos */}
+      <div className="landing-bullets landing-bullets-sm">
         {[
-          ['🥩','Carne, ovos, queijo e gordura boa — sem restrição de quantidade'],
-          ['🚫','Zero carboidrato processado — sem contar caloria, sem passar fome'],
-          ['⚡','Energia sobe na 1ª semana enquanto o peso cai'],
-          ['📱','App com plano de 21 dias guia você dia a dia'],
+          ['🥩','Carne, ovos e gordura boa — sem passar fome'],
+          ['⚡','Energia sobe na 1ª semana'],
+          ['📱','Plano personalizado para o seu perfil'],
         ].map(([e,t],i)=>(
           <div key={i} className="landing-bullet">
             <span className="landing-bullet-em">{e}</span>
@@ -1094,7 +1075,7 @@ function Landing({ onStart }) {
 
       {/* CTA principal */}
       <button className="cta" onClick={onStart}>Descobrir se funciona para mim →</button>
-      <p className="micro">⏱️ Análise gratuita em 2 minutos • Resultado personalizado</p>
+      <p className="micro">⏱️ Gratuito · 2 minutos · Resultado personalizado</p>
 
       {/* Prova social */}
       <div className="faces-row">
@@ -2435,13 +2416,14 @@ const S = {
 const CSS = `
 .badge{display:inline-block;padding:8px 20px;border-radius:100px;background:rgba(140,179,105,0.08);border:1px solid rgba(140,179,105,0.2);font-size:12px;font-weight:600;letter-spacing:.5px;color:#A8D08D;margin-bottom:24px}
 
-.landing-wrap{padding-top:28px;text-align:center}
-.landing-source{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#5C6652;margin-bottom:16px;background:rgba(140,179,105,0.04);border:1px solid rgba(140,179,105,0.1);padding:5px 12px;border-radius:100px}
+.landing-wrap{padding-top:20px;text-align:center}
+.landing-source{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#5C6652;margin-bottom:12px;background:rgba(140,179,105,0.04);border:1px solid rgba(140,179,105,0.1);padding:4px 10px;border-radius:100px}
 .landing-source-dot{width:6px;height:6px;border-radius:50%;background:#8CB369;flex-shrink:0;animation:blink 1.4s infinite}
 
-.hero-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1.25;color:#F2F0E8;margin-bottom:22px}
+.hero-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;line-height:1.25;color:#F2F0E8;margin-bottom:14px}
 
-.fogaca-card{margin:0 auto 22px;max-width:480px;border-radius:18px;overflow:hidden;border:1px solid rgba(140,179,105,0.15);box-shadow:0 8px 40px rgba(0,0,0,0.5)}
+/* card original (mantido mas não usado no novo layout) */
+.fogaca-card{margin:0 auto 16px;max-width:480px;border-radius:18px;overflow:hidden;border:1px solid rgba(140,179,105,0.15);box-shadow:0 8px 40px rgba(0,0,0,0.5)}
 .fogaca-img{width:100%;display:block;object-fit:cover;max-height:320px}
 .fogaca-caption{background:#0B0F07;padding:13px 15px;text-align:left}
 .fogaca-caption-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
@@ -2449,17 +2431,28 @@ const CSS = `
 .fogaca-caption-date{font-size:10px;color:#354030}
 .fogaca-caption p{font-size:13px;color:#C8D4B8;line-height:1.6;font-style:italic}
 
-.landing-article-block{max-width:480px;margin:0 auto 24px;text-align:left;background:rgba(140,179,105,0.04);border:1px solid rgba(140,179,105,0.1);border-left:3px solid #8CB369;border-radius:0 12px 12px 0;padding:14px 16px}
+/* card compacto — foto lateral + quote em linha */
+.fogaca-card-compact{display:flex;align-items:center;gap:0;text-align:left;padding:0;border-radius:16px;margin-bottom:14px}
+.fogaca-img-compact{width:90px;min-width:90px;height:90px;object-fit:cover;object-position:top;border-radius:12px 0 0 12px;display:block;flex-shrink:0}
+.fogaca-caption-compact{background:#0B0F07;padding:10px 13px;flex:1;border-radius:0 12px 12px 0}
+.fogaca-caption-compact .fogaca-caption-tag{display:block;font-size:9px;font-weight:700;color:#8CB369;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.fogaca-caption-compact p{font-size:12px;color:#C8D4B8;line-height:1.5;font-style:italic;margin:0}
+
+.landing-article-block{max-width:480px;margin:0 auto 18px;text-align:left;background:rgba(140,179,105,0.04);border:1px solid rgba(140,179,105,0.1);border-left:3px solid #8CB369;border-radius:0 12px 12px 0;padding:14px 16px}
 .landing-article-lead{font-size:15px;color:#D4D9CC;line-height:1.65;margin-bottom:10px}
 .landing-article-body{font-size:13px;color:#9CA88E;line-height:1.65}
 
-.landing-divider{display:flex;align-items:center;gap:10px;margin:0 auto 18px;max-width:480px;color:#5C6652;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.landing-divider{display:flex;align-items:center;gap:10px;margin:0 auto 14px;max-width:480px;color:#5C6652;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
 .landing-divider::before,.landing-divider::after{content:'';flex:1;height:1px;background:rgba(140,179,105,0.1)}
 
-.landing-bullets{display:flex;flex-direction:column;gap:7px;margin:0 auto 28px;max-width:480px;text-align:left}
-.landing-bullet{display:flex;align-items:flex-start;gap:10px;background:rgba(140,179,105,0.04);border:1px solid rgba(140,179,105,0.1);border-radius:12px;padding:10px 14px}
-.landing-bullet-em{font-size:18px;flex-shrink:0;margin-top:1px}
-.landing-bullet-txt{font-size:13px;color:#C8D4B8;line-height:1.5}
+.landing-bullets{display:flex;flex-direction:column;gap:6px;margin:0 auto 20px;max-width:480px;text-align:left}
+.landing-bullets-sm{gap:5px;margin-bottom:18px}
+.landing-bullet{display:flex;align-items:center;gap:10px;background:rgba(140,179,105,0.04);border:1px solid rgba(140,179,105,0.1);border-radius:10px;padding:8px 13px}
+.landing-bullet-em{font-size:17px;flex-shrink:0}
+.landing-bullet-txt{font-size:13px;color:#C8D4B8;line-height:1.4}
+
+/* proof row compact variant */
+.proof-row-sm{margin-bottom:16px}
 .hl{color:#A8D08D}.hl-accent{color:#E8A838}
 .hero-sub{font-size:16px;line-height:1.7;color:#9CA88E;margin-bottom:28px;max-width:520px;margin-left:auto;margin-right:auto}
 .proof-row{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:32px;flex-wrap:wrap}
