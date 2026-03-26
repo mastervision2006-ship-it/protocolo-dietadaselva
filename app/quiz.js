@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 /* ═══════════════════════════════════════════════════════════
    PROTOCOLO DIETA DA SELVA v2.0 — FUNIL QUIZ IMERSIVO
-   Público: Mulheres 30+ | R$27 | Garantia 7 dias
+   Público: Mulheres 30+ | R$27 | Garantia 21 dias
    ═══════════════════════════════════════════════════════════ */
 
 const CHECKOUT_URL = "https://SEU-CHECKOUT-GG.com/protocolo-dieta-da-selva";
@@ -262,7 +262,7 @@ function getOfferNote(answers, name) {
   if (frustration === 'fome')
     return `Desta vez você vai comer de verdade — e o peso vai cair mesmo assim.`;
   if (commitment === 'descrente' || (tentativas === 'muitas' && frustration === 'dietas'))
-    return `Você está cansada de promessas. Por isso existe a garantia de 7 dias — risco zero do seu lado.`;
+    return `Você está cansada de promessas. Por isso existe a garantia de 21 dias — risco zero do seu lado.`;
   if (motivacao === 'bemestar')
     return `Não é só sobre emagrecer. É sobre se sentir bem de verdade, todos os dias.`;
   return null;
@@ -830,14 +830,14 @@ function AppDemo({ onComprar }) {
                 <span style={{fontSize:'26px',fontWeight:'900',color:'#F2F0E8'}}>R$ 27</span>
               </div>
               <div className="demo-pw-perks">
-                {['Plano 21 dias completo','Selva IA 24h','Desafio + check-in','Garantia 7 dias'].map((p,i)=>(
+                {['Plano 21 dias completo','Selva IA 24h','Desafio + check-in','Garantia 21 dias'].map((p,i)=>(
                   <span key={i} className="demo-pw-perk">✓ {p}</span>
                 ))}
               </div>
               <button className="demo-pw-cta" onClick={()=>{ setLocked(false); onComprar(); }}>
                 GARANTIR ACESSO AGORA →
               </button>
-              <p className="demo-pw-guarantee">🛡️ Garantia incondicional de 7 dias</p>
+              <p className="demo-pw-guarantee">🛡️ Garantia incondicional de 21 dias</p>
               <button className="demo-pw-back" onClick={()=>setLocked(false)}>← Continuar explorando</button>
             </div>
           </div>
@@ -854,7 +854,7 @@ const CHAT_KB = [
   // OBJEÇÃO 1 — Já tentei tanta coisa
   {
     triggers: ['ja tentei','já tentei','nao funciona','não funciona','tentei de tudo','tentei varias','tentei várias','decepcionei','frustrada','frustrei','nao acredito','não acredito','funciona mesmo','vai ser diferente'],
-    text: `Eu entendo. De verdade.\n\nSabe o que me dói nessa frase? Que você está carregando a culpa de um fracasso que não é seu.\n\nVocê não falhou. O método falhou com você.\n\nPensa comigo: toda dieta que você tentou antes te pediu o quê? Cortar carboidrato e passar fome. Contar caloria e viver com ansiedade. Tomar shake e fingir que aquilo é comida de verdade. Sacrificar final de semana, social, prazer — por um resultado que some na primeira semana que você para.\n\nNão é fraqueza sua. É que esse sistema foi feito pra você abandonar. Porque toda vez que você abandona, você culpa a si mesma e tenta de novo.\n\nA Dieta da Selva funciona diferente porque ela não pede sacrifício. Ela pede que você coma — de verdade. Carne, ovos, frutas. Comida que sacia, que alimenta, que dá energia. Sem contar nada, sem passar fome.\n\nSão só R$27. Com garantia de 7 dias. Se em uma semana você achar que não é pra você, devolvemos tudo. Sem pergunta, sem burocracia.\n\nA única pergunta que importa agora é: você vai deixar as tentativas passadas te impedir de tentar o único método que respeita o seu corpo?`,
+    text: `Eu entendo. De verdade.\n\nSabe o que me dói nessa frase? Que você está carregando a culpa de um fracasso que não é seu.\n\nVocê não falhou. O método falhou com você.\n\nPensa comigo: toda dieta que você tentou antes te pediu o quê? Cortar carboidrato e passar fome. Contar caloria e viver com ansiedade. Tomar shake e fingir que aquilo é comida de verdade. Sacrificar final de semana, social, prazer — por um resultado que some na primeira semana que você para.\n\nNão é fraqueza sua. É que esse sistema foi feito pra você abandonar. Porque toda vez que você abandona, você culpa a si mesma e tenta de novo.\n\nA Dieta da Selva funciona diferente porque ela não pede sacrifício. Ela pede que você coma — de verdade. Carne, ovos, frutas. Comida que sacia, que alimenta, que dá energia. Sem contar nada, sem passar fome.\n\nSão só R$27. Com garantia de 21 dias. Se em uma semana você achar que não é pra você, devolvemos tudo. Sem pergunta, sem burocracia.\n\nA única pergunta que importa agora é: você vai deixar as tentativas passadas te impedir de tentar o único método que respeita o seu corpo?`,
     suggestions: ['Vou passar fome?','E a garantia?','Quero começar hoje'],
     showCTA: false,
   },
@@ -862,13 +862,13 @@ const CHAT_KB = [
   {
     triggers: ['fome','passar fome','ficar com fome','fiquei com fome','restritiva','restricao','restrição','sacrificio','sacrifício','mal-humorada','mal humorada','ansiosa com dieta'],
     text: `Essa é a melhor objeção que você podia ter. Porque ela me diz que você já sofreu pra caramba com dieta — e que dessa vez você quer algo diferente.\n\nVou te contar uma coisa que a maioria não fala: fome não é sinal de que você está emagrecendo. Fome é sinal de que o seu corpo está em pânico. E quando o corpo entra em pânico, ele segura gordura.\n\nA Dieta da Selva foi construída exatamente ao contrário. Você come até ficar saciada. Carne, ovo, frutas. Gordura boa. Proteína de verdade. Seu corpo recebe o sinal de que está bem alimentado — e aí, sim, ele libera a gordura guardada.\n\nA primeira coisa que muda é que a fome ansiosa das 15h desaparece. Aquela vontade de doce depois do almoço? Some. Porque o corpo finalmente foi alimentado de verdade.\n\nCom R$27 você testa isso por 7 dias. Se no sétimo dia você ainda estiver com fome, pede o dinheiro de volta. Mas você vai sentir a diferença muito antes disso.`,
-    suggestions: ['Posso comer de tudo?','E os carboidratos?','Quero testar os 7 dias'],
+    suggestions: ['Posso comer de tudo?','E os carboidratos?','Quero testar os 21 dias'],
     showCTA: true,
   },
   // OBJEÇÃO 3 — Não vai funcionar pra mim
   {
     triggers: ['comigo nao','comigo não','meu metabolismo','metabolismo lento','nao sou como','não sou como','caso especial','diferente das outras','meu corpo nao','meu corpo não','problema no meu corpo'],
-    text: `Sabe o que é mais doloroso do que uma dieta não funcionar? É quando você começa a acreditar que o problema é você.\n\nQuantas vezes você já disse essa frase: "Comigo não funciona"? Eu preciso que você escute o quanto isso machuca. Porque você está carregando uma crença que não é sua — alguém plantou ela em você cada vez que um método falhou e jogou a culpa no seu corpo.\n\nMas vou te falar a verdade: o seu corpo não é defeituoso. Ele é inteligente. Quando você passa fome, ele segura gordura. Quando você come industrializado, ele inflama. Quando você come de verdade — proteína, gordura boa, fruta — ele faz exatamente o que deveria fazer.\n\nA Dieta da Selva não é pra um tipo específico de corpo. Ela funciona porque respeita como o corpo humano funciona — o seu, o meu, o de qualquer mulher.\n\nR$27 é menos que um lanche no shopping. Com 7 dias de garantia. Você não tem nada a perder — só a crença de que "comigo não funciona". E essa crença? Ela está te custando muito mais do que R$27.`,
+    text: `Sabe o que é mais doloroso do que uma dieta não funcionar? É quando você começa a acreditar que o problema é você.\n\nQuantas vezes você já disse essa frase: "Comigo não funciona"? Eu preciso que você escute o quanto isso machuca. Porque você está carregando uma crença que não é sua — alguém plantou ela em você cada vez que um método falhou e jogou a culpa no seu corpo.\n\nMas vou te falar a verdade: o seu corpo não é defeituoso. Ele é inteligente. Quando você passa fome, ele segura gordura. Quando você come industrializado, ele inflama. Quando você come de verdade — proteína, gordura boa, fruta — ele faz exatamente o que deveria fazer.\n\nA Dieta da Selva não é pra um tipo específico de corpo. Ela funciona porque respeita como o corpo humano funciona — o seu, o meu, o de qualquer mulher.\n\nR$27 é menos que um lanche no shopping. Com 21 dias de garantia. Você não tem nada a perder — só a crença de que "comigo não funciona". E essa crença? Ela está te custando muito mais do que R$27.`,
     suggestions: ['Mas tenho hormônio lento','E a garantia?','Quero tentar'],
     showCTA: true,
   },
@@ -882,22 +882,22 @@ const CHAT_KB = [
   // OBJEÇÃO 5 — R$27 parece barato demais
   {
     triggers: ['barato demais','muito barato','parece fraco','parece ruim','qualidade baixa','27 reais so','r$27 so','27 reais é pouco','desconfio','desconfiei'],
-    text: `Eu adoro essa pergunta porque ela diz que você tem discernimento. Você já foi enganada antes — e não quer cair num golpe de novo.\n\nMas me deixa virar essa lógica: você já pagou caro por algo que não funcionou? Nutricionista a R$300 a consulta? Shake de R$200? Curso de reeducação alimentar de R$500?\n\nO preço alto não é garantia de resultado. Às vezes é só garantia de que o marketing foi mais caro.\n\nO App Dieta da Selva custa R$27 porque o objetivo é simples: tirar a barreira financeira que impede você de começar. A aposta é que quando você experimentar e ver resultado, vai querer continuar.\n\nDentro do app você tem receitas completas para café, almoço e jantar. Plano de exercícios de 21 dias pra fazer em casa. Guia completo da Dieta da Selva. Tudo organizado, fácil de seguir.\n\nPor R$27. Com 7 dias de garantia. O risco não é você comprar — o risco é você não comprar e continuar do mesmo jeito.`,
+    text: `Eu adoro essa pergunta porque ela diz que você tem discernimento. Você já foi enganada antes — e não quer cair num golpe de novo.\n\nMas me deixa virar essa lógica: você já pagou caro por algo que não funcionou? Nutricionista a R$300 a consulta? Shake de R$200? Curso de reeducação alimentar de R$500?\n\nO preço alto não é garantia de resultado. Às vezes é só garantia de que o marketing foi mais caro.\n\nO App Dieta da Selva custa R$27 porque o objetivo é simples: tirar a barreira financeira que impede você de começar. A aposta é que quando você experimentar e ver resultado, vai querer continuar.\n\nDentro do app você tem receitas completas para café, almoço e jantar. Plano de exercícios de 21 dias pra fazer em casa. Guia completo da Dieta da Selva. Tudo organizado, fácil de seguir.\n\nPor R$27. Com 21 dias de garantia. O risco não é você comprar — o risco é você não comprar e continuar do mesmo jeito.`,
     suggestions: ['O que tem no app?','E a garantia?','Quero garantir agora'],
     showCTA: true,
   },
   // OBJEÇÃO 6 — Preciso pensar
   {
     triggers: ['preciso pensar','vou pensar','deixa eu pensar','ainda nao sei','ainda não sei','vou ver','nao sei se','não sei se','talvez','pode ser'],
-    text: `Tudo bem. Mas me conta uma coisa: o que exatamente você precisa pensar?\n\nSe for sobre o preço — R$27 com garantia de 7 dias é literalmente risco zero. Você pode pedir o dinheiro de volta sem explicação.\n\nSe for sobre o método — você já tem a resposta de todas as outras tentativas. Elas funcionaram? A única coisa diferente aqui é experimentar algo diferente.\n\nSe for sobre o tempo — o app já existe, o conteúdo está pronto, você acessa agora mesmo.\n\nEntão me ajuda a entender: o que especificamente você precisa pensar? Me fala, e a gente resolve juntas agora.`,
+    text: `Tudo bem. Mas me conta uma coisa: o que exatamente você precisa pensar?\n\nSe for sobre o preço — R$27 com garantia de 21 dias é literalmente risco zero. Você pode pedir o dinheiro de volta sem explicação.\n\nSe for sobre o método — você já tem a resposta de todas as outras tentativas. Elas funcionaram? A única coisa diferente aqui é experimentar algo diferente.\n\nSe for sobre o tempo — o app já existe, o conteúdo está pronto, você acessa agora mesmo.\n\nEntão me ajuda a entender: o que especificamente você precisa pensar? Me fala, e a gente resolve juntas agora.`,
     suggestions: ['Tenho medo de gastar e não usar','E se não funcionar?','Tá, me convenceu'],
     showCTA: false,
   },
   // OBJEÇÃO 7 — Já tenho muitos apps que não uso
   {
     triggers: ['muitos apps','apps que nao uso','apps que não uso','compro e nao uso','compro e não uso','nao vou usar','não vou usar','ja comprei','já comprei','esqueco','esqueço','abandono tudo'],
-    text: `Você está sendo honesta comigo e eu respeito isso. Mas me deixa ser honesta com você também.\n\nVocê não usa esses apps porque eles são complicados, chatos ou te fazem sentir culpada toda vez que abre. Correto?\n\nO App Dieta da Selva foi feito pra ser simples. Você abre, vê o que comer hoje, faz o exercício do dia, fecha. Não tem contador de caloria, não tem planilha, não tem nada que te faça sentir inadequada.\n\nMas vou falar uma verdade que vai doer um pouco: o maior desperdício não é os R$27. É mais um ano do jeito que está.\n\nVocê tem 7 dias de garantia. Se abrir o app e não sentir que vale, pede o dinheiro de volta. Mas e se abrir e sentir que finalmente encontrou algo que funciona pra você?`,
-    suggestions: ['Como é o app por dentro?','E a garantia de 7 dias?','Quero tentar'],
+    text: `Você está sendo honesta comigo e eu respeito isso. Mas me deixa ser honesta com você também.\n\nVocê não usa esses apps porque eles são complicados, chatos ou te fazem sentir culpada toda vez que abre. Correto?\n\nO App Dieta da Selva foi feito pra ser simples. Você abre, vê o que comer hoje, faz o exercício do dia, fecha. Não tem contador de caloria, não tem planilha, não tem nada que te faça sentir inadequada.\n\nMas vou falar uma verdade que vai doer um pouco: o maior desperdício não é os R$27. É mais um ano do jeito que está.\n\nVocê tem 21 dias de garantia. Se abrir o app e não sentir que vale, pede o dinheiro de volta. Mas e se abrir e sentir que finalmente encontrou algo que funciona pra você?`,
+    suggestions: ['Como é o app por dentro?','E a garantia de 21 dias?','Quero tentar'],
     showCTA: true,
   },
   // OBJEÇÃO 8 — Família não vai comer assim
@@ -911,14 +911,14 @@ const CHAT_KB = [
   {
     triggers: ['tireoide','tireoide','hormonio','hormônio','hipotireoidismo','pcos','sop','insulina','problema de saude','problema de saúde','doença','medicamento','remedio','remédio','anticoncepcional'],
     text: `Isso é muito sério e eu não vou minimizar. Problemas hormonais, tireoide, PCOS — eles realmente impactam o metabolismo.\n\nMas deixa eu te perguntar: o que o médico disse sobre alimentação? Na maioria dos casos, a recomendação é exatamente isso — reduzir ultra-processados, açúcar e inflamação. É exatamente o que a Dieta da Selva propõe.\n\nEla não substitui o acompanhamento médico — e a gente deixa isso claro no app. Mas ela funciona junto com o tratamento, não contra ele.\n\nMulheres com hipotireoidismo relatam melhora significativa quando cortam os inflamatórios da dieta. Não é milagre — é o corpo respondendo a comida de verdade.\n\nExperimente por 7 dias. Se não sentir diferença, você pede o dinheiro de volta. Mas e se sentir?`,
-    suggestions: ['É seguro para quem tem tireoide?','E a garantia?','Quero tentar os 7 dias'],
+    suggestions: ['É seguro para quem tem tireoide?','E a garantia?','Quero tentar os 21 dias'],
     showCTA: true,
   },
   // OBJEÇÃO 10 — É seguro? Posso confiar?
   {
     triggers: ['seguro','confiar','confiavel','confiável','golpe','fraude','fake','enganar','mentira','verdadeiro','legitimo','legítimo','serio','sério'],
-    text: `Faz bem em perguntar.\n\nA Dieta da Selva não é uma dieta radical de eliminar tudo. É uma volta à comida de verdade — carne, ovos, frutas, legumes. O tipo de coisa que sua avó comia.\n\nNão tem suplemento obrigatório. Não tem produto pra comprar. Não tem restrição extrema. É simplesmente cortar o industrializado e voltar ao natural.\n\nA compra? Pagamento seguro via PIX, garantia de 7 dias, acesso imediato após confirmar. Qualquer problema, a gente resolve.\n\nA pergunta real é: você está mais segura continuando do jeito que está do que tentando algo diferente por R$27?`,
-    suggestions: ['Como funciona o pagamento?','E a garantia de 7 dias?','Quero garantir agora'],
+    text: `Faz bem em perguntar.\n\nA Dieta da Selva não é uma dieta radical de eliminar tudo. É uma volta à comida de verdade — carne, ovos, frutas, legumes. O tipo de coisa que sua avó comia.\n\nNão tem suplemento obrigatório. Não tem produto pra comprar. Não tem restrição extrema. É simplesmente cortar o industrializado e voltar ao natural.\n\nA compra? Pagamento seguro via PIX, garantia de 21 dias, acesso imediato após confirmar. Qualquer problema, a gente resolve.\n\nA pergunta real é: você está mais segura continuando do jeito que está do que tentando algo diferente por R$27?`,
+    suggestions: ['Como funciona o pagamento?','E a garantia de 21 dias?','Quero garantir agora'],
     showCTA: true,
   },
   // Acesso / como funciona
@@ -931,21 +931,21 @@ const CHAT_KB = [
   // Pagamento / PIX — passo a passo completo
   {
     triggers: ['pagar','pagamento','pix','cartao','cartão','boleto','parcelar','parcelamento','como pago','forma de pagamento','passo a passo','como funciona o pix','nao sei pagar','não sei pagar','nunca usei pix','como usar pix','qr code','copia e cola','copiar codigo','código pix'],
-    text: `O pagamento é 100% via PIX — seguro, rápido e sem complicação. 🔒\n\n📱 PASSO A PASSO — QR CODE:\n1. Clica no botão abaixo\n2. Preenche nome, e-mail e CPF\n3. O QR Code aparece na tela\n4. Abre o app do seu banco\n5. Vai em "PIX" → "Pagar com QR Code"\n6. Aponta a câmera para o código\n7. Confirma o valor de R$ 27\n8. Acesso liberado em menos de 30 segundos!\n\n📋 PREFERE COPIA E COLA?\nClica em "Copiar código PIX", abre o app do banco → PIX → Pix Copia e Cola, e cola o código. Só confirmar!\n\n🔒 SEUS DADOS 100% PROTEGIDOS:\n✅ Nenhum dado de cartão cadastrado\n✅ Você aprova tudo dentro do app do seu banco\n✅ Transação criptografada e segura\n✅ Processado pelo sistema bancário oficial\n\n🌿 GARANTIA INCONDICIONAL DE 7 DIAS:\nSe em 7 dias você não sentir nenhuma diferença — no inchaço, na energia, na saciedade — devolvemos 100% do seu dinheiro. Sem perguntas. Sem burocracia. Risco zero.`,
-    suggestions: ['Como acesso após pagar?','E a garantia de 7 dias?','Quero garantir agora'],
+    text: `O pagamento é 100% via PIX — seguro, rápido e sem complicação. 🔒\n\n📱 PASSO A PASSO — QR CODE:\n1. Clica no botão abaixo\n2. Preenche nome, e-mail e CPF\n3. O QR Code aparece na tela\n4. Abre o app do seu banco\n5. Vai em "PIX" → "Pagar com QR Code"\n6. Aponta a câmera para o código\n7. Confirma o valor de R$ 27\n8. Acesso liberado em menos de 30 segundos!\n\n📋 PREFERE COPIA E COLA?\nClica em "Copiar código PIX", abre o app do banco → PIX → Pix Copia e Cola, e cola o código. Só confirmar!\n\n🔒 SEUS DADOS 100% PROTEGIDOS:\n✅ Nenhum dado de cartão cadastrado\n✅ Você aprova tudo dentro do app do seu banco\n✅ Transação criptografada e segura\n✅ Processado pelo sistema bancário oficial\n\n🌿 GARANTIA INCONDICIONAL DE 21 DIAS:\nSe em 21 dias você não sentir nenhuma diferença — no inchaço, na energia, na saciedade — devolvemos 100% do seu dinheiro. Sem perguntas. Sem burocracia. Risco zero.`,
+    suggestions: ['Como acesso após pagar?','E a garantia de 21 dias?','Quero garantir agora'],
     showCTA: true,
   },
   // Garantia
   {
-    triggers: ['garantia','devolver','devolucao','devolução','dinheiro de volta','reembolso','7 dias','risco'],
-    text: `Garantia incondicional de 7 dias. ✅\n\nSe em 7 dias você não sentir nenhuma diferença — no inchaço, na energia, na saciedade — basta mandar uma mensagem e devolvemos 100% do seu dinheiro. Sem perguntas. Sem burocracia.\n\nO risco é zero do seu lado. A única coisa que você pode perder é mais tempo no mesmo ciclo.`,
+    triggers: ['garantia','devolver','devolucao','devolução','dinheiro de volta','reembolso','21 dias','risco'],
+    text: `Garantia incondicional de 21 dias. ✅\n\nSe em 21 dias você não sentir nenhuma diferença — no inchaço, na energia, na saciedade — basta mandar uma mensagem e devolvemos 100% do seu dinheiro. Sem perguntas. Sem burocracia.\n\nO risco é zero do seu lado. A única coisa que você pode perder é mais tempo no mesmo ciclo.`,
     suggestions: ['Quero começar hoje','Como acesso o app?','Tá, me convenci'],
     showCTA: true,
   },
   // Quero comprar / fechar
   {
     triggers: ['quero','comprar','garantir','comecar','começar','hoje','agora','me convenci','ta bom','tá bom','vamos','bora','sim','fechou'],
-    text: `Que ótimo! Fico feliz que você tomou essa decisão por você. 🌿\n\nClica no botão abaixo, garante o seu acesso por R$27 e começa hoje. Se em 7 dias não sentir que valeu, a gente devolve tudo.\n\nVocê não tem nada a perder — só o peso que está carregando.`,
+    text: `Que ótimo! Fico feliz que você tomou essa decisão por você. 🌿\n\nClica no botão abaixo, garante o seu acesso por R$27 e começa hoje. Se em 21 dias não sentir que valeu, a gente devolve tudo.\n\nVocê não tem nada a perder — só o peso que está carregando.`,
     suggestions: [],
     showCTA: true,
   },
@@ -2037,6 +2037,10 @@ function VideosScreen({ onNext }) {
     "https://drive.google.com/file/d/1_96WCGVL8VD1d4S92VWt9pFknNzI3sxk/preview",
     "https://drive.google.com/file/d/1SSqCaSXQ7PqnJYMfILDJK948ZalFMwBB/preview",
   ];
+  const [current, setCurrent] = useState(0);
+  const prev = () => setCurrent(i => Math.max(0, i - 1));
+  const next = () => setCurrent(i => Math.min(videos.length - 1, i + 1));
+
   return (
     <div style={{paddingTop:"0",maxWidth:"480px",margin:"0 auto",paddingBottom:"24px"}}>
       <div style={{textAlign:"center",padding:"28px 16px 22px"}}>
@@ -2051,30 +2055,48 @@ function VideosScreen({ onNext }) {
         </p>
       </div>
 
-      <div style={{display:"flex",flexDirection:"column",gap:"20px",padding:"0 4px"}}>
-        {videos.map((src,i) => (
-          <div key={i} id={`video-${i}`}>
-            <div style={{borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(140,179,105,0.15)",background:"#0C0F0A",position:"relative",aspectRatio:"9/16"}}>
-              <iframe
-                src={src}
-                allow="autoplay"
-                allowFullScreen
-                style={{width:"100%",height:"100%",border:"none",display:"block"}}
-              />
-            </div>
-            <button
-              onClick={() => {
-                const next = i < videos.length - 1
-                  ? document.getElementById(`video-${i+1}`)
-                  : document.querySelector('.cta');
-                next?.scrollIntoView({behavior:'smooth', block:'start'});
-              }}
-              style={{width:"100%",marginTop:"10px",padding:"13px",borderRadius:"12px",border:"1px solid rgba(140,179,105,0.25)",background:"rgba(140,179,105,0.07)",color:"#A8D08D",fontSize:"13px",fontWeight:"700",fontFamily:"'DM Sans',sans-serif",cursor:"pointer"}}
-            >
-              {i < videos.length - 1 ? `Ver próximo depoimento →` : `Quero meu protocolo agora →`}
-            </button>
-          </div>
-        ))}
+      {/* Carrossel */}
+      <div style={{position:"relative",padding:"0 4px"}}>
+        <div style={{borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(140,179,105,0.15)",background:"#0C0F0A",aspectRatio:"9/16"}}>
+          <iframe
+            key={current}
+            src={videos[current]}
+            allow="autoplay"
+            allowFullScreen
+            style={{width:"100%",height:"100%",border:"none",display:"block"}}
+          />
+        </div>
+
+        {/* Contador */}
+        <div style={{textAlign:"center",marginTop:"14px",fontSize:"12px",color:"#5C6652",letterSpacing:"0.05em"}}>
+          {current + 1} / {videos.length}
+        </div>
+
+        {/* Setas + dica */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"16px",marginTop:"10px"}}>
+          <button
+            onClick={prev}
+            disabled={current === 0}
+            style={{width:"40px",height:"40px",borderRadius:"50%",border:"1px solid rgba(140,179,105,0.2)",background:"rgba(140,179,105,0.06)",color: current === 0 ? "#3A4A30" : "#8CB369",fontSize:"18px",cursor: current === 0 ? "default" : "pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s"}}
+          >‹</button>
+
+          <span style={{fontSize:"11px",color:"#5C6652",letterSpacing:"0.04em"}}>
+            {current < videos.length - 1 ? "role para ver o próximo" : "você viu todos os depoimentos"}
+          </span>
+
+          <button
+            onClick={next}
+            disabled={current === videos.length - 1}
+            style={{width:"40px",height:"40px",borderRadius:"50%",border:"1px solid rgba(140,179,105,0.2)",background:"rgba(140,179,105,0.06)",color: current === videos.length - 1 ? "#3A4A30" : "#8CB369",fontSize:"18px",cursor: current === videos.length - 1 ? "default" : "pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s"}}
+          >›</button>
+        </div>
+
+        {/* Dots */}
+        <div style={{display:"flex",justifyContent:"center",gap:"6px",marginTop:"10px"}}>
+          {videos.map((_,i) => (
+            <button key={i} onClick={() => setCurrent(i)} style={{width: i === current ? "20px" : "6px",height:"6px",borderRadius:"100px",border:"none",background: i === current ? "#8CB369" : "rgba(140,179,105,0.25)",cursor:"pointer",transition:"all .3s",padding:0}} />
+          ))}
+        </div>
       </div>
 
       <div style={{margin:"28px 16px 0",background:"rgba(140,179,105,0.06)",border:"1px solid rgba(140,179,105,0.2)",borderRadius:"16px",padding:"20px"}}>
@@ -2243,7 +2265,7 @@ const LOADING_PROFILES = {
     bullets: [
       { icon: "💰", text: "Custo real por dia do protocolo" },
       { icon: "📊", text: "Resultado esperado nas primeiras 3 semanas" },
-      { icon: "🛡️", text: "Cobertura total da garantia de 7 dias" },
+      { icon: "🛡️", text: "Cobertura total da garantia de 21 dias" },
     ],
   },
 };
@@ -2547,7 +2569,7 @@ function Diagnosis({ name, bmi, bmiCat, weightToLose, timeWeeks, answers, onNext
       <div className="diag-protocolo">
         <p style={{fontSize:'10px',fontWeight:'700',color:'#5C6652',letterSpacing:'.08em',textTransform:'uppercase',marginBottom:'6px'}}>Protocolo Recomendado para {name}</p>
         <p style={{fontSize:'14px',fontWeight:'800',color:'#F2F0E8',marginBottom:'4px'}}>🌿 {d.protocolo}</p>
-        <p style={{fontSize:'12px',color:'#9CA88E'}}>21 dias · App com guia diário · IA disponível 24h · Garantia de 7 dias</p>
+        <p style={{fontSize:'12px',color:'#9CA88E'}}>21 dias · App com guia diário · IA disponível 24h · Garantia de 21 dias</p>
       </div>
 
       <button className="cta" onClick={onNext} style={{width:'100%',marginTop:'20px'}}>
@@ -2569,11 +2591,11 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
     medo:      `E se desta vez funcionasse de verdade, ${name}?`,
     ocupada:   `${name}, em 15 minutos por dia seu corpo vai mudar.`,
     hormonal:  `${name}, seu metabolismo não é o problema — a alimentação é a solução.`,
-    economica: `${name}, R$27 para testar. 7 dias para provar. Risco zero.`,
+    economica: `${name}, R$27 para testar. 21 dias para provar. Risco zero.`,
   };
   const subtitles = {
     decidida:  'Você tem tudo que precisa para começar hoje — incluindo o protocolo certo.',
-    cetica:    'Desta vez você tem evidências, um método que respeita seu corpo e 7 dias de garantia.',
+    cetica:    'Desta vez você tem evidências, um método que respeita seu corpo e 21 dias de garantia.',
     medo:      'Você merece uma chance justa. Esta é ela — com garantia total de devolução.',
     ocupada:   'Simples, sem academia, sem fome. Cabe na sua vida como ela é agora.',
     hormonal:  'O protocolo que trabalha com o seu metabolismo, não contra ele.',
@@ -2862,7 +2884,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
       <div className="guarantee">
         <div style={{fontSize:"36px"}}>🛡️</div>
         <h3 style={{fontSize:"18px",color:"#F2F0E8",marginBottom:"6px"}}>Garantia Incondicional de 7 Dias</h3>
-        <p className="dim" style={{fontSize:"14px",lineHeight:"1.7",maxWidth:"440px",margin:"0 auto"}}>{name}, se em 7 dias você não sentir que o Protocolo está funcionando, devolvemos <strong style={{color:"#A8D08D"}}>100% do seu dinheiro</strong>. Sem perguntas.</p>
+        <p className="dim" style={{fontSize:"14px",lineHeight:"1.7",maxWidth:"440px",margin:"0 auto"}}>{name}, se em 21 dias você não sentir que o Protocolo está funcionando, devolvemos <strong style={{color:"#A8D08D"}}>100% do seu dinheiro</strong>. Sem perguntas.</p>
       </div>
 
       {/* Price + PIX */}
@@ -2888,7 +2910,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
         )}
 
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"14px",marginTop:"14px",fontSize:"12px",color:"#5C6652",flexWrap:"wrap"}}>
-          <span>🔒 Compra segura</span><span>✅ Acesso imediato</span><span>🛡️ 7 dias de garantia</span>
+          <span>🔒 Compra segura</span><span>✅ Acesso imediato</span><span>🛡️ 21 dias de garantia</span>
         </div>
       </div>
 
@@ -2899,7 +2921,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
         {q:"Vou passar fome?",a:"Pelo contrário! Carnes, queijos, ovos e gorduras boas estimulam o GLP-1 — o hormônio natural da saciedade. Você se sente satisfeita por horas."},
         {q:"Preciso ir à academia?",a:"Não. O app inclui exercícios caseiros de 15 minutos. A alimentação é o pilar principal."},
         {q:"Como funciona o pagamento?",a:"100% via PIX. Você gera o QR Code, paga pelo app do seu banco, e o acesso é liberado automaticamente em segundos."},
-        {q:"E se não funcionar?",a:"Garantia de 7 dias. Devolvemos 100% sem perguntas."},
+        {q:"E se não funcionar?",a:"Garantia de 21 dias. Devolvemos 100% sem perguntas."},
       ].map((f,i)=>(<FaqItem key={i} q={f.q} a={f.a} />))}
 
       {/* Final CTA */}
