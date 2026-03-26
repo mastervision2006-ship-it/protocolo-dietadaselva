@@ -467,6 +467,36 @@ const TREINOS_DEMO = [
   { dia:'Dia 4', nome:'Descanso Ativo',      tempo:'10 min', nivel:'Leve',      locked:true,  exercicios:[] },
 ];
 
+function AppDemoCollapsible({ onComprar }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{margin:"24px 0"}}>
+      {!open ? (
+        <button
+          onClick={() => setOpen(true)}
+          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:"10px",padding:"14px 20px",borderRadius:"14px",border:"1px solid rgba(140,179,105,0.3)",background:"rgba(140,179,105,0.06)",color:"#A8D08D",fontSize:"14px",fontWeight:"700",fontFamily:"'DM Sans',sans-serif",cursor:"pointer",transition:"all .2s"}}
+        >
+          <span style={{fontSize:"18px"}}>📱</span>
+          Veja o app por dentro
+          <span style={{fontSize:"12px",opacity:0.7}}>▼</span>
+        </button>
+      ) : (
+        <div>
+          <button
+            onClick={() => setOpen(false)}
+            style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:"10px",padding:"10px 20px",borderRadius:"14px 14px 0 0",border:"1px solid rgba(140,179,105,0.3)",borderBottom:"none",background:"rgba(140,179,105,0.08)",color:"#A8D08D",fontSize:"13px",fontWeight:"700",fontFamily:"'DM Sans',sans-serif",cursor:"pointer",marginBottom:"-1px"}}
+          >
+            <span style={{fontSize:"16px"}}>📱</span>
+            Veja o app por dentro
+            <span style={{fontSize:"12px",opacity:0.7}}>▲</span>
+          </button>
+          <AppDemo onComprar={onComprar} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AppDemo({ onComprar }) {
   const [tab, setTab]       = useState('inicio');
   const [locked, setLocked] = useState(false);
@@ -975,7 +1005,7 @@ function SelvaChat({ name }) {
     <>
       {!open && (
         <button className="s-fab" onClick={() => setOpen(true)} aria-label="Chat com Selva IA">
-          <span className="s-fab-icon">🌿</span>
+          <span className="s-fab-icon">💬</span>
           <span className="s-fab-label">Tirar dúvidas</span>
         </button>
       )}
@@ -2002,10 +2032,10 @@ function QuizScreen({ q, progress, cur, total, onAnswer, sel, n }) {
    ══════════════════════ */
 function VideosScreen({ onNext }) {
   const videos = [
-    { src:"/videos/video 1.mp4", label:"Resultado semana 1" },
-    { src:"/videos/video 2.mp4", label:"Resultado semana 2" },
-    { src:"/videos/video 3.mp4", label:"Resultado semana 3" },
-    { src:"/videos/video 4.mp4", label:"Resultado semana 4" },
+    { src:"/videos/video1.mp4" },
+    { src:"/videos/video2.mp4" },
+    { src:"/videos/video3.mp4" },
+    { src:"/videos/video4.mp4" },
   ];
   return (
     <div style={{paddingTop:"0",maxWidth:"480px",margin:"0 auto",paddingBottom:"24px"}}>
@@ -2031,10 +2061,6 @@ function VideosScreen({ onNext }) {
               preload="metadata"
               style={{width:"100%",display:"block",maxHeight:"320px",objectFit:"cover",background:"#0C0F0A"}}
             />
-            <div style={{padding:"10px 14px",display:"flex",alignItems:"center",gap:"8px"}}>
-              <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"#8CB369",flexShrink:"0",display:"inline-block"}} />
-              <span style={{fontSize:"12px",color:"#9CA88E",fontWeight:"600"}}>{v.label}</span>
-            </div>
           </div>
         ))}
       </div>
@@ -2761,8 +2787,8 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
         )}
       </div>
 
-      {/* App Demo */}
-      <AppDemo onComprar={() => document.querySelector('.price-card')?.scrollIntoView({behavior:'smooth',block:'center'})} />
+      {/* App Demo — oculto por padrão */}
+      <AppDemoCollapsible onComprar={() => document.querySelector('.price-card')?.scrollIntoView({behavior:'smooth',block:'center'})} />
 
       {/* What you get */}
       <h3 className="section-title">O que você recebe hoje</h3>
@@ -2783,7 +2809,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
       </div>
 
       {/* WhatsApp social proof */}
-      <h3 className="section-title">O que dizem quem já fez</h3>
+      <h3 className="section-title">Resultados das nossas alunas</h3>
       <div className="whatsapp-grid">
         {["/depo-3.webp","/depo-4.webp","/depo-5.webp","/depo-6.webp"].map((src,i) => (
           <img key={i} src={src} alt={`Depoimento ${i+1}`} className="whatsapp-img" />

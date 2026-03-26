@@ -19,3 +19,4 @@ npm-debug.log*
 # skills e assets locais
 .agents/
 .DS_Store
+public/videos/
