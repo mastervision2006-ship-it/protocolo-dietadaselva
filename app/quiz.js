@@ -424,7 +424,8 @@ export default function Quiz() {
         {screen === "data"         && <DataScreen       nameInput={nameInput} onNameChange={setNameInput} bodyData={bodyData} onBodyChange={setBodyData} onSubmit={handleDataSubmit} />}
         {screen === "analyzing"    && <Analyzing        progress={analysisProgress} name={userName || nameInput} answers={answers} />}
         {screen === "diagnosis"    && <Diagnosis        name={userName} bmi={bmi} bmiCat={getBmiCategory(bmi)} weightToLose={weightToLose} timeWeeks={timeWeeks} answers={answers} onNext={() => go('testimonials-screen')} />}
-        {screen === "testimonials-screen" && <TestimonialsScreen onNext={() => go('result')} />}
+        {screen === "testimonials-screen" && <TestimonialsScreen onNext={() => go('videos-screen')} />}
+        {screen === "videos-screen"       && <VideosScreen onNext={() => go('result')} />}
         {screen === "result"       && <Result           name={userName} weightToLose={weightToLose} timeWeeks={timeWeeks} bmi={bmi} bmiCat={getBmiCategory(bmi)} answers={answers} />}
       </div>
       {screen === "result" && <SelvaChat name={userName} />}
@@ -1992,6 +1993,66 @@ function QuizScreen({ q, progress, cur, total, onAnswer, sel, n }) {
           <span>{hint}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ══════════════════════
+   VIDEOS SCREEN
+   ══════════════════════ */
+function VideosScreen({ onNext }) {
+  const videos = [
+    { src:"/videos/video 1.mp4", label:"Resultado semana 1" },
+    { src:"/videos/video 2.mp4", label:"Resultado semana 2" },
+    { src:"/videos/video 3.mp4", label:"Resultado semana 3" },
+    { src:"/videos/video 4.mp4", label:"Resultado semana 4" },
+  ];
+  return (
+    <div style={{paddingTop:"0",maxWidth:"480px",margin:"0 auto",paddingBottom:"24px"}}>
+      <div style={{textAlign:"center",padding:"28px 16px 22px"}}>
+        <div style={{display:"inline-block",background:"rgba(232,168,56,0.08)",border:"1px solid rgba(232,168,56,0.25)",borderRadius:"100px",padding:"5px 16px",fontSize:"12px",fontWeight:"700",color:"#E8A838",letterSpacing:"0.08em",marginBottom:"14px"}}>
+          ▶ TRANSFORMAÇÕES EM VÍDEO
+        </div>
+        <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"22px",fontWeight:"700",color:"#F2F0E8",lineHeight:"1.3",margin:"0 0 10px"}}>
+          Elas duvidaram.<br/>O corpo respondeu.
+        </h2>
+        <p style={{fontSize:"14px",color:"#9CA88E",margin:"0",lineHeight:"1.6"}}>
+          Sem filtro, sem edição — só resultados reais de quem seguiu o protocolo
+        </p>
+      </div>
+
+      <div style={{display:"flex",flexDirection:"column",gap:"14px",padding:"0 4px"}}>
+        {videos.map((v,i) => (
+          <div key={i} style={{borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(140,179,105,0.15)",background:"rgba(8,12,6,0.6)",position:"relative"}}>
+            <video
+              src={v.src}
+              controls
+              playsInline
+              preload="metadata"
+              style={{width:"100%",display:"block",maxHeight:"320px",objectFit:"cover",background:"#0C0F0A"}}
+            />
+            <div style={{padding:"10px 14px",display:"flex",alignItems:"center",gap:"8px"}}>
+              <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"#8CB369",flexShrink:"0",display:"inline-block"}} />
+              <span style={{fontSize:"12px",color:"#9CA88E",fontWeight:"600"}}>{v.label}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{margin:"28px 16px 0",background:"rgba(140,179,105,0.06)",border:"1px solid rgba(140,179,105,0.2)",borderRadius:"16px",padding:"20px"}}>
+        <p style={{fontSize:"15px",fontWeight:"700",color:"#F2F0E8",margin:"0 0 6px",lineHeight:"1.4"}}>
+          Seu protocolo personalizado está pronto.
+        </p>
+        <p style={{fontSize:"13px",color:"#9CA88E",margin:"0 0 18px",lineHeight:"1.6"}}>
+          Tudo que você acabou de ver começa com um único passo. Hoje, por R$27 — menos que um lanche.
+        </p>
+        <button className="cta" style={{width:"100%"}} onClick={onNext}>
+          Quero o meu protocolo agora →
+        </button>
+        <p style={{fontSize:"11px",color:"#9CA88E",textAlign:"center",margin:"10px 0 0"}}>
+          🔒 Acesso imediato · Garantia de 7 dias
+        </p>
+      </div>
     </div>
   );
 }
