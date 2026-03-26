@@ -2868,7 +2868,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
         </div>
       </div>
 
-      <button className="cta cta-final" style={{width:"100%",margin:"20px 0 4px"}} onClick={()=>setPixStep("form")}>
+      <button className="cta cta-final" style={{width:"100%",margin:"20px 0 4px"}} onClick={()=>{ setPixStep("form"); setTimeout(()=>document.getElementById("pix-form-anchor")?.scrollIntoView({behavior:"smooth",block:"start"}),100); }}>
         GARANTIR MEU ACESSO AGORA →
       </button>
 
@@ -2888,7 +2888,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
       </div>
 
       {/* Price + PIX */}
-      <div className="price-card">
+      <div id="pix-form-anchor" className="price-card">
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"12px",marginBottom:"8px"}}>
           <span style={{fontSize:"16px",color:"#5C6652",textDecoration:"line-through"}}>De R$ 197,00</span>
           <span className="discount-badge">-86% OFF</span>
@@ -2924,11 +2924,18 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
         {q:"E se não funcionar?",a:"Garantia de 21 dias. Devolvemos 100% sem perguntas."},
       ].map((f,i)=>(<FaqItem key={i} q={f.q} a={f.a} />))}
 
+      {/* CTA abaixo do FAQ */}
+      {pixStep === "idle" && (
+        <button className="cta cta-final" style={{width:"100%",margin:"24px 0 8px"}} onClick={()=>{ setPixStep("form"); setTimeout(()=>document.getElementById("pix-form-anchor")?.scrollIntoView({behavior:"smooth",block:"start"}),100); }}>
+          GARANTIR MEU ACESSO POR R$27 →
+        </button>
+      )}
+
       {/* Final CTA */}
       {pixStep === "idle" && (
-        <div style={{textAlign:"center",margin:"44px 0"}}>
+        <div style={{textAlign:"center",margin:"20px 0 44px"}}>
           <p style={{fontSize:"17px",color:"#9CA88E",lineHeight:"1.7",marginBottom:"20px"}}>{name}, você merece se sentir bem no seu corpo.<br/><strong style={{color:"#F2F0E8"}}>O primeiro passo é agora.</strong></p>
-          <button className="cta cta-final" onClick={()=>setPixStep("form")}>
+          <button className="cta cta-final" onClick={()=>{ setPixStep("form"); setTimeout(()=>document.getElementById("pix-form-anchor")?.scrollIntoView({behavior:"smooth",block:"start"}),100); }}>
             GARANTIR MEU ACESSO POR R$27 →
           </button>
         </div>
