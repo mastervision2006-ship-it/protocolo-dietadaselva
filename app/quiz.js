@@ -2846,6 +2846,10 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
         </div>
       </div>
 
+      <button className="cta cta-final" style={{width:"100%",margin:"20px 0 4px"}} onClick={()=>setPixStep("form")}>
+        GARANTIR MEU ACESSO AGORA →
+      </button>
+
       {/* WhatsApp social proof */}
       <h3 className="section-title">Resultados das nossas alunas</h3>
       <div className="whatsapp-grid">
@@ -2902,7 +2906,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
       {pixStep === "idle" && (
         <div style={{textAlign:"center",margin:"44px 0"}}>
           <p style={{fontSize:"17px",color:"#9CA88E",lineHeight:"1.7",marginBottom:"20px"}}>{name}, você merece se sentir bem no seu corpo.<br/><strong style={{color:"#F2F0E8"}}>O primeiro passo é agora.</strong></p>
-          <button className="cta cta-final" onClick={()=>{ window.scrollTo({top:0,behavior:"smooth"}); setTimeout(()=>setPixStep("form"),400); }}>
+          <button className="cta cta-final" onClick={()=>setPixStep("form")}>
             GARANTIR MEU ACESSO POR R$27 →
           </button>
         </div>
