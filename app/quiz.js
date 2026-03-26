@@ -2051,15 +2051,28 @@ function VideosScreen({ onNext }) {
         </p>
       </div>
 
-      <div style={{display:"flex",flexDirection:"column",gap:"14px",padding:"0 4px"}}>
+      <div style={{display:"flex",flexDirection:"column",gap:"20px",padding:"0 4px"}}>
         {videos.map((src,i) => (
-          <div key={i} style={{borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(140,179,105,0.15)",background:"#0C0F0A",position:"relative",aspectRatio:"9/16"}}>
-            <iframe
-              src={src}
-              allow="autoplay"
-              allowFullScreen
-              style={{width:"100%",height:"100%",border:"none",display:"block"}}
-            />
+          <div key={i} id={`video-${i}`}>
+            <div style={{borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(140,179,105,0.15)",background:"#0C0F0A",position:"relative",aspectRatio:"9/16"}}>
+              <iframe
+                src={src}
+                allow="autoplay"
+                allowFullScreen
+                style={{width:"100%",height:"100%",border:"none",display:"block"}}
+              />
+            </div>
+            <button
+              onClick={() => {
+                const next = i < videos.length - 1
+                  ? document.getElementById(`video-${i+1}`)
+                  : document.querySelector('.cta');
+                next?.scrollIntoView({behavior:'smooth', block:'start'});
+              }}
+              style={{width:"100%",marginTop:"10px",padding:"13px",borderRadius:"12px",border:"1px solid rgba(140,179,105,0.25)",background:"rgba(140,179,105,0.07)",color:"#A8D08D",fontSize:"13px",fontWeight:"700",fontFamily:"'DM Sans',sans-serif",cursor:"pointer"}}
+            >
+              {i < videos.length - 1 ? `Ver próximo depoimento →` : `Quero meu protocolo agora →`}
+            </button>
           </div>
         ))}
       </div>
