@@ -2041,16 +2041,16 @@ function VideosScreen({ onNext }) {
 
       <div style={{margin:"28px 16px 0",background:"rgba(140,179,105,0.06)",border:"1px solid rgba(140,179,105,0.2)",borderRadius:"16px",padding:"20px"}}>
         <p style={{fontSize:"15px",fontWeight:"700",color:"#F2F0E8",margin:"0 0 6px",lineHeight:"1.4"}}>
-          Seu protocolo personalizado está pronto.
+          Preparamos algo especial para você.
         </p>
         <p style={{fontSize:"13px",color:"#9CA88E",margin:"0 0 18px",lineHeight:"1.6"}}>
-          Tudo que você acabou de ver começa com um único passo. Hoje, por R$27 — menos que um lanche.
+          Com base nas suas respostas, montamos um protocolo sob medida. Clique para ver o que preparamos para o seu perfil.
         </p>
         <button className="cta" style={{width:"100%"}} onClick={onNext}>
-          Quero o meu protocolo agora →
+          Revelar meu protocolo →
         </button>
         <p style={{fontSize:"11px",color:"#9CA88E",textAlign:"center",margin:"10px 0 0"}}>
-          🔒 Acesso imediato · Garantia de 7 dias
+          🔒 Exclusivo para o seu perfil
         </p>
       </div>
     </div>
