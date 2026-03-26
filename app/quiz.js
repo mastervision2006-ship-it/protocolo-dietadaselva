@@ -9,7 +9,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const CHECKOUT_URL = "https://SEU-CHECKOUT-GG.com/protocolo-dieta-da-selva";
 
 /* ── SCREENS FLOW v3.0 ──
-  1. landing        → Landing com matéria Fogaça
+  1. landing        → Landing com matéria Simone Mendes
   2. name           → Pega nome
   3. quiz (9 perguntas com segmentação)
   4. [medo-screen]  → Só para quem responde "medo de falhar" na Q9
@@ -1172,35 +1172,35 @@ function AuthorityScreen({ progress, onNext }) {
           <span className="news-tag-verified">✓ Verificado</span>
         </div>
         <h1 className="news-headline">
-          Fogaça diz ter eliminado <span style={{color:"#E8A838"}}>17 kg</span> com a 'Dieta da Selva': como funciona e por que especialistas aprovam?
+          Simone Mendes revela que eliminou <span style={{color:"#E8A838"}}>30 kg</span> com a 'Dieta da Selva': como funciona e por que especialistas aprovam?
         </h1>
         <p className="news-byline">Por Redação UOL VivaBem · 26/11/2025 às 14h32</p>
 
         {/* Foto principal */}
-        <img src="/fogaca.webp" alt="Henrique Fogaça" className="news-main-img" />
-        <p className="news-img-caption">Henrique Fogaça revelou a dieta que usou para perder 17 kg em 3 meses — Crédito: Divulgação</p>
+        <img src="/simone noticia.webp" alt="Simone Mendes" className="news-main-img" />
+        <p className="news-img-caption">Simone Mendes revelou a dieta que usou para perder 30 kg — Crédito: Divulgação</p>
 
         {/* Lead */}
         <p className="news-lead">
-          O chef e apresentador Henrique Fogaça surpreendeu seguidores ao revelar que eliminou <strong>17 quilos em menos de 3 meses</strong> seguindo o que ele chama de "dieta da selva" — um protocolo baseado em carnes, ovos, queijos e gorduras boas, com eliminação quase total de carboidratos processados.
+          A cantora Simone Mendes surpreendeu fãs e especialistas ao revelar que eliminou <strong>30 quilos</strong> seguindo o que ela chama de "dieta da selva" — um protocolo baseado em carnes, ovos, queijos e gorduras boas, com eliminação quase total de carboidratos processados e ultraprocessados.
         </p>
 
         {/* Citação destacada */}
         <blockquote className="news-quote">
-          "Parei o carboidrato do dia para a noite. Comecei a comer mais carne, gordura boa, ovos. Em três semanas já havia perdido 6 kg. A fome ansiosa simplesmente desapareceu."
-          <cite>— Henrique Fogaça</cite>
+          "Parei de comer carboidrato processado e comecei a comer de verdade — carne, ovo, gordura boa. Em poucas semanas a fome ansiosa foi embora e o corpo começou a responder de um jeito que eu nunca tinha visto antes."
+          <cite>— Simone Mendes</cite>
         </blockquote>
 
         {/* Corpo */}
         <p className="news-body">
-          Segundo o chef, a mudança mais surpreendente não foi a balança — foi a energia. <strong>"Acordei disposto pela primeira vez em anos"</strong>, contou ele em entrevista. Nutricionistas ouvidos pela reportagem confirmam que a dieta ancestral, rica em proteína animal, ativa o hormônio GLP-1 — o mesmo mecanismo dos novos medicamentos de emagrecimento, mas de forma natural.
+          Segundo a cantora, a mudança mais surpreendente não foi o número na balança — foi a energia e o fim da compulsão alimentar. <strong>"Me sinto leve, disposta e sem aquela vontade louca de doce"</strong>, contou ela. Nutricionistas ouvidos pela reportagem explicam que a Dieta da Selva ativa o hormônio GLP-1 de forma natural — o mesmo mecanismo dos medicamentos de emagrecimento mais caros do mercado, mas sem efeitos colaterais.
         </p>
 
         {/* Stats */}
         <div className="news-stats-row">
-          <div className="news-stat"><span className="news-stat-num">17kg</span><span className="news-stat-lbl">em 3 meses</span></div>
+          <div className="news-stat"><span className="news-stat-num">30kg</span><span className="news-stat-lbl">eliminados</span></div>
           <div className="news-stat-div"/>
-          <div className="news-stat"><span className="news-stat-num">+12 mil</span><span className="news-stat-lbl">mulheres no método</span></div>
+          <div className="news-stat"><span className="news-stat-num">+14 mil</span><span className="news-stat-lbl">mulheres no método</span></div>
           <div className="news-stat-div"/>
           <div className="news-stat"><span className="news-stat-num">7 dias</span><span className="news-stat-lbl">primeiros resultados</span></div>
         </div>
@@ -2827,7 +2827,7 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
       {/* FAQ */}
       <h3 className="section-title" style={{marginTop:"44px"}}>Perguntas Frequentes</h3>
       {[
-        {q:"A Dieta da Selva funciona mesmo?",a:"Sim. É baseada nos princípios da dieta carnívora/ancestral. O chef Henrique Fogaça eliminou 17kg em 3 meses com este método. O protocolo foi adaptado para mulheres acima de 30."},
+        {q:"A Dieta da Selva funciona mesmo?",a:"Sim. É baseada nos princípios da dieta carnívora/ancestral. A cantora Simone Mendes eliminou 30kg com este método. O protocolo foi adaptado para mulheres acima de 30."},
         {q:"Vou passar fome?",a:"Pelo contrário! Carnes, queijos, ovos e gorduras boas estimulam o GLP-1 — o hormônio natural da saciedade. Você se sente satisfeita por horas."},
         {q:"Preciso ir à academia?",a:"Não. O app inclui exercícios caseiros de 15 minutos. A alimentação é o pilar principal."},
         {q:"Como funciona o pagamento?",a:"100% via PIX. Você gera o QR Code, paga pelo app do seu banco, e o acesso é liberado automaticamente em segundos."},
