@@ -1177,7 +1177,7 @@ function AuthorityScreen({ progress, onNext }) {
         <p className="news-byline">Por Redação UOL VivaBem · 26/11/2025 às 14h32</p>
 
         {/* Foto principal */}
-        <img src="/simone noticia.webp" alt="Simone Mendes" className="news-main-img" />
+        <img src="/simone.webp" alt="Simone Mendes" className="news-main-img" />
         <p className="news-img-caption">Simone Mendes revelou a dieta que usou para perder 30 kg — Crédito: Divulgação</p>
 
         {/* Lead */}
