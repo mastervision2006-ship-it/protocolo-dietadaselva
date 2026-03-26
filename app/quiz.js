@@ -2808,6 +2808,32 @@ function Result({ name, weightToLose, timeWeeks, bmi, bmiCat, answers }) {
         ))}
       </div>
 
+      {/* Bônus Exclusivos */}
+      <div id="bonus-exclusivos" style={{margin:"28px 0"}}>
+        <div style={{textAlign:"center",marginBottom:"16px"}}>
+          <span style={{fontFamily:"'Playfair Display',serif",fontSize:"19px",fontWeight:"700",color:"#E8A838",fontStyle:"italic"}}>
+            + Bônus Exclusivos <span style={{fontSize:"16px"}}>(Somente HOJE)</span>
+          </span>
+        </div>
+        <div style={{background:"linear-gradient(135deg,rgba(20,30,12,0.95),rgba(12,18,8,0.98))",border:"1.5px solid rgba(232,168,56,0.35)",borderRadius:"18px",padding:"22px 18px",boxShadow:"0 8px 40px rgba(0,0,0,0.4),0 0 0 1px rgba(232,168,56,0.08)"}}>
+          {[
+            { title:"Chá Asiático Anticelulite",       desc:"Misture uma plantinha verde escura pouco conhecida mas super fácil de encontrar com água morna pra assistir as celulites sumindo dia após dia..." },
+            { title:"Treino Turbo em Casa",             desc:"Receba um plano de treino personalizado com menos de 20 minutos por dia, desenvolvido especialmente para você acelerar seus resultados no conforto de casa." },
+            { title:"Lista de Compras Prática",         desc:"Lista de compras de mercado com ingredientes anti-inflamatórios acessíveis." },
+            { title:"Suporte 24h todos os dias",        desc:"Está com alguma dúvida? Nosso time vai estar pronto para te ajudar, independente do horário." },
+          ].map((b,i) => (
+            <div key={i} style={{display:"flex",gap:"13px",alignItems:"flex-start",padding:"13px 0",borderBottom: i < 3 ? "1px solid rgba(232,168,56,0.1)" : "none"}}>
+              <span style={{fontSize:"20px",flexShrink:0,marginTop:"1px"}}>🎁</span>
+              <p style={{margin:0,fontSize:"13.5px",color:"#C8D4B8",lineHeight:"1.65"}}>
+                <strong style={{color:"#F2F0E8"}}>{b.title}</strong>
+                {b.title.endsWith('a') || b.title.endsWith('ica') ? ': ' : ' – '}
+                {b.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* WhatsApp social proof */}
       <h3 className="section-title">Resultados das nossas alunas</h3>
       <div className="whatsapp-grid">
