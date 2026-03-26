@@ -2032,10 +2032,10 @@ function QuizScreen({ q, progress, cur, total, onAnswer, sel, n }) {
    ══════════════════════ */
 function VideosScreen({ onNext }) {
   const videos = [
-    { src:"/videos/video1.mp4" },
-    { src:"/videos/video2.mp4" },
-    { src:"/videos/video3.mp4" },
-    { src:"/videos/video4.mp4" },
+    "https://drive.google.com/file/d/1_QcqUp6j_sR9oNZ7e6AhOVFwavM4JH-N/preview",
+    "https://drive.google.com/file/d/1iKWCa3amw20-U67vTiF9qkniWgy7GU4O/preview",
+    "https://drive.google.com/file/d/1_96WCGVL8VD1d4S92VWt9pFknNzI3sxk/preview",
+    "https://drive.google.com/file/d/1SSqCaSXQ7PqnJYMfILDJK948ZalFMwBB/preview",
   ];
   return (
     <div style={{paddingTop:"0",maxWidth:"480px",margin:"0 auto",paddingBottom:"24px"}}>
@@ -2052,14 +2052,13 @@ function VideosScreen({ onNext }) {
       </div>
 
       <div style={{display:"flex",flexDirection:"column",gap:"14px",padding:"0 4px"}}>
-        {videos.map((v,i) => (
-          <div key={i} style={{borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(140,179,105,0.15)",background:"rgba(8,12,6,0.6)",position:"relative"}}>
-            <video
-              src={v.src}
-              controls
-              playsInline
-              preload="metadata"
-              style={{width:"100%",display:"block",maxHeight:"320px",objectFit:"cover",background:"#0C0F0A"}}
+        {videos.map((src,i) => (
+          <div key={i} style={{borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(140,179,105,0.15)",background:"#0C0F0A",position:"relative",aspectRatio:"9/16"}}>
+            <iframe
+              src={src}
+              allow="autoplay"
+              allowFullScreen
+              style={{width:"100%",height:"100%",border:"none",display:"block"}}
             />
           </div>
         ))}
